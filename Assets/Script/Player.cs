@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController2D : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] float moveSpeed = 5f;
@@ -27,7 +27,7 @@ public class PlayerController2D : MonoBehaviour
         HandleMovement();
         HandleAttack();
         HandleDash();
-    }
+    } 
 
     void HandleMovement()
     {

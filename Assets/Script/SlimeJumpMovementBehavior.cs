@@ -1,35 +1,35 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Ä£ÄâÊ·À³Ä·ÌøÔ¾£¨Å×ÎïÏß¹ì¼££©µÄÒÆ¶¯ĞĞÎª×é¼ş£º
-/// ÔÚ¶şÎ¬Æ½Ãæ£¨X/Y£©ÉÏÌøÔ¾£¬Í¨¹ıÔÚYÖá·½ÏòÌí¼ÓÒ»¸öÅ×ÎïÏßÆ«ÒÆÀ´Ä£ÄâÕæÊµÌøÔ¾Ğ§¹û¡£
-/// Èç¹ûÄ¿±êÔÚÌøÔ¾¾àÀëÄÚ£¬ÔòÖ±½ÓÌøµ½Ä¿±êÎ»ÖÃ£»·ñÔòÌøÔ¾¹Ì¶¨¾àÀë¡£
+/// æ¨¡æ‹Ÿå²è±å§†è·³è·ƒï¼ˆæŠ›ç‰©çº¿è½¨è¿¹ï¼‰çš„ç§»åŠ¨è¡Œä¸ºç»„ä»¶ï¼š
+/// åœ¨äºŒç»´å¹³é¢ï¼ˆX/Yï¼‰ä¸Šè·³è·ƒï¼Œé€šè¿‡åœ¨Yè½´æ–¹å‘æ·»åŠ ä¸€ä¸ªæŠ›ç‰©çº¿åç§»æ¥æ¨¡æ‹ŸçœŸå®è·³è·ƒæ•ˆæœã€‚ 
+/// å¦‚æœç›®æ ‡åœ¨è·³è·ƒè·ç¦»å†…ï¼Œåˆ™ç›´æ¥è·³åˆ°ç›®æ ‡ä½ç½®ï¼›å¦åˆ™è·³è·ƒå›ºå®šè·ç¦»ã€‚
 /// </summary>
 public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBehavior
 {
     [Header("Jump Settings")]
-    [Tooltip("Ã¿´ÎÌøÔ¾Ë®Æ½·½Ïò£¨ÑØÄ¿±ê·½Ïò£©µÄ×î´ó¾àÀë")]
+    [Tooltip("æ¯æ¬¡è·³è·ƒæ°´å¹³æ–¹å‘ï¼ˆæ²¿ç›®æ ‡æ–¹å‘ï¼‰çš„æœ€å¤§è·ç¦»")]
     [SerializeField] private float jumpDistance = 3f;
 
-    [Tooltip("ÌøÔ¾µÄ×ÜÊ±³¤£¨Ãë£©")]
+    [Tooltip("è·³è·ƒçš„æ€»æ—¶é•¿ï¼ˆç§’ï¼‰")]
     [SerializeField] private float jumpDuration = 0.7f;
 
-    [Tooltip("ÌøÔ¾Ê±µÄ×î´ó¸ß¶È£¨Å×ÎïÏß¶¥µã´¦µÄÆ«ÒÆÖµ£©")]
+    [Tooltip("è·³è·ƒæ—¶çš„æœ€å¤§é«˜åº¦ï¼ˆæŠ›ç‰©çº¿é¡¶ç‚¹å¤„çš„åç§»å€¼ï¼‰")]
     [SerializeField] private float maxJumpHeight = 1f;
 
-    [Tooltip("Á½´ÎÌøÔ¾Ö®¼äµÄ¼ä¸ô£¨Ãë£©")]
+    [Tooltip("ä¸¤æ¬¡è·³è·ƒä¹‹é—´çš„é—´éš”ï¼ˆç§’ï¼‰")]
     [SerializeField] private float jumpInterval = 1.5f;
 
     private float lastJumpTime = 0f;
     private bool isJumping = false;
 
     /// <summary>
-    /// ¸ù¾İÄ¿±ê·½Ïò·¢ÆğÒ»´ÎÌøÔ¾¡£
+    /// æ ¹æ®ç›®æ ‡æ–¹å‘å‘èµ·ä¸€æ¬¡è·³è·ƒã€‚
     /// </summary>
-    /// <param name="target">Ä¿±ê¶ÔÏóµÄTransform</param>
-    /// <param name="rb">½ÇÉ«µÄRigidbody2D£¨±¾ÊµÏÖÖĞÎ´Ö±½ÓÊ¹ÓÃ£©</param>
-    /// <param name="moveSpeed">ÒÆ¶¯ËÙ¶È²ÎÊı£¨±¾ÊµÏÖÖĞ²»Ê¹ÓÃ£¬ÌøÔ¾¾àÀëÓÉjumpDistance¿ØÖÆ£©</param>
+    /// <param name="target">ç›®æ ‡å¯¹è±¡çš„Transform</param>
+    /// <param name="rb">è§’è‰²çš„Rigidbody2Dï¼ˆæœ¬å®ç°ä¸­æœªç›´æ¥ä½¿ç”¨ï¼‰</param>
+    /// <param name="moveSpeed">ç§»åŠ¨é€Ÿåº¦å‚æ•°ï¼ˆæœ¬å®ç°ä¸­ä¸ä½¿ç”¨ï¼Œè·³è·ƒè·ç¦»ç”±jumpDistanceæ§åˆ¶ï¼‰</param>
     public void Move(Transform target, Rigidbody2D rb, float moveSpeed)
     {
         if (target == null) return;
@@ -40,45 +40,45 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBeha
     }
 
     /// <summary>
-    /// Ğ­³Ì£ºÖ´ĞĞÒ»´ÎÅ×ÎïÏßÌøÔ¾£¬²¢ÔÚ¶şÎ¬Æ½ÃæÉÏ¸üĞÂ½ÇÉ«Î»ÖÃ¡£
-    /// Èç¹ûÄ¿±êÔÚÌøÔ¾¾àÀëÄÚ£¬ÔòÌøµ½Ä¿±êÎ»ÖÃ£»·ñÔò°´ÕÕ¹Ì¶¨ÌøÔ¾¾àÀë¼ÆËãÂäµã¡£
+    /// åç¨‹ï¼šæ‰§è¡Œä¸€æ¬¡æŠ›ç‰©çº¿è·³è·ƒï¼Œå¹¶åœ¨äºŒç»´å¹³é¢ä¸Šæ›´æ–°è§’è‰²ä½ç½®ã€‚
+    /// å¦‚æœç›®æ ‡åœ¨è·³è·ƒè·ç¦»å†…ï¼Œåˆ™è·³åˆ°ç›®æ ‡ä½ç½®ï¼›å¦åˆ™æŒ‰ç…§å›ºå®šè·³è·ƒè·ç¦»è®¡ç®—è½ç‚¹ã€‚
     /// </summary>
-    /// <param name="target">Ä¿±êTransform</param>
+    /// <param name="target">ç›®æ ‡Transform</param>
     /// <returns></returns>
     private IEnumerator JumpTowardsTarget(Transform target)
     {
         isJumping = true;
         lastJumpTime = Time.time;
 
-        // ¼ÇÂ¼ÌøÔ¾Æğµã£¨µ±Ç°¶şÎ¬Æ½ÃæÎ»ÖÃ£©
+        // è®°å½•è·³è·ƒèµ·ç‚¹ï¼ˆå½“å‰äºŒç»´å¹³é¢ä½ç½®ï¼‰
         Vector2 startPos = transform.position;
-        // ¼ÆËãÄ¿±êÓëÆğµãµÄ¾àÀë
+        // è®¡ç®—ç›®æ ‡ä¸èµ·ç‚¹çš„è·ç¦»
         float targetDistance = Vector2.Distance(startPos, (Vector2)target.position);
-        // Èç¹ûÄ¿±ê¾àÀëĞ¡ÓÚÌøÔ¾¾àÀë£¬ÔòÊµ¼ÊÌøÔ¾¾àÀëÎªÄ¿±ê¾àÀë£¬·ñÔòÎªÉè¶¨µÄÌøÔ¾¾àÀë
+        // å¦‚æœç›®æ ‡è·ç¦»å°äºè·³è·ƒè·ç¦»ï¼Œåˆ™å®é™…è·³è·ƒè·ç¦»ä¸ºç›®æ ‡è·ç¦»ï¼Œå¦åˆ™ä¸ºè®¾å®šçš„è·³è·ƒè·ç¦»
         float actualJumpDistance = targetDistance < jumpDistance ? targetDistance : jumpDistance;
-        // ¼ÆËã´ÓÆğµãµ½Ä¿±êµÄ·½Ïò£¨±ê×¼»¯£©
+        // è®¡ç®—ä»èµ·ç‚¹åˆ°ç›®æ ‡çš„æ–¹å‘ï¼ˆæ ‡å‡†åŒ–ï¼‰
         Vector2 direction = ((Vector2)target.position - startPos).normalized;
-        // ¸ù¾İÊµ¼ÊÌøÔ¾¾àÀë¼ÆËãÂäµã
+        // æ ¹æ®å®é™…è·³è·ƒè·ç¦»è®¡ç®—è½ç‚¹
         Vector2 endPos = startPos + direction * actualJumpDistance;
 
         float elapsed = 0f;
         while (elapsed < jumpDuration)
         {
             elapsed += Time.deltaTime;
-            // ¹éÒ»»¯Ê±¼ä t ¡Ê [0,1]
+            // å½’ä¸€åŒ–æ—¶é—´ t âˆˆ [0,1]
             float t = Mathf.Clamp01(elapsed / jumpDuration);
-            // ÏÈÓÃÏßĞÔ²åÖµ¼ÆËãË®Æ½Î»ÖÃ
+            // å…ˆç”¨çº¿æ€§æ’å€¼è®¡ç®—æ°´å¹³ä½ç½®
             Vector2 pos = Vector2.Lerp(startPos, endPos, t);
-            // Ê¹ÓÃ¼òµ¥¶ş´Îº¯ÊıÄ£ÄâÅ×ÎïÏß£ºt*(1-t)ÔÚ t=0 Óë t=1 Ê±Îª 0£¬ÔÚ t=0.5 Ê±È¡µÃ×î´óÖµ
+            // ä½¿ç”¨ç®€å•äºŒæ¬¡å‡½æ•°æ¨¡æ‹ŸæŠ›ç‰©çº¿ï¼št*(1-t)åœ¨ t=0 ä¸ t=1 æ—¶ä¸º 0ï¼Œåœ¨ t=0.5 æ—¶å–å¾—æœ€å¤§å€¼
             float verticalOffset = 4 * maxJumpHeight * t * (1 - t);
-            // ½«Æ«ÒÆ¼Óµ½YÖáÉÏ£¬Ä£ÄâÌøÔ¾»¡Ïß
+            // å°†åç§»åŠ åˆ°Yè½´ä¸Šï¼Œæ¨¡æ‹Ÿè·³è·ƒå¼§çº¿
             pos.y += verticalOffset;
 
             transform.position = pos;
-            yield return null;  // ÔİÍ£Ö´ĞĞ£¬µÈ´ıÏÂÒ»Ö¡ÔÙ¼ÌĞø
+            yield return null;  // æš‚åœæ‰§è¡Œï¼Œç­‰å¾…ä¸‹ä¸€å¸§å†ç»§ç»­
         }
 
-        // È·±£ÌøÔ¾½áÊøÊ±Î»ÖÃ¾«È·ÂäÔÚÔ¤¶¨µÄÂäµã
+        // ç¡®ä¿è·³è·ƒç»“æŸæ—¶ä½ç½®ç²¾ç¡®è½åœ¨é¢„å®šçš„è½ç‚¹
         transform.position = endPos;
         isJumping = false;
     }

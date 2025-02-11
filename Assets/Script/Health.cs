@@ -10,7 +10,7 @@ public class Health : MonoBehaviour
     private int currentHealth;                     // 当前生命值
 
     void Start()
-    {
+    { 
         // 游戏开始时，初始化当前生命值为最大生命值
         currentHealth = maxHealth;
         Debug.Log($"{gameObject.name} 的生命值已初始化为 {currentHealth}");
