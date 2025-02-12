@@ -18,6 +18,9 @@ public class RoomManager_BC : MonoBehaviour
     public float roomSizeY = 2f; // 房间高度
     public float offset = 2f; // 额外的间隔距离
 
+    [Header("玩家相机")]
+    public CameraFollow cameraFollow; // **手动指定相机跟随组件**
+
     public static RoomManager_BC Instance;
 
     private bool[,] map; // 房间网格
@@ -195,15 +198,23 @@ public class RoomManager_BC : MonoBehaviour
 
     public void ChangeRoom(Vector2Int newRoom)
     {
+        Vector3 worldPos = GetWorldPosition(newRoom);
+
         if (CreatedRooms[newRoom.x, newRoom.y])
         {
             // 房间已创建，执行 "do something" 逻辑
             Debug.Log($"Room at {newRoom} already exists. Do something.");
+
+            if (cameraFollow != null)
+            {
+                cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
+            }
+
             return;
         }
 
         // 房间未创建，则生成
-        Vector3 worldPos = GetWorldPosition(newRoom);
+        //Vector3 worldPos = GetWorldPosition(newRoom);
         GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);
         //newRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
         Debug.Log($"Created room at {newRoom}.");
@@ -212,6 +223,11 @@ public class RoomManager_BC : MonoBehaviour
         CreatedRooms[newRoom.x, newRoom.y] = true;
         roomInstances[newRoom] = newRoomInstance;
         DeleteDoor(newRoomInstance, newRoom);
+
+        if (cameraFollow != null)
+        {
+            cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
+        }
     }
 
     void DeleteDoor(GameObject room, Vector2Int roomPos)
@@ -251,8 +267,6 @@ public class RoomManager_BC : MonoBehaviour
         Vector2Int newRoomPos = CurrentRoom + direction;
 
         Debug.Log($"Moving to {newRoomPos}.");
-        //debug map[newRoomPos.x, newRoomPos.y]
-        Debug.Log(map[newRoomPos.x, newRoomPos.y]);
 
         // 确保新房间在地图范围内
         if (newRoomPos.x < 0 || newRoomPos.x >= gridWidth || newRoomPos.y < 0 || newRoomPos.y >= gridHeight)
@@ -269,10 +283,7 @@ public class RoomManager_BC : MonoBehaviour
         }
 
         // 创建或获取房间
-        if (!CreatedRooms[newRoomPos.x, newRoomPos.y])
-        {
-            ChangeRoom(newRoomPos); // 创建新房间
-        }
+        ChangeRoom(newRoomPos); // 创建新房间
 
         // 获取新房间
         GameObject newRoom = roomInstances[newRoomPos];
