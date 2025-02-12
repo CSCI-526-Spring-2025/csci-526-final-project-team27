@@ -16,20 +16,37 @@ public class RoomManager_BC : MonoBehaviour
     [Header("房间大小")]
     public float roomSizeX = 2f; // 房间宽度
     public float roomSizeY = 2f; // 房间高度
+    public float offset = 2f; // 额外的间隔距离
+
+    public static RoomManager_BC Instance;
 
     private bool[,] map; // 房间网格
     private Vector2Int startRoom, endRoom; // 起点和终点
     private List<Vector2Int> roomPositions = new List<Vector2Int>(); // 已生成房间
 
+    private Vector2Int CurrentRoom;
+    private bool[,] CreatedRooms;
+    private Dictionary<Vector2Int, GameObject> roomInstances = new Dictionary<Vector2Int, GameObject>(); // 存储已创建的房间
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+    }
+
+
     void Start()
     {
         GenerateMap();
-        SpawnRooms();
+        //SpawnRooms();
+        InitRoom();
+        CurrentRoom = startRoom;
+        Debug.Log(startRoom);
     }
 
     void GenerateMap()
     {
         map = new bool[gridWidth, gridHeight];
+        CreatedRooms = new bool[gridWidth, gridHeight];
 
         // 选择起点
         startRoom = new Vector2Int(Random.Range(0, gridWidth), Random.Range(0, gridHeight));
@@ -52,6 +69,10 @@ public class RoomManager_BC : MonoBehaviour
 
         // **确保 `endRoom` 仍然存在**
         roomPositions.Add(endRoom);
+
+        //debug startroom and end room
+        Debug.Log(startRoom);
+        Debug.Log(endRoom);
     }
 
     void CreatePath(Vector2Int start, Vector2Int end)
@@ -124,6 +145,7 @@ public class RoomManager_BC : MonoBehaviour
         return neighbors;
     }
 
+    /*
     void SpawnRooms()
     {
         foreach (Vector2Int pos in roomPositions)
@@ -138,5 +160,155 @@ public class RoomManager_BC : MonoBehaviour
             GameObject spawnedRoom = Instantiate(prefab, worldPos, Quaternion.identity);
             spawnedRoom.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
         }
+    }*/
+    void InitRoom()
+    {
+        // 创建起点房间
+        Vector3 startWorldPos = new Vector3(0, 0, 0);
+        GameObject startRoomInstance = Instantiate(startRoomPrefab, startWorldPos, Quaternion.identity);
+        //startRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
+        roomInstances[startRoom] = startRoomInstance;
+        //debug startroominstance
+
+        CreatedRooms[startRoom.x, startRoom.y] = true;
+        DeleteDoor(startRoomInstance, startRoom);
+
+        
+        // 计算终点房间的世界坐标
+        Vector3 endWorldPos = GetWorldPosition(endRoom);
+        GameObject endRoomInstance = Instantiate(endRoomPrefab, endWorldPos, Quaternion.identity);
+        //endRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
+        roomInstances[endRoom] = endRoomInstance;
+        CreatedRooms[endRoom.x, endRoom.y] = true;
+        DeleteDoor(endRoomInstance, endRoom);
+        
+    }
+
+    Vector3 GetWorldPosition(Vector2Int room)
+    {
+        // 计算房间相对 `startRoom` 的偏移
+        Vector2Int offsetRoom = room - startRoom;
+        return new Vector3(offsetRoom.x * (roomSizeX + offset), offsetRoom.y * (roomSizeY + offset), 0);
+    }
+
+    
+
+    public void ChangeRoom(Vector2Int newRoom)
+    {
+        if (CreatedRooms[newRoom.x, newRoom.y])
+        {
+            // 房间已创建，执行 "do something" 逻辑
+            Debug.Log($"Room at {newRoom} already exists. Do something.");
+            return;
+        }
+
+        // 房间未创建，则生成
+        Vector3 worldPos = GetWorldPosition(newRoom);
+        GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);
+        //newRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
+        Debug.Log($"Created room at {newRoom}.");
+
+        // 记录房间已创建
+        CreatedRooms[newRoom.x, newRoom.y] = true;
+        roomInstances[newRoom] = newRoomInstance;
+        DeleteDoor(newRoomInstance, newRoom);
+    }
+
+    void DeleteDoor(GameObject room, Vector2Int roomPos)
+    {
+        if (room == null) return;
+
+        if (roomPos.x == 0 || !map[roomPos.x - 1, roomPos.y])
+        {
+            Transform leftDoor = room.transform.Find("Door_Left");
+            if (leftDoor) Destroy(leftDoor.gameObject);
+        }
+
+        if (roomPos.x == gridWidth - 1 || !map[roomPos.x + 1, roomPos.y])
+        {
+            Transform rightDoor = room.transform.Find("Door_Right");
+            if (rightDoor) Destroy(rightDoor.gameObject);
+        }
+
+        if (roomPos.y == 0 || !map[roomPos.x, roomPos.y - 1])
+        {
+            Transform bottomDoor = room.transform.Find("Door_Bottom");
+            if (bottomDoor) Destroy(bottomDoor.gameObject);
+        }
+
+        if (roomPos.y == gridHeight - 1 || !map[roomPos.x, roomPos.y + 1])
+        {
+            Transform topDoor = room.transform.Find("Door_Top");
+            if (topDoor) Destroy(topDoor.gameObject);
+        }
+    }
+
+    public void MoveTo(GameObject obj, Vector2Int direction)
+    {
+        if (obj == null) return;
+
+        // 计算新房间的坐标
+        Vector2Int newRoomPos = CurrentRoom + direction;
+
+        Debug.Log($"Moving to {newRoomPos}.");
+        //debug map[newRoomPos.x, newRoomPos.y]
+        Debug.Log(map[newRoomPos.x, newRoomPos.y]);
+
+        // 确保新房间在地图范围内
+        if (newRoomPos.x < 0 || newRoomPos.x >= gridWidth || newRoomPos.y < 0 || newRoomPos.y >= gridHeight)
+        {
+            Debug.Log("Invalid move: Out of bounds.");
+            return;
+        }
+
+        // 确保目标房间存在
+        if (!map[newRoomPos.x, newRoomPos.y])
+        {
+            Debug.Log("Invalid move: No room in that direction.");
+            return;
+        }
+
+        // 创建或获取房间
+        if (!CreatedRooms[newRoomPos.x, newRoomPos.y])
+        {
+            ChangeRoom(newRoomPos); // 创建新房间
+        }
+
+        // 获取新房间
+        GameObject newRoom = roomInstances[newRoomPos];
+
+        if (newRoom == null)
+        {
+            Debug.LogError($"Failed to retrieve the new room at {newRoomPos}.");
+            return;
+        }
+
+        // 计算进入新房间的入口点
+        string entryPointName = GetEntryPointName(direction);
+        Transform entryPoint = newRoom.transform.Find(entryPointName);
+
+        if (entryPoint == null)
+        {
+            Debug.LogError($"Entry point {entryPointName} not found in new room!");
+            return;
+        }
+
+        // 移动物体到新房间的入口点
+        obj.transform.position = entryPoint.position;
+
+        // 更新当前房间
+        CurrentRoom = newRoomPos;
+
+        Debug.Log($"Moved to {newRoomPos}, entered through {entryPointName}.");
+    }
+
+    // 获取进入新房间的入口点名称
+    private string GetEntryPointName(Vector2Int direction)
+    {
+        if (direction == Vector2Int.up) return "InPoint_Bottom";    // 从下方进入
+        if (direction == Vector2Int.down) return "InPoint_Top";     // 从上方进入
+        if (direction == Vector2Int.left) return "InPoint_Right";   // 从右侧进入
+        if (direction == Vector2Int.right) return "InPoint_Left";   // 从左侧进入
+        return "";
     }
 }
