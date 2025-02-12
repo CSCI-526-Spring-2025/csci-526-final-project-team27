@@ -1,7 +1,7 @@
 // IMovementBehavior.cs
 using UnityEngine;
 
-public interface IMovementBehavior
+public interface IMovementBehavior_VonD
 {
     /// <summary>
     /// 根据目标位置和移动速度控制角色的移动

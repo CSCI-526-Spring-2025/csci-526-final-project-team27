@@ -4,7 +4,7 @@ using UnityEngine;
 /// 默认的直接移动行为，实现了 IMovementBehavior 接口。
 /// 该组件会使角色向目标方向移动，并同时更新水平方向和垂直方向的速度。
 /// </summary>
-public class DirectMovementBehavior : MonoBehaviour, IMovementBehavior
+public class DirectMovementBehavior_VonD : MonoBehaviour, IMovementBehavior
 {
     public void Move(Transform target, Rigidbody2D rb, float moveSpeed)
     {

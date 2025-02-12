@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class MeleeEnemy2D : MonoBehaviour
+public class MeleeEnemy2D_VonD : MonoBehaviour
 {
     public enum TargetPriority { PlayerFirst, AllyFirst }
     public TargetPriority priority = TargetPriority.PlayerFirst;

@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 近战角色控制主组件，控制攻击、索敌和移动逻辑
 /// </summary>
-public class MeleeCharacter2D : MonoBehaviour
+public class MeleeCharacter2D_VonD : MonoBehaviour
 {
     // 角色类型枚举
     public enum CharacterType { Enemy, Ally }

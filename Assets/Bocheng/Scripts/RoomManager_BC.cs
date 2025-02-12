@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class RoomManager : MonoBehaviour
+public class RoomManager_BC : MonoBehaviour
 {
     [Header("地图尺寸")]
     public int gridWidth = 10;  // 地图网格宽度

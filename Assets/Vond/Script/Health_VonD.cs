@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 基本的生命值管理组件，用于2D角色或对象
 /// </summary>
-public class Health : MonoBehaviour
+public class Health_VonD : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;  // 最大生命值

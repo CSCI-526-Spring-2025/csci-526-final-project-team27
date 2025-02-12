@@ -6,7 +6,7 @@ using UnityEngine;
 /// 在二维平面（X/Y）上跳跃，通过在Y轴方向添加一个抛物线偏移来模拟真实跳跃效果。
 /// 如果目标在跳跃距离内，则直接跳到目标位置；否则跳跃固定距离。
 /// </summary>
-public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBehavior
+public class ParabolicSlimeJumpMovementBehavior2D_VonD : MonoBehaviour, IMovementBehavior_VonD
 {
     [Header("Jump Settings")]
     [Tooltip("每次跳跃水平方向（沿目标方向）的最大距离")]
