@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 movement;
+    private bool bCanMove = true;
 
     void Start()
     {
@@ -13,16 +14,28 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // 获取输入
-        movement.x = Input.GetAxisRaw("Horizontal"); // A/D 或 左/右箭头
-        movement.y = Input.GetAxisRaw("Vertical");   // W/S 或 上/下箭头
+        if(bCanMove)
+        {
+            // 获取输入
+            movement.x = Input.GetAxisRaw("Horizontal"); // A/D 或 左/右箭头
+            movement.y = Input.GetAxisRaw("Vertical");   // W/S 或 上/下箭头
 
-        movement.Normalize(); // 归一化防止对角线速度过快
+            movement.Normalize(); // 归一化防止对角线速度过快
+        }
+        else
+        {
+            movement = Vector2.zero;
+        }
     }
 
     void FixedUpdate()
     {
         // 移动角色
         rb.linearVelocity = movement * moveSpeed;
+    }
+
+    public void LockMove(bool bLock)
+    {
+        bCanMove = !bLock;
     }
 }

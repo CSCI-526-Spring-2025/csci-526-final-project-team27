@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering.Universal;
 
 public class RoomManager_BC : MonoBehaviour
 {
@@ -21,6 +22,22 @@ public class RoomManager_BC : MonoBehaviour
     [Header("玩家相机")]
     public CameraFollow cameraFollow; // **手动指定相机跟随组件**
 
+    [Header("小地图")]
+    public GameObject roomUIPrefab;  // 房间UI的预制体
+    public GameObject startRoomUIPrefab;
+    public GameObject endRoomUIPrefab;
+    public RectTransform panel;  // 小地图的UI Panel
+    public GameObject playerUIPrefab;
+    private RectTransform playerUI;
+
+    [Header("Player")]
+    public PlayerMovement playerMovement;
+
+    public float scaleRatio = 2f;  // 世界尺寸 → UI 比例
+    public float UIoffset = 5f;  // 房间 UI 之间的间隔
+    public float UImoveSpeed = 200f;  // 小地图移动速度
+
+
     public static RoomManager_BC Instance;
 
     private bool[,] map; // 房间网格
@@ -30,6 +47,9 @@ public class RoomManager_BC : MonoBehaviour
     private Vector2Int CurrentRoom;
     private bool[,] CreatedRooms;
     private Dictionary<Vector2Int, GameObject> roomInstances = new Dictionary<Vector2Int, GameObject>(); // 存储已创建的房间
+    private Dictionary<Vector2Int, RectTransform> roomUIElements = new Dictionary<Vector2Int, RectTransform>();
+
+    private bool MinimapOpen = false;
 
     private void Awake()
     {
@@ -42,8 +62,19 @@ public class RoomManager_BC : MonoBehaviour
         GenerateMap();
         //SpawnRooms();
         InitRoom();
+        InitializeMiniMap();
+        RemoveMaskFromRoomUI(startRoom);
+        RemoveMaskFromRoomUI(endRoom);
+
+
         CurrentRoom = startRoom;
+        panel.transform.parent.gameObject.SetActive(false);
         Debug.Log(startRoom);
+    }
+
+    void Update()
+    {
+        HandleMinimapInput();
     }
 
     void GenerateMap()
@@ -176,7 +207,7 @@ public class RoomManager_BC : MonoBehaviour
         CreatedRooms[startRoom.x, startRoom.y] = true;
         DeleteDoor(startRoomInstance, startRoom);
 
-        
+
         // 计算终点房间的世界坐标
         Vector3 endWorldPos = GetWorldPosition(endRoom);
         GameObject endRoomInstance = Instantiate(endRoomPrefab, endWorldPos, Quaternion.identity);
@@ -199,6 +230,8 @@ public class RoomManager_BC : MonoBehaviour
     public void ChangeRoom(Vector2Int newRoom)
     {
         Vector3 worldPos = GetWorldPosition(newRoom);
+        // **更新玩家 UI**
+        UpdatePlayerUI(newRoom);
 
         if (CreatedRooms[newRoom.x, newRoom.y])
         {
@@ -218,6 +251,8 @@ public class RoomManager_BC : MonoBehaviour
         GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);
         //newRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
         Debug.Log($"Created room at {newRoom}.");
+
+        RemoveMaskFromRoomUI(newRoom); // 移除 Mask
 
         // 记录房间已创建
         CreatedRooms[newRoom.x, newRoom.y] = true;
@@ -322,4 +357,152 @@ public class RoomManager_BC : MonoBehaviour
         if (direction == Vector2Int.right) return "InPoint_Left";   // 从左侧进入
         return "";
     }
+
+    // 计算房间 UI 位置（相对 UI 坐标）
+    private Vector2 CalculateUIPosition(Vector2Int roomPos, Vector2Int startRoom)
+    {
+        Vector2Int offsetPos = roomPos - startRoom; // 计算相对位置
+        float x = offsetPos.x * (roomSizeX * scaleRatio + UIoffset);
+        float y = offsetPos.y * (roomSizeY * scaleRatio + UIoffset); 
+        return new Vector2(x, y);
+    }
+
+    private void CreateRoomUI(Vector2Int roomPos, Vector2Int startRoom)
+    {
+        if (roomUIElements.ContainsKey(roomPos)) return; // 防止重复创建
+
+        Vector2 roomUIPosition = CalculateUIPosition(roomPos, startRoom);
+        GameObject roomUIInstance;
+        if (roomPos == startRoom)
+        {
+            roomUIInstance = Instantiate(startRoomUIPrefab, panel);
+        }
+        else if(roomPos == endRoom)
+        {
+            roomUIInstance = Instantiate(endRoomUIPrefab, panel);
+        }
+        else
+        {
+            roomUIInstance = Instantiate(roomUIPrefab, panel);
+        }
+
+        RectTransform roomUITransform = roomUIInstance.GetComponent<RectTransform>();
+        roomUITransform.gameObject.SetActive(false); // 默认隐藏
+
+        roomUITransform.anchoredPosition = roomUIPosition;
+        roomUITransform.sizeDelta = new Vector2(roomSizeX * scaleRatio, roomSizeY * scaleRatio);
+        roomUIElements.Add(roomPos, roomUITransform);
+    }
+
+    private void InitializeMiniMap()
+    {
+        foreach (Vector2Int roomPos in roomPositions)
+        {
+            CreateRoomUI(roomPos, startRoom);
+        }
+        // **创建玩家 UI**
+        CreatePlayerUI();
+    }
+
+    private void HandleMinimapInput()
+    {
+        // 打开/关闭小地图
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if(!MinimapOpen)
+            {
+                panel.transform.parent.gameObject.SetActive(true);
+                MinimapOpen = true;
+                AdjustRoomUIPosition();
+                if (playerMovement != null)
+                    playerMovement.LockMove(true);
+            }
+            else
+            {
+                panel.transform.parent.gameObject.SetActive(false);
+                MinimapOpen = false;
+                AdjustRoomUIPosition();
+                if (playerMovement != null)
+                    playerMovement.LockMove(false);
+            }
+        }
+
+        if(MinimapOpen)
+        {
+            Vector2 moveDir = Vector2.zero;
+
+            if (Input.GetKey(KeyCode.W)) moveDir.y -= 1; // 向上 = Panel 向下移动
+            if (Input.GetKey(KeyCode.S)) moveDir.y += 1; // 向下 = Panel 向上移动
+            if (Input.GetKey(KeyCode.A)) moveDir.x += 1; // 向左 = Panel 向右移动
+            if (Input.GetKey(KeyCode.D)) moveDir.x -= 1; // 向右 = Panel 向左移动
+
+            panel.anchoredPosition += moveDir * UImoveSpeed * Time.deltaTime;
+        }
+    }
+
+    void CreatePlayerUI()
+    {
+        if (playerUI != null) return; // 避免重复创建
+
+        // **找到 startRoom 对应的 UI**
+        if (!roomUIElements.ContainsKey(startRoom))
+        {
+            Debug.LogError("StartRoom 的 UI 不存在，无法创建 Player UI！");
+            return;
+        }
+
+        RectTransform startRoomUI = roomUIElements[startRoom];
+
+        // **生成 `playerUI`，作为 startRoom UI 的子对象**
+        GameObject playerUIInstance = Instantiate(playerUIPrefab, startRoomUI);
+        playerUI = playerUIInstance.GetComponent<RectTransform>();
+
+        // **对齐位置**
+        playerUI.anchoredPosition = Vector2.zero;
+    }
+
+    void UpdatePlayerUI(Vector2Int newRoom)
+    {
+        if (playerUI == null)
+        {
+            Debug.LogError("Player UI 未初始化！");
+            return;
+        }
+
+        if (!roomUIElements.ContainsKey(newRoom))
+        {
+            Debug.LogError("目标房间 UI 不存在！");
+            return;
+        }
+
+        // **更新 `playerUI` 父对象**
+        RectTransform newRoomUI = roomUIElements[newRoom];
+        playerUI.SetParent(newRoomUI);
+
+        // **对齐到新房间 UI**
+        playerUI.anchoredPosition = Vector2.zero;
+    }
+
+
+    void AdjustRoomUIPosition()
+    {
+        RectTransform CurrentRoomUI = roomUIElements[CurrentRoom];
+        Vector2 CurrentRoomUIPosition = CurrentRoomUI.anchoredPosition;
+        panel.anchoredPosition = -CurrentRoomUIPosition;
+    }
+
+    void RemoveMaskFromRoomUI(Vector2Int room)
+    {
+        if (!roomUIElements.ContainsKey(room))
+        {
+            Debug.LogError($"房间 {room} 的 UI 不存在，无法移除 Mask！");
+            return;
+        }
+
+        // 获取房间对应的 UI
+        RectTransform roomUI = roomUIElements[room];
+        
+        roomUI.gameObject.SetActive(true);
+    }
+
 }
