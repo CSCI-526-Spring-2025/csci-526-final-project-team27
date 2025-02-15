@@ -12,8 +12,9 @@ public class MeleeEnemy : MonoBehaviour
 
     private Transform playerTransform;    // 存储 Player 目标
     private List<Transform> teammates = new List<Transform>(); // 存储 Teammate 目标
-    private Transform currentTarget;      // 当前锁定的目标
+    public Transform currentTarget;      // 当前锁定的目标
     private Rigidbody2D rb;
+    public bool isAttacking = false;      // 攻击状态标志
 
     void Start()
     {
@@ -24,6 +25,13 @@ public class MeleeEnemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        // 当正在攻击时，确保速度归零
+        if (isAttacking)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+        
         if (currentTarget != null)
         {
             MoveTowardsTarget();

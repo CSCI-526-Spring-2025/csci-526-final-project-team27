@@ -11,9 +11,9 @@ public class Health_BC : MonoBehaviour
 
     void Start()
     {
-        //currentHealth = maxHealth;
+        currentHealth = maxHealth;
         //测试用
-        currentHealth = maxHealth * 0.7f;
+        // currentHealth = maxHealth * 0.7f;
         if(healthBar != null)
         {
             healthBar.SetHealth(currentHealth, maxHealth);
