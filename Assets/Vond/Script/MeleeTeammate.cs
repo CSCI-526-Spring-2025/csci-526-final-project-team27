@@ -80,10 +80,15 @@ public class MeleeTeammate : MonoBehaviour
             Instantiate(hitboxPrefab, spawnPos, rotation);
         }
 
-        Health_BC targetHealth = currentTarget.GetComponent<Health_BC>();
+        Health targetHealth = currentTarget.GetComponent<Health>();
         if (targetHealth != null)
         {
+            Debug.Log($"{this.gameObject.name} 攻击 {currentTarget.name} 造成 {damage} 点伤害"); 
             targetHealth.TakeDamage(damage);
+        }
+        else
+        {
+            Debug.LogWarning("目标缺少 Health 组件，无法造成伤害");
         }
 
         // 等待攻击间隔后恢复

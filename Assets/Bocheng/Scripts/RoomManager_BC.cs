@@ -37,6 +37,11 @@ public class RoomManager_BC : MonoBehaviour
     public float UIoffset = 5f;  // 房间 UI 之间的间隔
     public float UImoveSpeed = 200f;  // 小地图移动速度
 
+    [Header("Reward Selection UI")]
+    public GameObject rewardSelectionUIPrefab; // 奖励选择界面预制体
+    private RewardSelectionUI rewardSelectionUI;
+
+
 
     public static RoomManager_BC Instance;
 
@@ -270,7 +275,9 @@ public class RoomManager_BC : MonoBehaviour
         {
             DoorControl(false);
             enemySpawner.StartSpawn();
-            enemySpawner.RoomClearEvent += DoorControl;
+            // enemySpawner.RoomClearEvent += DoorControl;
+            enemySpawner.RoomClearEvent += OnRoomClear;
+
         }
     }
 
@@ -559,5 +566,185 @@ public class RoomManager_BC : MonoBehaviour
             door.IsOpen(open);
         }
     }
+
+    // 当房间敌人全部清除时的回调（RoomClearEvent 的触发）
+    void OnRoomClear(bool roomCleared)
+    {
+        if (roomCleared)
+        {
+            ShowRewardSelection();
+        }
+    }
+
+    /// <summary>
+    /// 显示奖励选择 UI，并锁定玩家移动
+    /// </summary>
+    void ShowRewardSelection()
+    {
+        // 如果尚未实例化，则创建奖励选择 UI 实例
+        if (rewardSelectionUI == null)
+        {
+            // 假设场景中有 Canvas，并且奖励预制体将挂在 Canvas 下
+            GameObject instance = Instantiate(rewardSelectionUIPrefab, GameObject.Find("Canvas").transform);
+            rewardSelectionUI = instance.GetComponent<RewardSelectionUI>();
+        }
+        rewardSelectionUI.gameObject.SetActive(true);
+        // 设置玩家选择奖励后的回调
+        rewardSelectionUI.onRewardSelected = OnRewardChosen;
+        // 锁定玩家移动，防止在奖励选择期间移动
+        if (playerMovement != null)
+            playerMovement.LockMove(true);
+    }
+
+    /// <summary>
+    /// 玩家选择奖励后的回调，根据选择提升对应属性，然后打开房间的门
+    /// </summary>
+    void OnRewardChosen(RewardSelectionUI.RewardType reward)
+    {
+        GameObject player = playerMovement.gameObject;
+        // 从玩家上获取 TeammateManager 组件，里面包含队友列表
+        TeammateManager tm = player.GetComponent<TeammateManager>();
+
+        switch (reward)
+        {
+            case RewardSelectionUI.RewardType.Health:
+                {
+                    // 玩家加血
+                    Health_BC playerHealth = player.GetComponent<Health_BC>();
+                    if (playerHealth != null)
+                    {
+                        playerHealth.maxHealth += 5;
+                        Debug.Log("Player HP+5, new maxHealth: " + playerHealth.maxHealth);
+                    }
+                    else
+                    {
+                        Debug.LogError("在玩家身上没有找到 Health_BC 组件！");
+                    }
+                    // 队友加血
+                    if (tm != null)
+                    {
+                        foreach (GameObject teammate in tm.teammates)
+                        {
+                            if (teammate != null)
+                            {
+                                Health_BC teammateHealth = teammate.GetComponent<Health_BC>();
+                                if (teammateHealth != null)
+                                {
+                                    teammateHealth.maxHealth += 5;
+                                    Debug.Log("Teammate HP+5, new maxHealth: " + teammateHealth.maxHealth);
+                                }
+                                else
+                                {
+                                    Debug.LogError("在队友身上没有找到 Health_BC 组件！");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case RewardSelectionUI.RewardType.Attack:
+                {
+                    // 玩家获得“增加治疗量”的效果
+                    ShootingController playerShooting = player.GetComponent<ShootingController>();
+                    if (playerShooting != null)
+                    {
+                        HealBallVond playerBullet = playerShooting.bulletPrefab.GetComponent<HealBallVond>();
+                        if (playerBullet != null)
+                        {
+                            // 增加治疗量，例如每次加1
+                            playerBullet.healAmount += 1;
+                            Debug.Log("Player's heal amount increased, new healAmount: " + playerBullet.healAmount);
+                        }
+                        else
+                        {
+                            Debug.LogError("玩家子弹预制体上未找到 HealBallVond 组件！");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Player身上没有找到 ShootingController 组件！");
+                    }
+                    
+                    // 队友获得“增加伤害”的效果（针对近战队友）
+                    if (tm != null)
+                    {
+                        foreach (GameObject teammate in tm.teammates)
+                        {
+                            if (teammate != null)
+                            {
+                                MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
+                                if (melee != null)
+                                {
+                                    // 增加伤害，例如每次加1
+                                    melee.damage += 1;
+                                    Debug.Log("Teammate's melee damage increased, new damage: " + melee.damage);
+                                }
+                                else
+                                {
+                                    Debug.LogError("队友身上未找到 MeleeTeammate 组件！");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("玩家身上没有找到 TeammateManager 组件，无法给予队友奖励。");
+                    }
+                }
+                break;
+            case RewardSelectionUI.RewardType.Speed:
+            {
+                // 玩家增加移动速度
+                PlayerMovement pm = player.GetComponent<PlayerMovement>();
+                if (pm != null)
+                {
+                    pm.moveSpeed += 1;  // 例如，每次加 1
+                    Debug.Log("Player Speed increased, new moveSpeed: " + pm.moveSpeed);
+                }
+                else
+                {
+                    Debug.LogError("在玩家身上没有找到 PlayerMovement 组件！");
+                }
+
+                // 队友增加移动速度
+                if (tm != null)
+                {
+                    foreach (GameObject teammate in tm.teammates)
+                    {
+                        if (teammate != null)
+                        {
+                            MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
+                            if (melee != null)
+                            {
+                                // 同样每次增加1点移动速度
+                                melee.moveSpeed += 1;
+                                Debug.Log("Teammate Speed increased, new moveSpeed: " + melee.moveSpeed);
+                            }
+                            else
+                            {
+                                Debug.LogError("队友身上没有找到 Speed 组件！");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("玩家身上没有找到 TeammateManager 组件，无法给予队友速度奖励。");
+                }
+            }
+            break;
+        }
+
+        // 解锁玩家移动
+        if (playerMovement != null)
+            playerMovement.LockMove(false);
+
+        // 打开当前房间的所有门
+        DoorControl(true);
+    }
+
+
+
+
 
 }

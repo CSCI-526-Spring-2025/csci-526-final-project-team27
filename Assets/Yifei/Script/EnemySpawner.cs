@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#region Êý¾Ý½á¹¹¶¨Òå
+#region 数据解析方法
 
 /// <summary>
-/// ÃèÊöµ¥¸öµÐÈËÉú³ÉÐÅÏ¢
+/// 敌人生成信息
 /// </summary>
 [Serializable]
 public class EnemySpawnInfo
 {
-    public string enemyType;  // µÐÈËÀàÐÍ±êÊ¶£¬ÐèÒªÓëÔ¤ÖÆÌåÓ³ÉäÖÐµÄ key ¶ÔÓ¦
-    public int count;         // Éú³É¸ÃÀàÐÍµÐÈËµÄÊýÁ¿
+    public string enemyType;  // 敌人类型字符串，需要与预设中的 key 对应
+    public int count;         // 生成该类型敌人的数量
 }
 
 /// <summary>
-/// ÃèÊöµ¥¸ö²¨´ÎÊý¾Ý
+/// 敌人生成波次数据
 /// </summary>
 [Serializable]
 public class WaveData
@@ -26,7 +26,7 @@ public class WaveData
 }
 
 /// <summary>
-/// ÕûÌå²¨´ÎÊý¾ÝµÄÈÝÆ÷£¨ÓÃÓÚ JSON ·´ÐòÁÐ»¯£©
+/// 关卡波次数据的解析器（用于 JSON 文件加载）
 /// </summary>
 [Serializable]
 public class WaveDataList
@@ -37,58 +37,64 @@ public class WaveDataList
 #endregion
 
 /// <summary>
-/// µÐÈËÉú³ÉÆ÷£º
-/// 1. Èç¹ûÖ¸¶¨ÁË²¨´ÎÊý¾Ý JSON£¬ÔòÖ±½Ó°´ JSON ¶¨ÒåÉú³É£»
-/// 2. ·ñÔò£¬Èç¹û¹´Ñ¡ÁËÖ±½ÓÖ¸¶¨²¨´ÎÊý¾Ý£¬ÔòÊ¹ÓÃ Inspector ÖÐÖ¸¶¨µÄ²¨ÊýºÍÊýÁ¿£»
-///    Èç¹ûÒ²Î´Ö±½ÓÖ¸¶¨£¬ÔòÒÀ¾ÝÄÑ¶ÈµÈ¼¶£¨1¡«5£©×Ô¶¯Éú³ÉÄ¬ÈÏ²¨´ÎÊý¾Ý¡£  
-/// Í¬Ê±£¬ÔÚÉú³ÉÎ»ÖÃÊ±È·±£²»ÔÚÕÏ°­ÎïÉÏ£¬Ò²²»ÔÚÍæ¼Ò»ò¶ÓÓÑ¸½½ü¡£
+/// 敌人生成器：
+/// 1. 如果配置了波次数据 JSON，则自动调用 JSON 解析生成
+/// 2. 否则，如果手动配置了难度对应的波次数据，则使用 Inspector 中配置的波次和数量
+///    如果未配置，则根据难度级别（1~5）随机生成敌人波次数据
+/// 注意：在生成位置时不考虑障碍物和敌人之间的重叠！
 /// </summary>
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Wave Data")]
-    [Tooltip("´æ·Å²¨´ÎÊý¾ÝµÄ JSON ÎÄ¼þ£¨¿ÉÑ¡£©¡£Î´Ö¸¶¨Ê±½«¸ù¾ÝÏÂÁÐÉèÖÃ×Ô¶¯Éú³É²¨´ÎÊý¾Ý¡£")]
+    [Tooltip("加载波次数据的 JSON 文件（可选），如果未配置则根据难度自动生成敌人波次数据")]
     public TextAsset waveDataJson;
 
     [Header("Difficulty Settings")]
     [Range(1, 5)]
-    [Tooltip("ÄÑ¶ÈµÈ¼¶£¬1 ±íÊ¾×îµÍÄÑ¶È£¬5 ±íÊ¾×î¸ßÄÑ¶È")]
+    [Tooltip("难度级别，1 表示最简单，5 表示最困难")]
     public int difficultyLevel = 3;
 
     [Header("Direct Wave Settings (Optional)")]
-    [Tooltip("ÊÇ·ñÖ±½ÓÖ¸¶¨²¨´ÎÊý¾Ý£¨¶ø·Ç×Ô¶¯Éú³É£©¡£")]
+    [Tooltip("是否手动配置波次数据（即直接生成）")]
     public bool useDirectWaveSettings = false;
-    [Tooltip("Ö±½ÓÖ¸¶¨µÄ²¨´ÎÊý£¨´óÓÚ 0 ±íÊ¾ÓÐÐ§£©¡£")]
+    [Tooltip("配置的波次数（大于 0 表示有效）")]
     public int directWaveCount = 0;
-    [Tooltip("Ö±½ÓÖ¸¶¨µÄÃ¿ÖÖµÐÈËµÄÉú³ÉÊýÁ¿£¨´óÓÚ 0 ±íÊ¾ÓÐÐ§£©¡£")]
+    [Tooltip("配置的每波敌人数量（大于 0 表示有效）")]
     public int directEnemyCount = 0;
 
     [Header("Spawn Area & Obstacles")]
-    [Tooltip("Éú³ÉÇøÓòµÄ×óÏÂ½Ç×ø±ê£¨µØÍ¼ÓÐÐ§ÇøÓò£©")]
+    [Tooltip("敌人生成区域的左下角坐标（用于定位场景）")]
     public Vector2 spawnAreaMin = new Vector2(-10, -10);
-    [Tooltip("Éú³ÉÇøÓòµÄÓÒÉÏ½Ç×ø±ê£¨µØÍ¼ÓÐÐ§ÇøÓò£©")]
+    [Tooltip("敌人生成区域的右上角坐标（用于定位场景）")]
     public Vector2 spawnAreaMax = new Vector2(10, 10);
-    [Tooltip("ÕÏ°­ÎïËùÔÚ²ã£¬ÓÃÓÚ¼ì²âÉú³ÉÎ»ÖÃÊÇ·ñ±»ÕÚµ²")]
+    [Tooltip("场景中用于标识障碍物的图层（生成时避让障碍物）")]
     public LayerMask obstacleLayer;
-    [Tooltip("Éú³ÉÎ»ÖÃÓëÍæ¼Ò»ò¶ÓÓÑÖ®¼äµÄ×îÐ¡¾àÀë£¨±ÜÈÃ¾àÀë£©")]
+    [Tooltip("生成位置时与障碍物或其他指定对象的最小避让距离")]
     public float avoidDistance = 3f;
-    [Tooltip("²»ÔÊÐíÉú³ÉÔÚ´ËÊý×éÖÐ¶ÔÏó¸½½ü£¨ÀýÈçÖ÷½ÇºÍ¶ÓÓÑ£©")]
+    [Tooltip("指定在生成位置时需要避让的其他对象的 Transform（不用于检测敌人自身重叠）")]
     public Transform[] avoidTransforms;
 
     [Header("Spawn Timing")]
-    [Tooltip("Éú³ÉµÐÈËÖ®¼äµÄ×îÐ¡ÑÓÊ±£¨Ãë£©")]
+    [Tooltip("生成敌人之间的最小间隔（秒）")]
     public float minSpawnInterval = 0.5f;
-    [Tooltip("Éú³ÉµÐÈËÖ®¼äµÄ×î´óÑÓÊ±£¨Ãë£©")]
+    [Tooltip("生成敌人之间的最大间隔（秒）")]
     public float maxSpawnInterval = 2f;
-    [Tooltip("Ã¿²¨µÐÈË¼ä¸ô£¨Ãë£©")]
+    [Tooltip("两波敌人生成之间的间隔时间（秒）")]
     public float waveInterval = 3f;
 
     [Header("Enemy Prefab Mapping")]
-    [Tooltip("Ô¤ÖÆÌåÓ³Éä£º½« enemyType ×Ö·û´®Ó³Éäµ½¶ÔÓ¦µÄµÐÈËÔ¤ÖÆÌå¡£×¢Òâ£ºÔ¤ÖÆÌåÊý×éµÄÅÅÁÐË³Ðò¾ö¶¨ÁËµÐÈËµÄÇ¿Èõ£¬Êý×éºó¶ËµÄÊÓÎªÇ¿Á¦µÐÈË¡£")]
+    [Tooltip("预设映射：将 enemyType 字符串映射到对应的敌人预制体。举例：预制体的名称用于在场景中生成敌人")]
     public EnemyPrefabMapping[] enemyPrefabs;
 
-    // 敌人全部死亡的通知
+    // 敌人全部死亡时的通知事件
     public event Action<bool> RoomClearEvent;
-    // 当所有敌人死亡时，RoomClearEvent?.Invoke(true);
+    // 当所有敌人死亡时，可调用 RoomClearEvent?.Invoke(true);
+
+    // 当前存活的敌人数量
+    private int aliveEnemyCount = 0;
+
+    // 所有波次是否已经全部生成完成
+    private bool spawningCompleted = false;
 
     [Serializable]
     public class EnemyPrefabMapping
@@ -97,7 +103,7 @@ public class EnemySpawner : MonoBehaviour
         public GameObject prefab;
     }
 
-    // ÄÚ²¿±äÁ¿
+    // 私有变量
     private Dictionary<string, GameObject> enemyPrefabDict;
     private WaveDataList waveDataList;
 
@@ -109,18 +115,26 @@ public class EnemySpawner : MonoBehaviour
             return;
         else
         {
-            //do something
+            hasSpawned = true;                     
+            spawningCompleted = false;             
+            aliveEnemyCount = 0;                   
+            StartCoroutine(SpawnWaves());          
         }
     }
 
     public void EnemyDie()
     {
-        //do something
+        aliveEnemyCount--;   
+                             
+        if (spawningCompleted && aliveEnemyCount <= 0)
+        {
+            RoomClearEvent?.Invoke(true);
+        }
     }
 
     private void Awake()
     {
-        // ¸ù¾Ý³¡¾°ÖÐ "Floor" ½ÚµãÉèÖÃÉú³ÉÇøÓò£¨Èç¹û´æÔÚ£©
+        // 根据场景中名为 "Floor" 的子物体设置生成区域（如果存在）
         Transform floor = transform.Find("Floor");
         if (floor != null)
         {
@@ -128,7 +142,7 @@ public class EnemySpawner : MonoBehaviour
             spawnAreaMin = floor.position - floor.localScale / 2;
         }
 
-        // ¹¹½¨Ô¤ÖÆÌåÓ³Éä×Öµä
+        // 构建预设映射字典
         enemyPrefabDict = new Dictionary<string, GameObject>();
         foreach (var mapping in enemyPrefabs)
         {
@@ -139,24 +153,24 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        // ÓÅÏÈÊ¹ÓÃ JSON Êý¾Ý£¬Èç¹ûÎ´Ö¸¶¨£¬ÔòÒÀ¾ÝÖ±½ÓÖ¸¶¨ÉèÖÃ»ò×Ô¶¯Éú³É
+        // 优先使用 JSON 数据，如果未配置，则根据难度自动生成敌人波次数据
         if (waveDataJson != null)
         {
             waveDataList = JsonUtility.FromJson<WaveDataList>(waveDataJson.text);
-            Debug.Log("¼ÓÔØ²¨´ÎÊý¾Ý JSON ³É¹¦¡£");
+            Debug.Log("成功加载波次数据 JSON！");
         }
         else
         {
             waveDataList = GenerateRandomWaveData();
-            Debug.Log("Î´Ö¸¶¨²¨´ÎÊý¾Ý JSON£¬ÒÀ¾ÝÉèÖÃËæ»úÉú³É²¨´ÎÊý¾Ý¡£");
+            Debug.Log("未配置波次数据 JSON，已根据难度自动生成敌人波次数据！");
         }
-        //ÈÕÖ¾ÖÐ´òÓ¡²¨´ÎÊý¾Ý
+        // 在控制台打印波次数据
         foreach (WaveData wave in waveDataList.waves)
         {
-            string waveInfo = "²¨´Î " + wave.waveNumber + "£º";
+            string waveInfo = "波次 " + wave.waveNumber + "：";
             foreach (EnemySpawnInfo spawnInfo in wave.enemySpawns)
             {
-                waveInfo += " " + spawnInfo.count + " ¸ö " + spawnInfo.enemyType + ",";
+                waveInfo += " " + spawnInfo.count + " 个 " + spawnInfo.enemyType + ",";
             }
             Debug.Log(waveInfo);
         }
@@ -164,17 +178,17 @@ public class EnemySpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸ù¾ÝÄÑ¶ÈµÈ¼¶¼°Ö±½ÓÖ¸¶¨ÉèÖÃÉú³É²¨´ÎÊý¾Ý×Öµä
+    /// 根据难度级别生成敌人波次数据
     /// </summary>
-    /// <returns>Éú³ÉµÄ²¨´ÎÊý¾Ý</returns>
+    /// <returns>生成的波次数据</returns>
     private WaveDataList GenerateRandomWaveData()
     {
         WaveDataList dataList = new WaveDataList();
-        // Èç¹ûÖ±½ÓÖ¸¶¨²¨´ÎÊý¾Ý£¨²¨ÊýºÍÃ¿ÖÖµÐÈËÉú³ÉÊýÁ¿¾ù´óÓÚ 0£©£¬ÔòÊ¹ÓÃ¸ÃÅäÖÃ
+        // 如果配置了手动波次设置（直接生成）且波次数和敌人数量大于 0
         if (useDirectWaveSettings && directWaveCount > 0 && directEnemyCount > 0)
         {
             dataList.waves = new WaveData[directWaveCount];
-            // ÔÊÐíÉú³ÉµÄµÐÈËÀàÐÍÊýÁ¿£ºÖ»È¡ enemyPrefabs Êý×éÖÐÇ° difficultyLevel ¸ö£¨×î¶à²»³¬¹ý×ÜÊý£©
+            // 计算允许生成的敌人类型数量：取 difficultyLevel 与预设映射数量中的较小值
             int allowedCount = Mathf.Min(difficultyLevel, enemyPrefabDict.Count);
             List<string> allowedTypes = new List<string>();
             for (int i = 0; i < enemyPrefabs.Length && allowedTypes.Count < allowedCount; i++)
@@ -187,7 +201,7 @@ public class EnemySpawner : MonoBehaviour
                 WaveData wave = new WaveData();
                 wave.waveNumber = i + 1;
                 List<EnemySpawnInfo> spawnInfos = new List<EnemySpawnInfo>();
-                // Ã¿²¨ÖÐ£¬Ã¿¸öÔÊÐíµÄµÐÈËÀàÐÍ¶¼Éú³É¹Ì¶¨ÊýÁ¿
+                // 针对每一种允许生成的敌人类型，生成对应的敌人数量
                 foreach (string enemyType in allowedTypes)
                 {
                     EnemySpawnInfo info = new EnemySpawnInfo();
@@ -201,7 +215,7 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            // Ä¬ÈÏÄ£Ê½£º²¨´ÎÊýÁ¿µÈÓÚ difficultyLevel£¬ÔÊÐíµÄµÐÈËÀàÐÍÊýÁ¿Ò²È¡ difficultyLevel£¨²»³¬¹ýÔ¤ÖÆÌå×ÜÊý£©
+            // 普通模式：波次数为难度级别，允许生成的敌人类型最多为 difficultyLevel 个
             int numWaves = difficultyLevel;
             dataList.waves = new WaveData[numWaves];
             int allowedEnemyTypes = Mathf.Min(difficultyLevel, enemyPrefabDict.Count);
@@ -216,7 +230,7 @@ public class EnemySpawner : MonoBehaviour
                 WaveData wave = new WaveData();
                 wave.waveNumber = i + 1;
                 List<EnemySpawnInfo> spawnInfos = new List<EnemySpawnInfo>();
-                // ¶ÔÓÚÃ¿¸öÔÊÐíµÄµÐÈËÀàÐÍ£¬80% µÄ¸ÅÂÊ³öÏÖÔÚ¸Ã²¨´Î£¬ÊýÁ¿Ëæ»ú£¨1 µ½ 1+difficultyLevel*2£©
+                // 对于每一种允许生成的敌人类型，以 80% 概率生成该类型的敌人，数量随机生成，范围为 [1, 1+difficultyLevel*2]
                 foreach (string enemyType in allowedTypes)
                 {
                     if (UnityEngine.Random.value < 0.8f)
@@ -227,7 +241,7 @@ public class EnemySpawner : MonoBehaviour
                         spawnInfos.Add(info);
                     }
                 }
-                // Èç¹û¸Ã²¨´ÎÎ´Ñ¡ÔñÈÎºÎµÐÈË£¬ÔòÖÁÉÙËæ»úÑ¡ÔñÒ»ÖÖ³öÏÖ 1 ¸ö
+                // 如果一波中未生成任何敌人，则至少生成 1 个随机敌人
                 if (spawnInfos.Count == 0 && allowedTypes.Count > 0)
                 {
                     EnemySpawnInfo info = new EnemySpawnInfo();
@@ -243,46 +257,56 @@ public class EnemySpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Ð­³Ì£º°´²¨´ÎË³ÐòÉú³ÉµÐÈËµ¥Î»
+    /// 协程：逐波生成敌人
     /// </summary>
     private IEnumerator SpawnWaves()
     {
-        //µÈ´ýÒ»¶ÎÊ±¼äÔÙ¿ªÊ¼Éú³ÉµÐÈË
         yield return new WaitForSeconds(waveInterval);
         foreach (WaveData wave in waveDataList.waves)
         {
-            Debug.Log("¿ªÊ¼Éú³É²¨´Î£º" + wave.waveNumber);
+            Debug.Log("开始生成波次：" + wave.waveNumber);
             foreach (EnemySpawnInfo spawnInfo in wave.enemySpawns)
             {
-                // ²éÕÒ¶ÔÓ¦Ô¤ÖÆÌå
                 if (enemyPrefabDict.TryGetValue(spawnInfo.enemyType, out GameObject enemyPrefab))
                 {
                     for (int i = 0; i < spawnInfo.count; i++)
                     {
-                        // »ñÈ¡Ò»¸öÓÐÐ§µÄÉú³ÉÎ»ÖÃ
                         Vector2 spawnPos = GetValidSpawnPosition();
-                        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-
-                        // Ã¿¸öµÐÈËÉú³ÉÖ®¼äÑÓÊ±
+                        GameObject enemyInstance =  Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+                        EnemyHealth enemyHealth = enemyInstance.GetComponent<EnemyHealth>();
+                        if (enemyHealth != null)
+                        {
+                            enemyHealth.SetSpawnner(this);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("未在生成的敌人中找到 EnemyHealth 组件！");
+                        }
+                        aliveEnemyCount++;   
                         float delay = UnityEngine.Random.Range(minSpawnInterval, maxSpawnInterval);
                         yield return new WaitForSeconds(delay);
                     }
                 }
                 else
                 {
-                    Debug.LogWarning("Î´ÕÒµ½ÀàÐÍÎª " + spawnInfo.enemyType + " µÄµÐÈËÔ¤ÖÆÌåÓ³Éä£¡");
+                    Debug.LogWarning("未找到类型为 " + spawnInfo.enemyType + " 的敌人预制体！");
                 }
             }
-            // ²¨´ÎÖ®¼äµÈ´ý¹Ì¶¨Ê±¼ä
             yield return new WaitForSeconds(waveInterval);
+        }
+        spawningCompleted = true;   
+        // 如果此时没有存活的敌人，则触发房间清空事件
+        if (aliveEnemyCount <= 0)
+        {
+            RoomClearEvent?.Invoke(true); 
         }
     }
 
+
     /// <summary>
-    /// ³¢ÊÔÔÚ spawnArea ·¶Î§ÄÚÉú³ÉÒ»¸öÓÐÐ§Î»ÖÃ£º¸ÃÎ»ÖÃ²»ÄÜ±»ÕÏ°­ÎïÕ¼ÓÃ£¬
-    /// ÇÒÓë avoidTransforms ÖÐµÄ¶ÔÏó±£³ÖÖÁÉÙ avoidDistance ¾àÀë¡£
+    /// 获取一个有效的生成位置：确保该位置不在障碍物内，并且与指定的对象保持足够距离
     /// </summary>
-    /// <returns>ÓÐÐ§Éú³ÉÎ»ÖÃ</returns>
+    /// <returns>生成位置</returns>
     private Vector2 GetValidSpawnPosition()
     {
         Vector2 candidate = Vector2.zero;
@@ -297,12 +321,12 @@ public class EnemySpawner : MonoBehaviour
             float y = UnityEngine.Random.Range(spawnAreaMin.y, spawnAreaMax.y);
             candidate = new Vector2(x, y);
 
-            // ¼ì²éºòÑ¡Î»ÖÃÊÇ·ñ±»ÕÏ°­ÎïÕ¼ÓÃ
+            // 检测该位置是否碰到障碍物
             Collider2D hit = Physics2D.OverlapCircle(candidate, 0.1f, obstacleLayer);
             if (hit != null)
                 continue;
 
-            // ¼ì²éºòÑ¡Î»ÖÃÓë avoidTransforms ÖÐ¶ÔÏóÖ®¼äµÄ¾àÀë
+            // 检测该位置是否与指定对象距离过近
             bool tooClose = false;
             foreach (Transform t in avoidTransforms)
             {
@@ -319,7 +343,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         if (!valid)
-            Debug.LogWarning("¾­¹ý " + attempts + " ´Î³¢ÊÔºóÈÔÎ´ÕÒµ½ÍêÈ«ÓÐÐ§µÄÉú³ÉÎ»ÖÃ£¬Ê¹ÓÃ×îºóºòÑ¡Î»ÖÃ¡£");
+            Debug.LogWarning("经过 " + attempts + " 次尝试后仍未找到合适的生成位置，使用最后的候选位置！");
 
         return candidate;
     }
@@ -329,14 +353,14 @@ public class EnemySpawner : MonoBehaviour
 //{
 //    "waves": [
 //        {
-//        "waveNumber": 1,
+//            "waveNumber": 1,
 //            "enemySpawns": [
 //                { "enemyType": "Slime", "count": 5 },
 //                { "enemyType": "Goblin", "count": 3 }
 //            ]
 //        },
 //        {
-//        "waveNumber": 2,
+//            "waveNumber": 2,
 //            "enemySpawns": [
 //                { "enemyType": "Slime", "count": 7 },
 //                { "enemyType": "Goblin", "count": 5 }
