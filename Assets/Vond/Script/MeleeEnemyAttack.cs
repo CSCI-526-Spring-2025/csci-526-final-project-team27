@@ -56,10 +56,15 @@ public class MeleeEnemyAttack : MonoBehaviour
         // 实例化 Hitbox
         Instantiate(hitboxPrefab, spawnPosition, rotation);
 
-        Health_BC targetHealth = meleeEnemy.currentTarget.GetComponent<Health_BC>();
+        Health targetHealth = meleeEnemy.currentTarget.GetComponent<Health>();
         if (targetHealth != null)
         {
+            //Debug.Log($"{this.gameObject.name} 攻击 {meleeEnemy.currentTarget.name} 造成 {damage} 点伤害"); 
             targetHealth.TakeDamage(damage);
+        }
+        else
+        {
+            Debug.LogWarning("目标缺少 Health 组件，无法造成伤害");
         }
 
         // 等待攻击间隔

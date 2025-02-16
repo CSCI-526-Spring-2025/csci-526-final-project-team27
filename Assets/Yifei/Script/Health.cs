@@ -10,7 +10,7 @@ public class Health : MonoBehaviour
     protected float currentHealth;                     // 当前生命值
 
     [Header("Floating Text Settings")]
-    public GameObject FloatingHPCanvas;            // 含 Canvas 的浮动文字预制体
+    public GameObject FloatingHPCanvas;            // 含 Canvas 的浮动文字预制体 
 
     void Start()
     {

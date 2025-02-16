@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorPrefab: {fileID: 7437055006599082140, guid: 2dbf7d9487ae32a4c8a564edd4e5fed2, type: 3}
-  bulletPrefab: {fileID: 4773240290590505226, guid: 7034cb931b3af5b41b2a21439dbd1928, type: 3}
+  bulletPrefab: {fileID: 4773240290590505226, guid: e82ff50408adfbb409060603fa7a4a8a, type: 3}
   firePoint: {fileID: 69524386}
   bulletSpeed: 20
   bulletLifetime: 2
@@ -819,6 +819,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1048800914 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5792705401397882181, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+  m_PrefabInstance: {fileID: 1925031703}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58b8f4a11399784dbd86feaefd0ad09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1113065107 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5765368790545764713, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
@@ -1119,6 +1130,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.33962193
       objectReference: {fileID: 0}
+    - target: {fileID: 7414926327221384575, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      propertyPath: healthBar
+      value: 
+      objectReference: {fileID: 1048800914}
+    - target: {fileID: 7414926327221384575, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      propertyPath: FloatingHPCanvas
+      value: 
+      objectReference: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

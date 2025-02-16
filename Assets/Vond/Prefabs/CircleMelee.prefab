@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6487100508941774345}
   - component: {fileID: 7893289129775161033}
   - component: {fileID: 5559042736424340193}
+  - component: {fileID: 3866559801616925073}
   m_Layer: 0
   m_Name: CircleMelee
   m_TagString: Enemy
@@ -188,3 +189,17 @@ MonoBehaviour:
   hitboxPrefab: {fileID: 819594227005175230, guid: 9734671eba7252749ad057da0e351284, type: 3}
   hitboxOffset: 0.5
   damage: 10
+--- !u!114 &3866559801616925073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4769684472117481767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02896bce7ea32544919dffef61c19c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}

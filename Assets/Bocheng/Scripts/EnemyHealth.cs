@@ -22,6 +22,7 @@ public class EnemyHealth : Health
 
     public override void Die()
     {
+        Debug.Log(this.gameObject.name + " is dead");
         enemySpawner.EnemyDie();
         base.Die();
     }
