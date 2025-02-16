@@ -119,6 +119,70 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &9237773
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.2574115
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2206573
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180266506004827046, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: m_Name
+      value: CircleMelee (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5559042736424340193, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      propertyPath: attackInterval
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1624043541}
+  m_SourcePrefab: {fileID: 100100000, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
 --- !u!114 &283326246 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8884787199980699151, guid: 0e162a2c9032829459f542c41809aee8, type: 3}
@@ -148,6 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 200
+  FloatingHPCanvas: {fileID: 0}
   healthBar: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
@@ -470,6 +535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
+  FloatingHPCanvas: {fileID: 0}
   healthBar: {fileID: 0}
 --- !u!114 &1300147041 stripped
 MonoBehaviour:
@@ -482,6 +548,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58b8f4a11399784dbd86feaefd0ad09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1624043540 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+  m_PrefabInstance: {fileID: 9237773}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1624043541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624043540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb6f6b5a4e069145b562050ed06029d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
+  FloatingHPCanvas: {fileID: 0}
+  healthBar: {fileID: 0}
 --- !u!1 &1818357476 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9015571020212102392, guid: 79a86ed4c10b1c54cbef2554bd437b63, type: 3}
@@ -500,6 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 30
+  FloatingHPCanvas: {fileID: 0}
   healthBar: {fileID: 0}
 --- !u!1001 &2107439681
 PrefabInstance:
@@ -613,6 +700,10 @@ PrefabInstance:
     - target: {fileID: 588451331338096435, guid: 907eea56e3115c8489f2bafea3e38550, type: 3}
       propertyPath: m_Name
       value: WizardTeammate
+      objectReference: {fileID: 0}
+    - target: {fileID: 588451331338096435, guid: 907eea56e3115c8489f2bafea3e38550, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3420005624478752658, guid: 907eea56e3115c8489f2bafea3e38550, type: 3}
       propertyPath: m_LocalPosition.x
@@ -783,6 +874,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CircleWizard
       objectReference: {fileID: 0}
+    - target: {fileID: 9015571020212102392, guid: 79a86ed4c10b1c54cbef2554bd437b63, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -863,6 +958,10 @@ PrefabInstance:
     - target: {fileID: 2610382780819110842, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_Name
       value: RangeTeammate
+      objectReference: {fileID: 0}
+    - target: {fileID: 2610382780819110842, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4117404067797838661, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -985,6 +1084,7 @@ SceneRoots:
   - {fileID: 4669787917162466450}
   - {fileID: 3150015253614328689}
   - {fileID: 4334079864936327929}
+  - {fileID: 9237773}
   - {fileID: 4379467502307008438}
   - {fileID: 2107439681}
   - {fileID: 552276719}

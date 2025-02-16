@@ -232,6 +232,7 @@ public class RoomManager_BC : MonoBehaviour
         Vector3 worldPos = GetWorldPosition(newRoom);
         // **更新玩家 UI**
         UpdatePlayerUI(newRoom);
+        CurrentRoom = newRoom;
 
         if (CreatedRooms[newRoom.x, newRoom.y])
         {
@@ -262,6 +263,14 @@ public class RoomManager_BC : MonoBehaviour
         if (cameraFollow != null)
         {
             cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
+        }
+
+        EnemySpawner enemySpawner = newRoomInstance.GetComponent<EnemySpawner>();
+        if(enemySpawner != null)
+        {
+            DoorControl(false);
+            enemySpawner.StartSpawn();
+            enemySpawner.RoomClearEvent += DoorControl;
         }
     }
 
@@ -340,10 +349,15 @@ public class RoomManager_BC : MonoBehaviour
         }
 
         // 移动物体到新房间的入口点
-        obj.transform.position = entryPoint.position;
+        //obj.transform.position = entryPoint.position;
+        TeammateManager teammateManager = obj.GetComponent<TeammateManager>();
+        if (teammateManager != null)
+        {
+            teammateManager.MoveToNextRoom(entryPoint.position, direction);
+        }
 
         // 更新当前房间
-        CurrentRoom = newRoomPos;
+        //CurrentRoom = newRoomPos;
 
         Debug.Log($"Moved to {newRoomPos}, entered through {entryPointName}.");
     }
@@ -503,6 +517,47 @@ public class RoomManager_BC : MonoBehaviour
         RectTransform roomUI = roomUIElements[room];
         
         roomUI.gameObject.SetActive(true);
+    }
+
+    void DoorControl(bool open)
+    {
+        Debug.Log($"Door is: {open}");
+
+        GameObject room = roomInstances[CurrentRoom];
+
+        if(open)
+        {
+            EnemySpawner enemySpawner = room.GetComponent<EnemySpawner>();
+            if (enemySpawner != null)
+            {
+                enemySpawner.RoomClearEvent -= DoorControl;
+            }
+        }
+
+        Transform leftDoor = room.transform.Find("Door_Left");
+        if(leftDoor != null)
+        {
+            BCsDoor door = leftDoor.GetComponent<BCsDoor>();
+            door.IsOpen(open);
+        }
+        Transform rightDoor = room.transform.Find("Door_Right");
+        if(rightDoor != null)
+        {
+            BCsDoor door = rightDoor.GetComponent<BCsDoor>();
+            door.IsOpen(open);
+        }
+        Transform bottomDoor = room.transform.Find("Door_Bottom");
+        if(bottomDoor != null)
+        {
+            BCsDoor door = bottomDoor.GetComponent<BCsDoor>();
+            door.IsOpen(open);
+        }
+        Transform topDoor = room.transform.Find("Door_Top");
+        if(topDoor != null)
+        {
+            BCsDoor door = topDoor.GetComponent<BCsDoor>();
+            door.IsOpen(open);
+        }
     }
 
 }

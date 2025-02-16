@@ -1,13 +1,8 @@
 ﻿using UnityEngine;
 
-public class Health_BC : MonoBehaviour
+public class Health_BC : Health
 {
-    [Header("Health Settings")]
-    [SerializeField] public float maxHealth = 100;
-
-    public HealthBar healthBar;
-
-    private float currentHealth;                     
+    public HealthBar healthBar;                   
 
     void Start()
     {
@@ -20,7 +15,7 @@ public class Health_BC : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    override public void TakeDamage(float damage) 
     {
         currentHealth -= damage;
         if(healthBar != null)
@@ -34,13 +29,7 @@ public class Health_BC : MonoBehaviour
         }
     }
 
-
-    private void Die()
-    {
-        Destroy(gameObject);
-    }
-
-    public void Heal(float amount)
+    override public void Heal(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         if(healthBar != null)

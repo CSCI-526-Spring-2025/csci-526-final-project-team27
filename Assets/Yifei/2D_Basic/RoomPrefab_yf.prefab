@@ -618,7 +618,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4840226400624763445}
-  - component: {fileID: 647744316518262566}
   - component: {fileID: 3830815840721491203}
   m_Layer: 0
   m_Name: RoomPrefab_yf
@@ -655,19 +654,6 @@ Transform:
   - {fileID: 65515553123503191}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &647744316518262566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076533052321158648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d372fb3379fe8ee478f57304bc91fdf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position: {x: 0, y: 0}
 --- !u!114 &3830815840721491203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,9 +668,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveDataJson: {fileID: 0}
   difficultyLevel: 3
-  useDirectWaveSettings: 0
-  directWaveCount: 0
-  directEnemyCount: 0
+  useDirectWaveSettings: 1
+  directWaveCount: 1
+  directEnemyCount: 1
   spawnAreaMin: {x: -10, y: -10}
   spawnAreaMax: {x: 10, y: 10}
   obstacleLayer:
@@ -692,13 +678,12 @@ MonoBehaviour:
     m_Bits: 0
   avoidDistance: 3
   avoidTransforms: []
-  minSpawnInterval: 0.5
+  minSpawnInterval: 1
   maxSpawnInterval: 2
+  waveInterval: 3
   enemyPrefabs:
   - enemyType: Slime
-    prefab: {fileID: 2027857850954515486, guid: f8814c214a678cb4bb392c01fa66b480, type: 3}
-  - enemyType: default
-    prefab: {fileID: 5595760122267134751, guid: a4e9a1a4446050843a8ea57707200a88, type: 3}
+    prefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
 --- !u!1 &4512887401930351777
 GameObject:
   m_ObjectHideFlags: 0

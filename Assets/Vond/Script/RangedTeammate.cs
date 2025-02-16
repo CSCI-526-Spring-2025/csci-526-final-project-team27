@@ -87,9 +87,11 @@ public class RangedTeammate : MonoBehaviour
     // 使角色面向目标
     void FaceTarget(Vector3 targetPos)
     {
+        /*
         Vector2 direction = (targetPos - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.Euler(0, 0, angle);*/
+
     }
 
     // 定时搜索最近的敌人目标
