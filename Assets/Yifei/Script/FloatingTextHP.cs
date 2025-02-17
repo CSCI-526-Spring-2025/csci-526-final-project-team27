@@ -1,18 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 
 public class FloatingTextHP : MonoBehaviour
 {
-    public float moveSpeed = 1f;     // ÏòÉÏÒÆ¶¯ËÙ¶È
-    public float fadeDuration = 1f;  // ½¥ÒşÊ±¼ä
-    public float lifetime = 1f;      // ´æÔÚÊ±¼ä£¨Ãë£©
+    public float moveSpeed = 1f;     // å‘ä¸Šç§»åŠ¨é€Ÿåº¦
+    public float fadeDuration = 1f;  // æ¸éšæ—¶é—´
+    public float lifetime = 1f;      // å­˜åœ¨æ—¶é—´ï¼ˆç§’ï¼‰
 
     private TextMeshProUGUI textMesh;
     private Color textColor;
 
     void Awake()
     {
-        // Ö±½Ó»ñÈ¡¹ÒÔÚÍ¬Ò»¶ÔÏóÉÏµÄ TextMeshProUGUI ×é¼ş
+        // ç›´æ¥è·å–æŒ‚åœ¨åŒä¸€å¯¹è±¡ä¸Šçš„ TextMeshProUGUI ç»„ä»¶
         textMesh = GetComponent<TextMeshProUGUI>();
         if (textMesh != null)
         {
@@ -20,13 +20,13 @@ public class FloatingTextHP : MonoBehaviour
         }
         else
         {
-            Debug.LogError("FloatingTextHP: Î´ÄÜÕÒµ½ TextMeshProUGUI ×é¼ş£¬Çë¼ì²éÔ¤ÖÆÌå½á¹¹£¡");
+            Debug.LogError("FloatingTextHP: æœªèƒ½æ‰¾åˆ° TextMeshProUGUI ç»„ä»¶ï¼Œè¯·æ£€æŸ¥é¢„åˆ¶ä½“ç»“æ„ï¼");
         }
     }
 
     void Start()
     {
-        Debug.Log("´ı´İ»Ù£º" + transform.root.name);
+        //Debug.Log("å¾…æ‘§æ¯ï¼š" + transform.root.name);
         Destroy(transform.root.gameObject, lifetime);
     }
 
@@ -47,7 +47,7 @@ public class FloatingTextHP : MonoBehaviour
             textMesh.text = text;
             textMesh.color = color;
             textColor = color;
-            Debug.Log($"ÉèÖÃ¸¡¶¯ÎÄ×Ö£º{text}£¬ÑÕÉ«£º{color}");
+            //Debug.Log($"è®¾ç½®æµ®åŠ¨æ–‡å­—ï¼š{text}ï¼Œé¢œè‰²ï¼š{color}");
         }
     }
 }

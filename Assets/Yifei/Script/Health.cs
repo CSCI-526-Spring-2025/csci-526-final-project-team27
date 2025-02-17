@@ -1,27 +1,29 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// »ù±¾µÄÉúÃüÖµ¹ÜÀí×é¼ş£¬ÓÃÓÚ2D½ÇÉ«»ò¶ÔÏó
+/// åŸºæœ¬çš„ç”Ÿå‘½å€¼ç®¡ç†ç»„ä»¶ï¼Œç”¨äº2Dè§’è‰²æˆ–å¯¹è±¡
 /// </summary>
 public class Health : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] public float maxHealth = 100;  // ×î´óÉúÃüÖµ
-    protected float currentHealth;                     // µ±Ç°ÉúÃüÖµ
+    [SerializeField] public float maxHealth = 100;  // æœ€å¤§ç”Ÿå‘½å€¼
+    protected float currentHealth;                     // å½“å‰ç”Ÿå‘½å€¼
 
     [Header("Floating Text Settings")]
-    public GameObject FloatingHPCanvas;            // º¬ Canvas µÄ¸¡¶¯ÎÄ×ÖÔ¤ÖÆÌå 
+    public GameObject FloatingHPCanvas;            // å« Canvas çš„æµ®åŠ¨æ–‡å­—é¢„åˆ¶ä½“ 
 
-    void Start()
+
+
+    void Awake()
     {
-        // ÓÎÏ·¿ªÊ¼Ê±³õÊ¼»¯ÉúÃüÖµ
+        // æ¸¸æˆå¼€å§‹æ—¶åˆå§‹åŒ–ç”Ÿå‘½å€¼
         currentHealth = maxHealth;
-        Debug.Log($"{gameObject.name} µÄÉúÃüÖµÒÑ³õÊ¼»¯Îª {currentHealth}");
+        Debug.Log($"{gameObject.name} çš„ç”Ÿå‘½å€¼å·²åˆå§‹åŒ–ä¸º {currentHealth}");
     }
 
     void Update()
     {
-        // ÁÙÊ±²âÊÔ´úÂë£º°´ Q ¼üµôÑª 10 µã£¬°´ E ¼ü¼ÓÑª 10 µã
+        // ä¸´æ—¶æµ‹è¯•ä»£ç ï¼šæŒ‰ Q é”®æ‰è¡€ 10 ç‚¹ï¼ŒæŒ‰ E é”®åŠ è¡€ 10 ç‚¹
         if (Input.GetKeyDown(KeyCode.Q))
         {
             TakeDamage(10);
@@ -33,15 +35,15 @@ public class Health : MonoBehaviour
     }
 
     /// <summary>
-    /// ÊÜµ½ÉËº¦£¬¼õÉÙµ±Ç°ÉúÃüÖµ£¬²¢¼ì²âÊÇ·ñËÀÍö
+    /// å—åˆ°ä¼¤å®³ï¼Œå‡å°‘å½“å‰ç”Ÿå‘½å€¼ï¼Œå¹¶æ£€æµ‹æ˜¯å¦æ­»äº¡
     /// </summary>
-    /// <param name="damage">ÉËº¦ÊıÖµ</param>
+    /// <param name="damage">ä¼¤å®³æ•°å€¼</param>
     public virtual void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name} ÊÜµ½ÁË {damage} µãÉËº¦£¬Ê£ÓàÉúÃüÖµ£º{currentHealth}");
+        Debug.Log($"{gameObject.name} å—åˆ°äº† {damage} ç‚¹ä¼¤å®³ï¼Œå‰©ä½™ç”Ÿå‘½å€¼ï¼š{currentHealth}");
 
-        // Éú³ÉºìÉ«ÉËº¦ÌØĞ§£¬Æ«ÒÆÁ¿Ê¹Æä³öÏÖÔÚ½ÇÉ«ÓÒÉÏ½Ç
+        // ç”Ÿæˆçº¢è‰²ä¼¤å®³ç‰¹æ•ˆï¼Œåç§»é‡ä½¿å…¶å‡ºç°åœ¨è§’è‰²å³ä¸Šè§’
         ShowFloatingText("-" + damage, Color.red, new Vector3(0.5f, 1f, 0));
 
         if (currentHealth <= 0)
@@ -51,32 +53,32 @@ public class Health : MonoBehaviour
     }
 
     /// <summary>
-    /// »Ö¸´ÉúÃüÖµ
+    /// æ¢å¤ç”Ÿå‘½å€¼
     /// </summary>
-    /// <param name="amount">»Ö¸´ÊıÖµ</param>
+    /// <param name="amount">æ¢å¤æ•°å€¼</param>
     public virtual void Heal(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log($"{gameObject.name} ÖÎÓúÁË {amount} µãÉúÃüÖµ£¬µ±Ç°ÉúÃüÖµ£º{currentHealth}");
+        Debug.Log($"{gameObject.name} æ²»æ„ˆäº† {amount} ç‚¹ç”Ÿå‘½å€¼ï¼Œå½“å‰ç”Ÿå‘½å€¼ï¼š{currentHealth}");
 
-        // Éú³ÉÂÌÉ«ÖÎÁÆÌØĞ§£¬Æ«ÒÆÁ¿Ê¹Æä³öÏÖÔÚ½ÇÉ«ÓÒÉÏ½Ç
+        // ç”Ÿæˆç»¿è‰²æ²»ç–—ç‰¹æ•ˆï¼Œåç§»é‡ä½¿å…¶å‡ºç°åœ¨è§’è‰²å³ä¸Šè§’
         ShowFloatingText("+" + amount, Color.green, new Vector3(0.5f, 1f, 0));
     }
 
     /// <summary>
-    /// Éú³É¸¡¶¯ÎÄ×ÖÌØĞ§
+    /// ç”Ÿæˆæµ®åŠ¨æ–‡å­—ç‰¹æ•ˆ
     /// </summary>
-    /// <param name="text">ÏÔÊ¾µÄÎÄ×Ö</param>
-    /// <param name="color">ÎÄ×ÖÑÕÉ«</param>
-    /// <param name="offset">Ïà¶ÔÓÚ½ÇÉ«Î»ÖÃµÄÆ«ÒÆÁ¿</param>
+    /// <param name="text">æ˜¾ç¤ºçš„æ–‡å­—</param>
+    /// <param name="color">æ–‡å­—é¢œè‰²</param>
+    /// <param name="offset">ç›¸å¯¹äºè§’è‰²ä½ç½®çš„åç§»é‡</param>
     void ShowFloatingText(string text, Color color, Vector3 offset)
     {
         if (FloatingHPCanvas != null)
         {
             Vector3 spawnPos = transform.position + offset;
             GameObject textObj = Instantiate(FloatingHPCanvas, spawnPos, Quaternion.identity);
-            Debug.Log($"Éú³É¸¡¶¯ÎÄ×ÖÌØĞ§£º{text}£¬ÑÕÉ«£º{color}£¬Î»ÖÃ£º{spawnPos}");
-            // ÓÉÓÚ FloatingHP ×é¼ş¹ÒÔÚÔ¤ÖÆÌåÖĞµÄ×Ó¶ÔÏóÉÏ£¬ËùÒÔÓÃ GetComponentInChildren<>
+            //Debug.Log($"ç”Ÿæˆæµ®åŠ¨æ–‡å­—ç‰¹æ•ˆï¼š{text}ï¼Œé¢œè‰²ï¼š{color}ï¼Œä½ç½®ï¼š{spawnPos}");
+            // ç”±äº FloatingHP ç»„ä»¶æŒ‚åœ¨é¢„åˆ¶ä½“ä¸­çš„å­å¯¹è±¡ä¸Šï¼Œæ‰€ä»¥ç”¨ GetComponentInChildren<>
             FloatingTextHP ft = textObj.GetComponentInChildren<FloatingTextHP>();
             if (ft != null)
             {
@@ -84,18 +86,18 @@ public class Health : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Î´ÄÜÔÚÊµÀı»¯µÄ FloatingHPCanvas ÖĞÕÒµ½ FloatingHP ×é¼ş£¡");
+                Debug.LogWarning("æœªèƒ½åœ¨å®ä¾‹åŒ–çš„ FloatingHPCanvas ä¸­æ‰¾åˆ° FloatingHP ç»„ä»¶ï¼");
             }
         }
     }
 
     /// <summary>
-    /// ½ÇÉ«ËÀÍöÂß¼­
+    /// è§’è‰²æ­»äº¡é€»è¾‘
     /// </summary>
     virtual public void Die()
     {
-        Debug.Log($"{gameObject.name} ÒÑ¾­ËÀÍö£¡");
-        // ´Ë´¦¿ÉÌí¼Ó¸ü¶àËÀÍöÊ±µÄÂß¼­£¨ÀıÈç²¥·Å¶¯»­¡¢Éú³ÉµôÂäÎïµÈ£©
+        Debug.Log($"{gameObject.name} å·²ç»æ­»äº¡ï¼");
+        // æ­¤å¤„å¯æ·»åŠ æ›´å¤šæ­»äº¡æ—¶çš„é€»è¾‘ï¼ˆä¾‹å¦‚æ’­æ”¾åŠ¨ç”»ã€ç”Ÿæˆæ‰è½ç‰©ç­‰ï¼‰
         Destroy(gameObject);
     }
 }

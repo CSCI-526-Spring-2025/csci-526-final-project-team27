@@ -201,5 +201,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02896bce7ea32544919dffef61c19c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
+  maxHealth: 30
+  FloatingHPCanvas: {fileID: 0}

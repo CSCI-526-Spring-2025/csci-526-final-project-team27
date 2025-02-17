@@ -146,6 +146,8 @@ GameObject:
   - component: {fileID: 69524381}
   - component: {fileID: 69524387}
   - component: {fileID: 69524389}
+  - component: {fileID: 69524390}
+  - component: {fileID: 69524391}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -346,6 +348,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teammates:
   - {fileID: 744967955}
+--- !u!114 &69524390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69524380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a57bcb127158b564f900101b3fbb5a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillFirePoint: {fileID: 69524386}
+  mainCamera: {fileID: 1716088206}
+  cursorPrefab: {fileID: 7437055006599082140, guid: 2dbf7d9487ae32a4c8a564edd4e5fed2, type: 3}
+  skillSlots:
+  - skillPrefab: {fileID: 2414979748907042219, guid: b60bf33667a063a4097595e7be203a10, type: 3}
+    releaseType: 0
+  - skillPrefab: {fileID: 0}
+    releaseType: 0
+  - skillPrefab: {fileID: 0}
+    releaseType: 0
+--- !u!114 &69524391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69524380}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3995010f493ee4f8238d1f9e59d3fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
 --- !u!1 &175668370
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +570,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
   m_PrefabInstance: {fileID: 1602102609}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &744967962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744967955}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3995010f493ee4f8238d1f9e59d3fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
 --- !u!224 &925675515 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6123461277153370994, guid: 1a2fc81839a87174abf9967d16e4a1ed, type: 3}
@@ -1135,13 +1187,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1048800914}
     - target: {fileID: 7414926327221384575, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414926327221384575, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: FloatingHPCanvas
       value: 
       objectReference: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 744967962}
   m_SourcePrefab: {fileID: 100100000, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
 --- !u!114 &1623236921 stripped
 MonoBehaviour:
