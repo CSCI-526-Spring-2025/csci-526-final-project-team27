@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public enum SkillReleaseType
 {
@@ -28,7 +30,7 @@ public abstract class Skill : MonoBehaviour
     public SkillReleaseType releaseType = SkillReleaseType.Direct;
 
     // 静态字典记录每种技能类型上次使用的时间（按类型名区分）
-    private static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
+    public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
 
     /// <summary>
     /// 检查当前技能是否处于冷却状态

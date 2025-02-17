@@ -1,6 +1,8 @@
 ﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 /// <summary>
 /// 技能槽位数据结构：每个槽位包括技能预制体与其释放模式
@@ -31,6 +33,7 @@ public class SkillController : MonoBehaviour
     [Header("Skill Slots")]
     [Tooltip("三个技能槽位，可分别指定技能预制体和释放模式")]
     public SkillSlot[] skillSlots = new SkillSlot[3];
+    public UnityEngine.UI.Image[] hpFills;
 
     // 内部变量
     private GameObject cursorInstance;
@@ -39,6 +42,8 @@ public class SkillController : MonoBehaviour
 
     void Update()
     {
+        CoolDownImagesTick();
+
         // 监听数字键1~3对应技能槽的输入
         if (!isTargetingMode)
         {
@@ -230,6 +235,7 @@ public class SkillController : MonoBehaviour
             return;
         skillSlots[slotIndex].skillPrefab = newSkillPrefab;
         skillSlots[slotIndex].releaseType = newReleaseType;
+
     }
 
     /// <summary>
@@ -238,5 +244,22 @@ public class SkillController : MonoBehaviour
     private bool IsPointerOverUIObject()
     {
         return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+    }
+
+    void CoolDownImagesTick()
+    {
+        // for each skill slot, update the cooldown image
+        for (int i = 0; i < skillSlots.Length; i++)
+        {
+            if (hpFills[i] != null)
+            {
+                Skill skill = skillSlots[i].skillPrefab.GetComponent<Skill>();
+                string key = skill.GetType().Name;
+                if (Skill.lastUsedTimeBySkill.ContainsKey(key))
+                {
+                    hpFills[i].fillAmount = Mathf.Clamp01(1 - (Time.time - Skill.lastUsedTimeBySkill[key]) / skill.cooldownTime);
+                }
+            }
+        }
     }
 }
