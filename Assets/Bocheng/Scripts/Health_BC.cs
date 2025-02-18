@@ -36,9 +36,9 @@ public class Health_BC : Health
 
     override public void Heal(float heal)
     {
-        currentHealth = Mathf.Clamp(currentHealth + heal * defenseBuff, 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + heal, 0, maxHealth);
         // 生成绿色治疗特效，偏移量使其出现在角色右上角
-        ShowFloatingText("+" + heal * defenseBuff, Color.green, new Vector3(0.5f, 1f, 0));
+        ShowFloatingText("+" + heal, Color.green, new Vector3(0.5f, 1f, 0));
         if (healthBar != null)
         {
             healthBar.SetHealth(currentHealth, maxHealth);
