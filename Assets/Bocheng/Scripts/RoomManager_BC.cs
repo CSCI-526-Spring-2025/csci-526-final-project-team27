@@ -681,7 +681,18 @@ public class RoomManager_BC : MonoBehaviour
                                 }
                                 else
                                 {
-                                    Debug.LogError("队友身上未找到 MeleeTeammate 组件！");
+                                    // 如果没有 MeleeTeammate，则检查是否有 RangeTeammate 组件
+                                    RangedTeammate range = teammate.GetComponent<RangedTeammate>();
+                                    DamageBallTeam teamBullet = range.bulletPrefab.GetComponent<DamageBallTeam>();
+                                    if (teamBullet != null)
+                                    {
+                                        teamBullet.damageAmount += 1; 
+                                        Debug.Log("Range teammate damage increased, new moveSpeed: " + teamBullet.damageAmount);
+                                    }
+                                    else
+                                    {
+                                        Debug.LogError("队友没有找到 MeleeTeammate 或 RangeTeammate 组件！");
+                                    }
                                 }
                             }
                         }
@@ -711,18 +722,25 @@ public class RoomManager_BC : MonoBehaviour
                 {
                     foreach (GameObject teammate in tm.teammates)
                     {
-                        if (teammate != null)
+                        // 优先检查是否有 MeleeTeammate 组件
+                        MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
+                        if (melee != null)
                         {
-                            MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
-                            if (melee != null)
+                            melee.moveSpeed += 1;  // 增加移动速度
+                            Debug.Log("Melee teammate speed increased, new moveSpeed: " + melee.moveSpeed);
+                        }
+                        else
+                        {
+                            // 如果没有 MeleeTeammate，则检查是否有 RangeTeammate 组件
+                            RangedTeammate range = teammate.GetComponent<RangedTeammate>();
+                            if (range != null)
                             {
-                                // 同样每次增加1点移动速度
-                                melee.moveSpeed += 1;
-                                Debug.Log("Teammate Speed increased, new moveSpeed: " + melee.moveSpeed);
+                                range.moveSpeed += 1;  // 增加移动速度
+                                Debug.Log("Range teammate speed increased, new moveSpeed: " + range.moveSpeed);
                             }
                             else
                             {
-                                Debug.LogError("队友身上没有找到 Speed 组件！");
+                                Debug.LogError("队友没有找到 MeleeTeammate 或 RangeTeammate 组件！");
                             }
                         }
                     }
