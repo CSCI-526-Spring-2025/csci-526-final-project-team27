@@ -32,6 +32,7 @@ public abstract class Skill : MonoBehaviour
     // 静态字典记录每种技能类型上次使用的时间（按类型名区分）
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
 
+
     /// <summary>
     /// 检查当前技能是否处于冷却状态
     /// </summary>
@@ -82,18 +83,22 @@ public abstract class Skill : MonoBehaviour
     /// <param name="target">技能目标对象</param>
     public void TryInitialize(GameObject target)
     {
-        Vector2 direction = Vector2.zero;
-        if (target != null)
+        if (IsOnCooldown())
         {
-            direction = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
+            Destroy(gameObject);
+            return;
         }
-        TryInitialize(direction);
+        SetCooldown();
+        OnSkillEffect(target);
+        StartCoroutine(SkillRoutine());
     }
 
     /// <summary>
     /// 抽象方法：由派生类实现具体技能效果。参数 direction 表示技能释放的方向或目标指向。
     /// </summary>
     protected abstract void OnSkillEffect(Vector2 direction);
+
+    protected abstract void OnSkillEffect(GameObject target);
 
     /// <summary>
     /// 默认的技能执行协程，等待 skillDuration 秒后销毁技能预制体。

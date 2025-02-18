@@ -39,6 +39,19 @@ public class SkillController : MonoBehaviour
     private GameObject cursorInstance;
     private int currentSkillSlotIndex = -1;      // 当前正在等待目标/方向选择的技能槽索引
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
+    private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
+
+    private void Start()
+    {
+        for (int i = 0; i < skillSlots.Length; i++)
+        {
+            if (skillSlots[i].skillPrefab != null)
+            {
+                GameObject skillInstance = Instantiate(skillSlots[i].skillPrefab, skillFirePoint.position, Quaternion.identity);
+                skillInstances[i] = skillInstance;
+            }
+        }
+    }
 
     void Update()
     {
@@ -146,7 +159,10 @@ public class SkillController : MonoBehaviour
     private void UseSkill(int slotIndex, GameObject target)
     {
         SkillSlot slot = skillSlots[slotIndex];
-        GameObject skillInstance = Instantiate(slot.skillPrefab, skillFirePoint.position, Quaternion.identity);
+
+        //GameObject skillInstance = Instantiate(slot.skillPrefab, skillFirePoint.position, Quaternion.identity);
+
+        GameObject skillInstance = skillInstances[slotIndex];
         // 使技能朝向目标（这里根据目标位置计算方向）
         Vector2 dir = ((Vector2)target.transform.position - (Vector2)skillFirePoint.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -253,7 +269,7 @@ public class SkillController : MonoBehaviour
         {
             if (hpFills[i] != null)
             {
-                Skill skill = skillSlots[i].skillPrefab.GetComponent<Skill>();
+                Skill skill = skillInstances[i].GetComponent<Skill>();
                 string key = skill.GetType().Name;
                 if (Skill.lastUsedTimeBySkill.ContainsKey(key))
                 {
