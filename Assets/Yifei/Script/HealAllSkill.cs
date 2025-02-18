@@ -13,7 +13,7 @@ public class HealAllSkill : Skill
     public int healAmount = 10;
 
     [Tooltip("用于标识友方单位的标签数组")]
-    public string[] friendlyTags = new string[] { "Ally", "Player" };
+    public string[] friendlyTags = new string[] { "Teammate", "Player" };
 
     public GameObject healAllSkillEffect;   // 回复技能特效
 
@@ -23,13 +23,13 @@ public class HealAllSkill : Skill
     protected override void OnSkillEffect(Vector2 direction)
     {
         HealAllAllies();
-        ShowHealEffect();
+        //ShowHealEffect();
     }
 
     protected override void OnSkillEffect(GameObject target)
     {
         HealAllAllies();
-        ShowHealEffect();
+        //ShowHealEffect();
     }
     
 

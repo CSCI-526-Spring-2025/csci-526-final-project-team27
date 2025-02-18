@@ -2,7 +2,9 @@
 
 public class Health_BC : Health
 {
-    public HealthBar healthBar;                   
+    public HealthBar healthBar;
+    public float defenseBuff = 1.0f;
+    public float damageBuff = 1.0f;
 
     void Start()
     {
@@ -17,8 +19,8 @@ public class Health_BC : Health
 
     override public void TakeDamage(float damage) 
     {
-        currentHealth -= damage;
-        if(healthBar != null)
+        currentHealth -= damage * defenseBuff;
+        if (healthBar != null)
         {
             healthBar.SetHealth(currentHealth, maxHealth);
         }
@@ -29,9 +31,9 @@ public class Health_BC : Health
         }
     }
 
-    override public void Heal(float amount)
+    override public void Heal(float heal)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + heal * defenseBuff, 0, maxHealth);
         if(healthBar != null)
         {
             healthBar.SetHealth(currentHealth, maxHealth);

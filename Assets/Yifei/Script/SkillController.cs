@@ -39,10 +39,11 @@ public class SkillController : MonoBehaviour
     private GameObject cursorInstance;
     private int currentSkillSlotIndex = -1;      // 当前正在等待目标/方向选择的技能槽索引
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
-    private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
+    public GameObject[] skillInstances;        // 实例化的技能对象
 
-    private void Awake()
+    private void Start()
     {
+        skillInstances = new GameObject[skillSlots.Length];
         for (int i = 0; i < skillSlots.Length; i++)
         {
             if (skillSlots[i].skillPrefab != null)
@@ -52,7 +53,10 @@ public class SkillController : MonoBehaviour
                 Debug.Log("实例化" + skillInstances[i].name);
             }
         }
+        
     }
+
+
 
     void Update()
     {
@@ -271,6 +275,10 @@ public class SkillController : MonoBehaviour
         {
             if (hpFills[i] != null )
             {
+                if (skillSlots[i].skillPrefab == null)
+                {
+                    continue;
+                }
                 GameObject skillObject = skillInstances[i];
                 Skill skill = skillObject.GetComponent<Skill>();
 

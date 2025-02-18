@@ -186,8 +186,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 1
   attackInterval: 1
-  hitboxPrefab: {fileID: 819594227005175230, guid: 9734671eba7252749ad057da0e351284, type: 3}
-  hitboxOffset: 0.5
   damage: 10
 --- !u!114 &3866559801616925073
 MonoBehaviour:
