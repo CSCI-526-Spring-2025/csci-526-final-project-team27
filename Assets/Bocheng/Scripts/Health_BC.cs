@@ -21,7 +21,7 @@ public class Health_BC : Health
     {
         currentHealth -= damage * defenseBuff;
         // 生成红色伤害特效，偏移量使其出现在角色右上角
-        ShowFloatingText("-" + damage, Color.red, new Vector3(0.5f, 1f, 0));
+        ShowFloatingText("-" + damage * defenseBuff, Color.red, new Vector3(0.5f, 1f, 0));
 
         if (healthBar != null)
         {
@@ -38,7 +38,7 @@ public class Health_BC : Health
     {
         currentHealth = Mathf.Clamp(currentHealth + heal * defenseBuff, 0, maxHealth);
         // 生成绿色治疗特效，偏移量使其出现在角色右上角
-        ShowFloatingText("+" + heal, Color.green, new Vector3(0.5f, 1f, 0));
+        ShowFloatingText("+" + heal * defenseBuff, Color.green, new Vector3(0.5f, 1f, 0));
         if (healthBar != null)
         {
             healthBar.SetHealth(currentHealth, maxHealth);

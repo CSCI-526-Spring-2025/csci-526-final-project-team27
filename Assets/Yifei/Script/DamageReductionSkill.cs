@@ -43,6 +43,7 @@ public class DamageReductionSkill : Skill
                 if (health != null)
                 {
                     health.defenseBuff = reductionRate;
+                    Debug.Log($"对 {ally.name} 使用了减伤技能，减伤率：{health.defenseBuff}");
                 }
             }
         }
