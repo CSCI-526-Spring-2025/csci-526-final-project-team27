@@ -41,14 +41,15 @@ public class SkillController : MonoBehaviour
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
     private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
 
-    private void Start()
+    private void Awake()
     {
         for (int i = 0; i < skillSlots.Length; i++)
         {
             if (skillSlots[i].skillPrefab != null)
             {
-                GameObject skillInstance = Instantiate(skillSlots[i].skillPrefab, skillFirePoint.position, Quaternion.identity);
+                GameObject skillInstance = Instantiate(skillSlots[i].skillPrefab, skillFirePoint.position, Quaternion.identity, transform);
                 skillInstances[i] = skillInstance;
+                Debug.Log("实例化" + skillInstances[i].name);
             }
         }
     }
@@ -139,7 +140,8 @@ public class SkillController : MonoBehaviour
     private void UseSkill(int slotIndex, Vector2 direction)
     {
         SkillSlot slot = skillSlots[slotIndex];
-        GameObject skillInstance = Instantiate(slot.skillPrefab, skillFirePoint.position, Quaternion.identity);
+        //GameObject skillInstance = Instantiate(slot.skillPrefab, skillFirePoint.position, Quaternion.identity);
+        GameObject skillInstance = skillInstances[slotIndex];
         // 使技能朝向释放方向
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         skillInstance.transform.rotation = Quaternion.Euler(0, 0, angle);
@@ -267,9 +269,11 @@ public class SkillController : MonoBehaviour
         // for each skill slot, update the cooldown image
         for (int i = 0; i < skillSlots.Length; i++)
         {
-            if (hpFills[i] != null)
+            if (hpFills[i] != null )
             {
-                Skill skill = skillInstances[i].GetComponent<Skill>();
+                GameObject skillObject = skillInstances[i];
+                Skill skill = skillObject.GetComponent<Skill>();
+
                 string key = skill.GetType().Name;
                 if (Skill.lastUsedTimeBySkill.ContainsKey(key))
                 {

@@ -87,4 +87,14 @@ public class HealAllSkill : Skill
             }
         }
     }
+    //重写Skill routine,销毁技能特效
+    protected override IEnumerator SkillRoutine()
+    {
+        yield return new WaitForSeconds(skillDuration);
+        while (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+            yield return null;
+        }
+    }
 }

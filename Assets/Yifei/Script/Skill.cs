@@ -33,6 +33,15 @@ public abstract class Skill : MonoBehaviour
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
 
 
+    private void Awake()
+    {
+        string key = GetType().Name;
+        if (!lastUsedTimeBySkill.ContainsKey(key))
+        {
+            lastUsedTimeBySkill[key] = -100;
+        }
+    }
+
     /// <summary>
     /// 检查当前技能是否处于冷却状态
     /// </summary>
@@ -69,7 +78,7 @@ public abstract class Skill : MonoBehaviour
     {
         if (IsOnCooldown())
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
             return;
         }
         SetCooldown();
@@ -85,7 +94,7 @@ public abstract class Skill : MonoBehaviour
     {
         if (IsOnCooldown())
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
             return;
         }
         SetCooldown();
@@ -107,6 +116,6 @@ public abstract class Skill : MonoBehaviour
     protected virtual IEnumerator SkillRoutine()
     {
         yield return new WaitForSeconds(skillDuration);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }
