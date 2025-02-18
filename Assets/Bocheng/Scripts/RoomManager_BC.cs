@@ -41,7 +41,8 @@ public class RoomManager_BC : MonoBehaviour
     public GameObject rewardSelectionUIPrefab; // 奖励选择界面预制体
     private RewardSelectionUI rewardSelectionUI;
 
-
+    [Header("Win UI")]
+    public GameObject winUIPrefab; // 获胜时显示的UI预制体
 
     public static RoomManager_BC Instance;
 
@@ -234,6 +235,13 @@ public class RoomManager_BC : MonoBehaviour
 
     public void ChangeRoom(Vector2Int newRoom)
     {
+        // 检查是否进入终点房间
+        if(newRoom == endRoom)
+        {
+            WinGame();
+            return;
+        }
+
         Vector3 worldPos = GetWorldPosition(newRoom);
         // **更新玩家 UI**
         UpdatePlayerUI(newRoom);
@@ -761,6 +769,24 @@ public class RoomManager_BC : MonoBehaviour
         DoorControl(true);
     }
 
+    void WinGame()
+    {
+        Debug.Log("You Win!");
+
+        // 显示 "You Win" UI
+        if (winUIPrefab != null)
+        {
+            Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+        }
+        else
+        {
+            Debug.LogError("winUIPrefab 未在 Inspector 中赋值！");
+        }
+
+        // 禁用玩家移动（如果需要）
+        if (playerMovement != null)
+            playerMovement.LockMove(true);
+    }
 
 
 
