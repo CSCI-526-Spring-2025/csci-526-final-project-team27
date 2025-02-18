@@ -26,6 +26,13 @@ public class HealAllSkill : Skill
         ShowHealEffect();
     }
 
+    protected override void OnSkillEffect(GameObject target)
+    {
+        HealAllAllies();
+        ShowHealEffect();
+    }
+    
+
     /// <summary>
     /// 对场上所有符合条件的友方单位进行回复
     /// </summary>
