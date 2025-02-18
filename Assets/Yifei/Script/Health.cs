@@ -23,15 +23,15 @@ public class Health : MonoBehaviour
 
     void Update()
     {
-        // 临时测试代码：按 Q 键掉血 10 点，按 E 键加血 10 点
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            TakeDamage(10);
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Heal(10);
-        }
+        //// 临时测试代码：按 Q 键掉血 10 点，按 E 键加血 10 点
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    TakeDamage(10);
+        //}
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    Heal(10);
+        //}
     }
 
     /// <summary>
