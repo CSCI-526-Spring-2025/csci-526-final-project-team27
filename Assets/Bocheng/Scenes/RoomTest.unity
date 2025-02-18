@@ -842,7 +842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2610382780819110842, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_Name
-      value: RangeTeammate
+      value: RangeTeammate_2
       objectReference: {fileID: 0}
     - target: {fileID: 2610382780819110842, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_IsActive
@@ -850,11 +850,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4117404067797838661, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4117404067797838661, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.01
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 4117404067797838661, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -992,6 +992,22 @@ PrefabInstance:
     - target: {fileID: 527508729959328614, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
       propertyPath: m_Name
       value: Teammate_Panel_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1752911661036532352, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Name
+      value: HP_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.r
+      value: 0.18039216
       objectReference: {fileID: 0}
     - target: {fileID: 5792705401397882181, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
       propertyPath: hpFill
@@ -1186,7 +1202,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1673,6 +1689,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Teammate_Panel_3
       objectReference: {fileID: 0}
+    - target: {fileID: 1752911661036532352, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Name
+      value: HP_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.b
+      value: 0.22352943
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.g
+      value: 0.86666673
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9607844
+      objectReference: {fileID: 0}
     - target: {fileID: 5792705401397882181, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
       propertyPath: hpFill
       value: 
@@ -2025,11 +2057,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.55
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.52
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2065,7 +2097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_Name
-      value: MeleeTeammate
+      value: MeleeTeammate_1
       objectReference: {fileID: 0}
     - target: {fileID: 5825243572851147960, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_Color.b
@@ -2523,11 +2555,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.92
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2563,7 +2595,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_Name
-      value: MeleeTeammate (1)
+      value: MeleeTeammate_3
       objectReference: {fileID: 0}
     - target: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_IsActive
@@ -2793,10 +2825,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Teammate_Panel_1
       objectReference: {fileID: 0}
+    - target: {fileID: 1752911661036532352, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Name
+      value: HP_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.b
+      value: 0.34117648
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5647059
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655969064751153209, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.r
+      value: 0.34117648
+      objectReference: {fileID: 0}
     - target: {fileID: 5792705401397882181, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
       propertyPath: hpFill
       value: 
       objectReference: {fileID: 300290466}
+    - target: {fileID: 8203920131647054409, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8203920131647054409, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8203920131647054409, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6368004397411489162, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
     m_RemovedGameObjects: []
