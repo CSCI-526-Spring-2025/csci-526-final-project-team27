@@ -103,7 +103,6 @@ public class EnemySpawner : MonoBehaviour
         public GameObject prefab;
     }
 
-    // 私有变量
     private Dictionary<string, GameObject> enemyPrefabDict;
     private WaveDataList waveDataList;
 
@@ -194,7 +193,11 @@ public class EnemySpawner : MonoBehaviour
             for (int i = 0; i < enemyPrefabs.Length && allowedTypes.Count < allowedCount; i++)
             {
                 if (enemyPrefabDict.ContainsKey(enemyPrefabs[i].enemyType))
+                {
                     allowedTypes.Add(enemyPrefabs[i].enemyType);
+                    Debug.Log("允许生成的敌人类型：" + enemyPrefabs[i].enemyType);
+                }
+                    
             }
             for (int i = 0; i < directWaveCount; i++)
             {

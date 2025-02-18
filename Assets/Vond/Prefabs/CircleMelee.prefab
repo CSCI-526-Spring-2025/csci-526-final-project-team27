@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 1
   attackInterval: 1
-  damage: 10
+  damage: 15
 --- !u!114 &3866559801616925073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,4 +200,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 30
-  FloatingHPCanvas: {fileID: 0}
+  FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}

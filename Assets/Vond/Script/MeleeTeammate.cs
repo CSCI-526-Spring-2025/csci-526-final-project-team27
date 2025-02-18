@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class MeleeTeammate : MonoBehaviour
 {
@@ -149,5 +150,20 @@ public class MeleeTeammate : MonoBehaviour
             }
         }
         currentTarget = nearest;
+    }
+
+    //修改OnDestroy函数, 使得队友死亡时从队友列表中移除
+    void OnDestroy()
+    {
+        //找到当前Scene中的Player对象
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            TeammateManager teammateManager = player.GetComponent<TeammateManager>();
+            if (teammateManager != null)
+            {
+                teammateManager.RemoveTeammate(gameObject);
+            }
+        }
     }
 }

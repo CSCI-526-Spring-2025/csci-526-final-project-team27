@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movement;
     private bool bCanMove = true;
+    public GameObject gameOverUI;
 
     void Start()
     {
@@ -37,5 +38,13 @@ public class PlayerMovement : MonoBehaviour
     public void LockMove(bool bLock)
     {
         bCanMove = !bLock;
+    }
+
+    //修改onDestroy方法,主角死亡后游戏结束
+    void OnDestroy()
+    {
+        // 显示UI
+        Debug.Log("游戏结束");
+        gameOverUI = Instantiate(gameOverUI);
     }
 }

@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87215d5ff811ee74c87505e885a81cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillDuration: 5
-  cooldownTime: 1
+  skillDuration: 3
+  cooldownTime: 10
   releaseType: 0
   damageReductionSkillX: {fileID: 2540477000716077424, guid: 54d2a53c7eeb6d4408cf3dafea0f1138, type: 3}
   reductionRate: 0.5

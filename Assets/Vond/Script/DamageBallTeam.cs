@@ -10,7 +10,7 @@ public class DamageBallTeam : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             // 尝试获取玩家的 Health_BC 组件
-            Health_BC health = other.GetComponent<Health_BC>();
+            Health health = other.GetComponent<Health>();
             if (health != null)
             {
                 health.TakeDamage(damageAmount);

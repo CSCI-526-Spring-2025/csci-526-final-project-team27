@@ -71,7 +71,7 @@ public class Health : MonoBehaviour
     /// <param name="text">显示的文字</param>
     /// <param name="color">文字颜色</param>
     /// <param name="offset">相对于角色位置的偏移量</param>
-    void ShowFloatingText(string text, Color color, Vector3 offset)
+    public void ShowFloatingText(string text, Color color, Vector3 offset)
     {
         if (FloatingHPCanvas != null)
         {

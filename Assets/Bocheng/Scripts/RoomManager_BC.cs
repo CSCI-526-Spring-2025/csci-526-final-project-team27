@@ -41,8 +41,8 @@ public class RoomManager_BC : MonoBehaviour
     public GameObject rewardSelectionUIPrefab; // 奖励选择界面预制体
     private RewardSelectionUI rewardSelectionUI;
 
-    [Header("Win UI")]
-    public GameObject winUIPrefab; // 获胜时显示的UI预制体
+    //[Header("Win UI")]
+    //public GameObject winUIPrefab; // 获胜时显示的UI预制体
 
     public static RoomManager_BC Instance;
 
@@ -235,12 +235,15 @@ public class RoomManager_BC : MonoBehaviour
 
     public void ChangeRoom(Vector2Int newRoom)
     {
-        // 检查是否进入终点房间
-        if(newRoom == endRoom)
-        {
-            WinGame();
-            return;
-        }
+        //// 检查是否进入终点房间
+        //if(newRoom == endRoom)
+        //{
+        //    WinGame();
+        //    return;
+        //}
+
+        // 启用玩家控制
+        EnablePlayerControllers();
 
         Vector3 worldPos = GetWorldPosition(newRoom);
         // **更新玩家 UI**
@@ -580,6 +583,8 @@ public class RoomManager_BC : MonoBehaviour
     {
         if (roomCleared)
         {
+            // 禁用玩家的 ShootingController 和 SkillController
+            DisablePlayerControllers();
             ShowRewardSelection();
         }
     }
@@ -613,6 +618,18 @@ public class RoomManager_BC : MonoBehaviour
         // 从玩家上获取 TeammateManager 组件，里面包含队友列表
         TeammateManager tm = player.GetComponent<TeammateManager>();
 
+        // 如果存在队友管理器，则先清理掉已销毁的队友引用
+        if (tm != null)
+        {
+            for (int i = tm.teammates.Count - 1; i >= 0; i--)
+            {
+                if (tm.teammates[i] == null)
+                {
+                    tm.teammates.RemoveAt(i);
+                }
+            }
+        }
+
         switch (reward)
         {
             case RewardSelectionUI.RewardType.Health:
@@ -628,28 +645,30 @@ public class RoomManager_BC : MonoBehaviour
                     {
                         Debug.LogError("在玩家身上没有找到 Health_BC 组件！");
                     }
+
                     // 队友加血
                     if (tm != null)
                     {
                         foreach (GameObject teammate in tm.teammates)
                         {
-                            if (teammate != null)
+                            if (teammate == null)
+                                continue;
+
+                            Health_BC teammateHealth = teammate.GetComponent<Health_BC>();
+                            if (teammateHealth != null)
                             {
-                                Health_BC teammateHealth = teammate.GetComponent<Health_BC>();
-                                if (teammateHealth != null)
-                                {
-                                    teammateHealth.maxHealth += 5;
-                                    Debug.Log("Teammate HP+5, new maxHealth: " + teammateHealth.maxHealth);
-                                }
-                                else
-                                {
-                                    Debug.LogError("在队友身上没有找到 Health_BC 组件！");
-                                }
+                                teammateHealth.maxHealth += 5;
+                                Debug.Log("Teammate HP+5, new maxHealth: " + teammateHealth.maxHealth);
+                            }
+                            else
+                            {
+                                Debug.LogError("在队友身上没有找到 Health_BC 组件！");
                             }
                         }
                     }
                 }
                 break;
+
             case RewardSelectionUI.RewardType.Attack:
                 {
                     // 玩家获得“增加治疗量”的效果
@@ -659,7 +678,7 @@ public class RoomManager_BC : MonoBehaviour
                         HealBallVond playerBullet = playerShooting.bulletPrefab.GetComponent<HealBallVond>();
                         if (playerBullet != null)
                         {
-                            // 增加治疗量，例如每次加1
+                            // 增加治疗量，例如每次加 1
                             playerBullet.healAmount += 1;
                             Debug.Log("Player's heal amount increased, new healAmount: " + playerBullet.healAmount);
                         }
@@ -672,35 +691,49 @@ public class RoomManager_BC : MonoBehaviour
                     {
                         Debug.LogError("Player身上没有找到 ShootingController 组件！");
                     }
-                    
+
                     // 队友获得“增加伤害”的效果（针对近战队友）
                     if (tm != null)
                     {
                         foreach (GameObject teammate in tm.teammates)
                         {
-                            if (teammate != null)
+                            if (teammate == null)
+                                continue;
+
+                            MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
+                            if (melee != null)
                             {
-                                MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
-                                if (melee != null)
+                                // 增加伤害，例如每次加 1
+                                melee.damage += 1;
+                                Debug.Log("Teammate's melee damage increased, new damage: " + melee.damage);
+                            }
+                            else
+                            {
+                                // 如果没有 MeleeTeammate，则检查是否有 RangedTeammate 组件
+                                RangedTeammate range = teammate.GetComponent<RangedTeammate>();
+                                if (range != null)
                                 {
-                                    // 增加伤害，例如每次加1
-                                    melee.damage += 1;
-                                    Debug.Log("Teammate's melee damage increased, new damage: " + melee.damage);
-                                }
-                                else
-                                {
-                                    // 如果没有 MeleeTeammate，则检查是否有 RangeTeammate 组件
-                                    RangedTeammate range = teammate.GetComponent<RangedTeammate>();
-                                    DamageBallTeam teamBullet = range.bulletPrefab.GetComponent<DamageBallTeam>();
-                                    if (teamBullet != null)
+                                    if (range.bulletPrefab != null)
                                     {
-                                        teamBullet.damageAmount += 1; 
-                                        Debug.Log("Range teammate damage increased, new moveSpeed: " + teamBullet.damageAmount);
+                                        DamageBallTeam teamBullet = range.bulletPrefab.GetComponent<DamageBallTeam>();
+                                        if (teamBullet != null)
+                                        {
+                                            teamBullet.damageAmount += 1;
+                                            Debug.Log("Range teammate damage increased, new damage: " + teamBullet.damageAmount);
+                                        }
+                                        else
+                                        {
+                                            Debug.LogError("队友子弹预制体上未找到 DamageBallTeam 组件！");
+                                        }
                                     }
                                     else
                                     {
-                                        Debug.LogError("队友没有找到 MeleeTeammate 或 RangeTeammate 组件！");
+                                        Debug.LogError("队友 RangeTeammate 的 bulletPrefab 为空！");
                                     }
+                                }
+                                else
+                                {
+                                    Debug.LogError("队友没有找到 MeleeTeammate 或 RangedTeammate 组件！");
                                 }
                             }
                         }
@@ -711,54 +744,58 @@ public class RoomManager_BC : MonoBehaviour
                     }
                 }
                 break;
-            case RewardSelectionUI.RewardType.Speed:
-            {
-                // 玩家增加移动速度
-                PlayerMovement pm = player.GetComponent<PlayerMovement>();
-                if (pm != null)
-                {
-                    pm.moveSpeed += 1;  // 例如，每次加 1
-                    Debug.Log("Player Speed increased, new moveSpeed: " + pm.moveSpeed);
-                }
-                else
-                {
-                    Debug.LogError("在玩家身上没有找到 PlayerMovement 组件！");
-                }
 
-                // 队友增加移动速度
-                if (tm != null)
+            case RewardSelectionUI.RewardType.Speed:
                 {
-                    foreach (GameObject teammate in tm.teammates)
+                    // 玩家增加移动速度
+                    PlayerMovement pm = player.GetComponent<PlayerMovement>();
+                    if (pm != null)
                     {
-                        // 优先检查是否有 MeleeTeammate 组件
-                        MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
-                        if (melee != null)
+                        pm.moveSpeed += 1;  // 例如，每次加 1
+                        Debug.Log("Player Speed increased, new moveSpeed: " + pm.moveSpeed);
+                    }
+                    else
+                    {
+                        Debug.LogError("在玩家身上没有找到 PlayerMovement 组件！");
+                    }
+
+                    // 队友增加移动速度
+                    if (tm != null)
+                    {
+                        foreach (GameObject teammate in tm.teammates)
                         {
-                            melee.moveSpeed += 1;  // 增加移动速度
-                            Debug.Log("Melee teammate speed increased, new moveSpeed: " + melee.moveSpeed);
-                        }
-                        else
-                        {
-                            // 如果没有 MeleeTeammate，则检查是否有 RangeTeammate 组件
-                            RangedTeammate range = teammate.GetComponent<RangedTeammate>();
-                            if (range != null)
+                            if (teammate == null)
+                                continue;
+
+                            // 优先检查是否有 MeleeTeammate 组件
+                            MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
+                            if (melee != null)
                             {
-                                range.moveSpeed += 1;  // 增加移动速度
-                                Debug.Log("Range teammate speed increased, new moveSpeed: " + range.moveSpeed);
+                                melee.moveSpeed += 1;
+                                Debug.Log("Melee teammate speed increased, new moveSpeed: " + melee.moveSpeed);
                             }
                             else
                             {
-                                Debug.LogError("队友没有找到 MeleeTeammate 或 RangeTeammate 组件！");
+                                // 如果没有 MeleeTeammate，则检查是否有 RangedTeammate 组件
+                                RangedTeammate range = teammate.GetComponent<RangedTeammate>();
+                                if (range != null)
+                                {
+                                    range.moveSpeed += 1;
+                                    Debug.Log("Range teammate speed increased, new moveSpeed: " + range.moveSpeed);
+                                }
+                                else
+                                {
+                                    Debug.LogError("队友没有找到 MeleeTeammate 或 RangedTeammate 组件！");
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.LogWarning("玩家身上没有找到 TeammateManager 组件，无法给予队友速度奖励。");
+                    }
                 }
-                else
-                {
-                    Debug.LogWarning("玩家身上没有找到 TeammateManager 组件，无法给予队友速度奖励。");
-                }
-            }
-            break;
+                break;
         }
 
         // 解锁玩家移动
@@ -769,24 +806,73 @@ public class RoomManager_BC : MonoBehaviour
         DoorControl(true);
     }
 
-    void WinGame()
+
+    // 新增：禁用玩家的 ShootingController 和 SkillController
+    void DisablePlayerControllers()
     {
-        Debug.Log("You Win!");
+        //获取tag为Player的对象
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        // 显示 "You Win" UI
-        if (winUIPrefab != null)
+        if (player != null)
         {
-            Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
-        }
-        else
-        {
-            Debug.LogError("winUIPrefab 未在 Inspector 中赋值！");
-        }
+            ShootingController shootingController = player.GetComponent<ShootingController>();
 
-        // 禁用玩家移动（如果需要）
-        if (playerMovement != null)
-            playerMovement.LockMove(true);
+            if (shootingController != null)
+            {
+                shootingController.bulletLifetime = 0;
+                Debug.Log("ShootingController disabled.");
+            }
+            SkillController skillController = player.GetComponent<SkillController>();
+            if (skillController != null)
+            {
+                skillController.enabled = false;
+                Debug.Log("SkillController disabled.");
+            }
+        }
     }
+
+    // 新增：启用玩家的 ShootingController 和 SkillController
+    void EnablePlayerControllers()
+    {
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            player = playerMovement.gameObject;
+            ShootingController shootingController = player.GetComponent<ShootingController>();
+            if (shootingController != null)
+            {
+                shootingController.bulletLifetime = 2; //临时解决方案
+                Debug.Log("ShootingController enabled.");
+            }
+            SkillController skillController = player.GetComponent<SkillController>();
+            if (skillController != null)
+            {
+                skillController.enabled = true;
+                Debug.Log("SkillController enabled.");
+            }
+        }
+    }
+
+
+    //void WinGame()
+    //{
+    //    Debug.Log("You Win!");
+
+    //    // 显示 "You Win" UI
+    //    if (winUIPrefab != null)
+    //    {
+    //        Instantiate(winUIPrefab, GameObject.Find("Canvas").transform);
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("winUIPrefab 未在 Inspector 中赋值！");
+    //    }
+
+    //    // 禁用玩家移动（如果需要）
+    //    if (playerMovement != null)
+    //        playerMovement.LockMove(true);
+    //}
 
 
 
