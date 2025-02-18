@@ -394,7 +394,7 @@ MonoBehaviour:
   scaleRatio: 3
   UIoffset: 5
   UImoveSpeed: 200
-  rewardSelectionUIPrefab: {fileID: 3298716666243901270, guid: 32a42b25f5f88db4ba61b54121626072, type: 3}
+  rewardSelectionUIPrefab: {fileID: 5917384412329829628, guid: e493b849293d9e8459c58878e5b4afd0, type: 3}
 --- !u!4 &175668372
 Transform:
   m_ObjectHideFlags: 0
