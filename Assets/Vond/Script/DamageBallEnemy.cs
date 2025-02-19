@@ -7,7 +7,7 @@ public class DamageBallEnemy : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         // 检查是否碰到了玩家
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Teammate"))
         {
             // 尝试获取玩家的 Health_BC 组件
             Health_BC health = other.GetComponent<Health_BC>();
