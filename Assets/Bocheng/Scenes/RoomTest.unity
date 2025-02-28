@@ -378,7 +378,6 @@ MonoBehaviour:
   - {fileID: 1209384161}
   - {fileID: 1837176323}
   - {fileID: 1352053520}
-  skillInstances: []
 --- !u!114 &69524391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,17 +559,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc89072eba142e4491589be96eff7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 4
-  gridHeight: 4
-  minPathLength: 2
-  roomPrefab: {fileID: 4076533052321158648, guid: 90ed36cddf92b4d4eaee5a50073cb78a, type: 3}
+  gridWidth: 5
+  gridHeight: 5
+  minPathLength: 4
+  normalRoomPrefabs:
+  - {fileID: 4076533052321158648, guid: 888c6d2e576828d4e8fd623622e581b9, type: 3}
+  eliteRoomPrefabs:
+  - {fileID: 4076533052321158648, guid: 8400598fe8230504e8fc6756bafbed8e, type: 3}
+  shopRoomPrefabs:
+  - {fileID: 4076533052321158648, guid: e5af6c73e4517fa4cbd4190334e3c41f, type: 3}
   startRoomPrefab: {fileID: 4076533052321158648, guid: dbeded1e4b8766740bcdae4adc696d42, type: 3}
   endRoomPrefab: {fileID: 4076533052321158648, guid: f04ab3f020eb0d8468087dd9f4869803, type: 3}
   roomSizeX: 30
   roomSizeY: 15
   offset: 5
+  eliteRoomRatio: 0.3
   cameraFollow: {fileID: 1716088209}
   roomUIPrefab: {fileID: 7120024035353279927, guid: c87e9e476f77a334a92e0f8852111cfd, type: 3}
+  eliteRoomUIPrefab: {fileID: 7120024035353279927, guid: 22555f66b6491fe47ade1dfe33cb7586, type: 3}
+  shopRoomUIPrefab: {fileID: 7120024035353279927, guid: 7cd910283daf22b449908d91098ffc58, type: 3}
   startRoomUIPrefab: {fileID: 7120024035353279927, guid: db166b9138e28ae4fa792cc86bf59590, type: 3}
   endRoomUIPrefab: {fileID: 7120024035353279927, guid: b07f63b8c2d809447aea63a588539822, type: 3}
   panel: {fileID: 2064287712}
