@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 651536428}
   - component: {fileID: 651536427}
   m_Layer: 0
-  m_Name: CircleMelee(Clone)
+  m_Name: CircleMelee
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
