@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &574665280875744282
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -16.0151
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4234
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4497679739810604741, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4773240290590505226, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_Name
+      value: DamageBallTeam Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590704352006545325, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_Color.b
+      value: 0.9559748
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590704352006545325, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_Color.g
+      value: 0.21900804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590704352006545325, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      propertyPath: m_Color.r
+      value: 0.015030953
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -6032346679823912358, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4773240290590505226, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4047904723998325913}
+  m_SourcePrefab: {fileID: 100100000, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+--- !u!1 &5027261582592439568 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4773240290590505226, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+  m_PrefabInstance: {fileID: 574665280875744282}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4047904723998325913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5027261582592439568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ada6b5a9c22cf44f851f84c2673492e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAmount: 15
