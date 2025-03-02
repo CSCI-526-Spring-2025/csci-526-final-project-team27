@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class EnemyHealth : Health
 {
+    [Header("Coin Drop")]
+    [SerializeField] private GameObject coinPrefab;
+
     private EnemySpawner enemySpawner;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,14 +27,31 @@ public class EnemyHealth : Health
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
-        // Éú³ÉºìÉ«ÖÎÁÆÌØÐ§£¬Æ«ÒÆÁ¿Ê¹Æä³öÏÖÔÚ½ÇÉ«ÓÒÉÏ½Ç
+        // ï¿½ï¿½ï¿½Éºï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½É«ï¿½ï¿½ï¿½Ï½ï¿½
         ShowFloatingText("+" + amount + "!", Color.red, new Vector3(0.5f, 1f, 0));
     }
 
     public override void Die()
     {
         Debug.Log(this.gameObject.name + " is dead");
-        enemySpawner.EnemyDie();
+
+        // Notify spawner
+        if (enemySpawner != null)
+        {
+            enemySpawner.EnemyDie();
+        }
+
+        // 1. Spawn coin (if you have assigned coinPrefab)
+        if (coinPrefab != null)
+        {
+            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("coinPrefab not set on " + gameObject.name);
+        }
+
+        // 2. Call base.Die to handle anything else from the parent Health
         base.Die();
     }
 }
