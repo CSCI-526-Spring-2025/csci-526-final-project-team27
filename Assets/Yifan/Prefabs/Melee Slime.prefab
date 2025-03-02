@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 5467604675802629570}
   - component: {fileID: 5906741237807419427}
   - component: {fileID: 445820219740098354}
-  - component: {fileID: 7652752191821496731}
-  - component: {fileID: -7957200380691956401}
   - component: {fileID: -3880152435667545754}
+  - component: {fileID: 8180063506914729136}
   m_Layer: 0
   m_Name: Melee Slime
   m_TagString: Enemy
@@ -313,38 +312,6 @@ PolygonCollider2D:
       - {x: -2.2077098, y: 1.2374437}
       - {x: -2, y: 1.25}
   m_UseDelaunayMesh: 0
---- !u!114 &7652752191821496731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2027857850954515486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 786ede264e1fbdc4ca0adf2d05a2f41f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveMode: 0
-  moveSpeed: 0.5
-  searchInterval: 1
-  currentTarget: {fileID: 0}
-  isAttacking: 0
---- !u!114 &-7957200380691956401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2027857850954515486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b43c383816befd4fa7bea76e284af42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackRange: 0.5
-  attackInterval: 2
-  damage: 25
 --- !u!114 &-3880152435667545754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,8 +324,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3075bc55eafdbc74db504e92147ce339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 120
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   slimePrefab: {fileID: 2027857850954515486}
   splitThreshold: 0.5
   splitCounter: 8
+--- !u!114 &8180063506914729136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027857850954515486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786ede264e1fbdc4ca0adf2d05a2f41f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveMode: 0
+  moveSpeed: 8
+  searchInterval: 1
+  attackRange: 1
+  attackInterval: 2
+  damage: 20
+  isAttacking: 0
+  currentTarget: {fileID: 0}
