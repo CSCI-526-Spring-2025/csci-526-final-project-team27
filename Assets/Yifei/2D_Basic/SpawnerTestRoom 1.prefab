@@ -1357,17 +1357,17 @@ MonoBehaviour:
     preDelay: 0
     units:
     - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
-      count: 1
-      interval: 1
+      count: 5
+      interval: 0.5
       positionType: 1
       spawnPositions:
       - {x: 10, y: 5}
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
-      count: 1
-      interval: 1
+    - enemyPrefab: {fileID: 719380913716239421, guid: a425b81c88748d14cbd36db71894fb6e, type: 3}
+      count: 2
+      interval: 0
       positionType: 2
       spawnPositions:
       - {x: 10, y: 5}
@@ -1378,7 +1378,7 @@ MonoBehaviour:
     preDelay: 3
     units:
     - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
-      count: 5
+      count: 3
       interval: 1
       positionType: 1
       spawnPositions:
@@ -1386,8 +1386,8 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
-      count: 1
+    - enemyPrefab: {fileID: 719380913716239421, guid: a425b81c88748d14cbd36db71894fb6e, type: 3}
+      count: 3
       interval: 1
       positionType: 1
       spawnPositions:
