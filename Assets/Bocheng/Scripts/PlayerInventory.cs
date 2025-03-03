@@ -1,15 +1,27 @@
 using UnityEngine;
-using System;
 using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
     public int currentCoins = 0; // 当前金币数量
     [SerializeField] private TMPro.TextMeshProUGUI coinText; // 金币数量文本
-    
+
+    public static PlayerInventory Instance { get; private set; } // 单例实例
 
     private void Awake()
     {
+        // 确保单例唯一性
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 确保场景切换时不会销毁
+        }
+        else
+        {
+            Destroy(gameObject); // 如果已经存在实例，销毁当前对象
+            return;
+        }
+
         GameObject coinTextObj = GameObject.Find("CoinText");
         if (coinTextObj != null)
         {
@@ -38,5 +50,21 @@ public class PlayerInventory : MonoBehaviour
         Debug.Log("Coins: " + currentCoins);
         
         coinText.text = "Coins: " + currentCoins;
+    }
+
+    public bool PurchaseItem(int cost)
+    {
+        if (currentCoins >= cost)
+        {
+            currentCoins -= cost;
+            Debug.Log("Coins: " + currentCoins);
+            coinText.text = "Coins: " + currentCoins;
+            return true;
+        }
+        else
+        {
+            Debug.Log("Not enough coins to purchase item.");
+            return false;
+        }
     }
 }
