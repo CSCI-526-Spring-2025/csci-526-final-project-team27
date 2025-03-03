@@ -1,59 +1,112 @@
-ï»¿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IntelligentSpawner : MonoBehaviour
+public class SimpleSpawner : MonoBehaviour
 {
-    [Header("æ ¸å¿ƒé…ç½®")]
-    [SerializeField] private RoomConfig roomConfig;
-    [SerializeField] private GlobalEnemyLibrary enemyLibrary;
-    //[SerializeField] private Transform[] fixedSpawnPoints;
-    private Vector2 roomSize = Vector2.one * 10f;
+    #region ·¿¼äÅäÖÃ
+    public enum RoomType { Normal, Elite, Boss }
+    public enum SpawnMode { Dynamic, Static }
+    public enum SpawnPosition { Random, FixedPoints, Perimeter }
 
-    [Header("è¿è¡Œæ—¶å‚æ•°")]
+    [Header("·¿¼äÅäÖÃ")]
+    [Tooltip("·¿¼äÔ¤ÖÆÌå£¨½¨ÒéÌîĞ´³¡¾°ÖĞ¸Ã·¿¼äµÄ¸ùÎïÌå£©")]
+    public GameObject roomPrefab;
+    [Tooltip("·¿¼äÀàĞÍ")]
+    public RoomType roomType;
+    [Tooltip("Éú³ÉÄ£Ê½")]
+    public SpawnMode spawnMode;
+
+    [Header("µĞÈË¶¯Ì¬Éú³É")]
+    [Tooltip("¶¯Ì¬Éú³ÉÊ±µÄÉú³ÉÊıÁ¿·¶Î§×îĞ¡Öµ")]
+    public int dynamicSpawnRangeMin = 1;
+    [Tooltip("¶¯Ì¬Éú³ÉÊ±µÄÉú³ÉÊıÁ¿·¶Î§×î´óÖµ")]
+    public int dynamicSpawnRangeMax = 10;
+    [Tooltip("ËæÄÑ¶È±ä»¯µÄÉú³ÉÊıÁ¿ÇúÏß")] // XÖá: ±ê×¼»¯ÄÑ¶È(0-1) YÖá: ÊıÁ¿³ËÊı
+    public AnimationCurve difficultyCurve = AnimationCurve.Linear(0, 1, 1, 1);
+    [Tooltip("Éú³ÉÎ»ÖÃ£¨½öËæ»ú»ò±ßÔµ£©")]
+    public SpawnPosition dynamicSpawnPosition = SpawnPosition.Random;
+
+    [Header("µĞÈË¾²Ì¬²¨´Î")]
+    public List<WaveGroup> waveGroups = new List<WaveGroup>();
+
+    [Serializable]
+    public class WaveGroup
+    {
+        [Tooltip("²¨´ÎÃû³Æ£¨¿ÉÑ¡£©")]
+        public string waveName = "Wave";
+        [Tooltip("²¨´Î¿ªÊ¼Ç°µÄÑÓ³Ù")]
+        [Min(0)] public float preDelay;
+        [Tooltip("µĞÈËÉú³Éµ¥Ôª")]
+        public List<EnemySpawnUnit> units = new List<EnemySpawnUnit>();
+    }
+
+    [Serializable]
+    public class EnemySpawnUnit
+    {
+        [Tooltip("µĞÈËÀàĞÍÅäÖÃ")]
+        public EnemyConfig enemy;
+        [Tooltip("Éú³ÉÊıÁ¿")]
+        [Min(1)] public int count = 3;
+        [Tooltip("Éú³É¼ä¸ô£¨Ãë£©")]
+        [Min(0)] public float interval = 0.5f;
+        [Tooltip("Éú³ÉÎ»ÖÃÄ£Ê½")]
+        public SpawnPosition positionType;
+        [Tooltip("Éú³ÉÎ»ÖÃÁĞ±í£¨Ïà¶Ô·¿¼äÖĞĞÄ£©")]
+        public List<Vector2> spawnPositions = new List<Vector2>();
+    }
+    #endregion
+
+    #region ÔËĞĞÊ±²ÎÊı
+    [Header("ÔËĞĞÊ±²ÎÊı")]
+    [SerializeField] private GlobalEnemyLibrary enemyLibrary;
+    private Vector2 roomSize = Vector2.one * 10f;
     private List<EnemyConfig> validEnemies = new List<EnemyConfig>();
     [SerializeField] private float currentDifficulty;
     [SerializeField] private float spawnIntervalMin = 1f;
     [SerializeField] private float spawnIntervalMax = 3f;
 
-    // æ•Œäººå…¨éƒ¨æ­»äº¡æ—¶çš„é€šçŸ¥äº‹ä»¶
+    // µĞÈËÈ«²¿ËÀÍöÊ±µÄÍ¨ÖªÊÂ¼ş
     public event Action<bool> RoomClearEvent;
-
-    // æ•Œäººæ•°é‡ç›‘æ§
+    // µĞÈËÊıÁ¿¼à¿Ø
     private List<GameObject> activeEnemies = new List<GameObject>();
     private int totalEnemiesSpawned;
     private int enemiesRemaining;
-    private int roomCount; // å¯ç”¨äºè®¡ç®—éš¾åº¦ï¼Œä»æˆ¿é—´ç®¡ç†å™¨è·å–ï¼Ÿ
+    private int roomCount; // ¿ÉÓÃÓÚ¼ÆËãÄÑ¶È£¬´Ó·¿¼ä¹ÜÀíÆ÷»ñÈ¡£¿
+    #endregion
 
     private void Start()
     {
         InitializeRoom();
         Debug.Log("Room " + name + " initialized");
 
+        // »ñÈ¡·¿¼ä´óĞ¡£¨ÒÔ·¿¼äÖĞÃûÎª Floor µÄ×ÓÎïÌåÎª×¼£©
         Transform floor = transform.Find("Floor");
         if (floor != null)
-            roomSize = new Vector2(floor.localScale.x, floor.localScale.z); 
+            roomSize = new Vector2(floor.localScale.x, floor.localScale.z);
         else
             Debug.LogWarning("Room " + name + " has no floor!");
 
         CalculateDifficulty();
+        Debug.Log("Current difficulty: " + currentDifficulty);
         FilterValidEnemies();
+        Debug.Log("Valid enemies: " + validEnemies.Count);
 
-        switch (roomConfig.spawnMode)
+        switch (spawnMode)
         {
-            case RoomConfig.SpawnMode.Dynamic:
+            case SpawnMode.Dynamic:
                 Debug.Log("Dynamic spawning");
                 StartCoroutine(SpawnDynamicWave());
                 break;
-            case RoomConfig.SpawnMode.Static:
+            case SpawnMode.Static:
                 Debug.Log("Static spawning");
                 StartCoroutine(SpawnStaticWaves());
                 break;
         }
     }
 
-    #region æˆ¿é—´ç®¡ç†
+    #region ·¿¼ä¹ÜÀí
     private void InitializeRoom()
     {
         activeEnemies.Clear();
@@ -68,11 +121,14 @@ public class IntelligentSpawner : MonoBehaviour
         activeEnemies.Add(enemy);
         totalEnemiesSpawned++;
         enemiesRemaining++;
+        Debug.Log("Enemy " + enemy.name + " spawned");
+        Debug.Log("Enemies Remaining: " + enemiesRemaining);
 
         var health = enemy.GetComponent<EnemyHealth>();
         if (health != null)
         {
             health.OnDeath.AddListener(HandleEnemyDeath);
+            //Debug.Log("Enemy " + enemy.name + " dead");
             health.OnIncrease.AddListener(HandleEnemyIncrease);
         }
     }
@@ -80,6 +136,7 @@ public class IntelligentSpawner : MonoBehaviour
     private void HandleEnemyDeath(GameObject enemy)
     {
         enemiesRemaining--;
+        Debug.Log("Enemies Remaining: " + enemiesRemaining);
         CheckRoomClear();
         activeEnemies.Remove(enemy);
     }
@@ -97,23 +154,23 @@ public class IntelligentSpawner : MonoBehaviour
         if (enemiesRemaining <= 0)
         {
             RoomClearEvent?.Invoke(true);
+            Debug.Log("Room " + name + " clear");
         }
     }
     #endregion
 
-    #region åŠ¨æ€ç”Ÿæˆ
+    #region ¶¯Ì¬Éú³É
     private IEnumerator SpawnDynamicWave()
     {
         int spawnCount = Mathf.RoundToInt(
-            UnityEngine.Random.Range(
-                roomConfig.dynamicSpawnRangeMin,
-                Mathf.Max(roomConfig.dynamicSpawnRangeMax, roomConfig.dynamicSpawnRangeMin)
-            ) * roomConfig.difficultyCurve.Evaluate(currentDifficulty)
+            UnityEngine.Random.Range(dynamicSpawnRangeMin,
+            Mathf.Max(dynamicSpawnRangeMax, dynamicSpawnRangeMin))
+            * difficultyCurve.Evaluate(currentDifficulty)
         );
 
         for (int i = 0; i < spawnCount; i++)
         {
-            var enemy = SelectEnemyByWeight();
+            EnemyConfig enemy = SelectEnemyByWeight();
             SpawnEnemy(enemy, GetDynamicSpawnPosition());
             yield return new WaitForSeconds(UnityEngine.Random.Range(spawnIntervalMin, spawnIntervalMax));
         }
@@ -121,23 +178,24 @@ public class IntelligentSpawner : MonoBehaviour
 
     private Vector2 GetDynamicSpawnPosition()
     {
-        // å¦‚æœæˆ¿é—´ç±»å‹ä¸º Bossï¼Œåˆ™é‡‡ç”¨ Boss ä¸“ç”¨ç”Ÿæˆé€»è¾‘
-        if (roomConfig.roomType == RoomConfig.RoomType.Boss)
+        // Èç¹û·¿¼äÀàĞÍÎª Boss£¬Ôò²ÉÓÃ Boss ×¨ÓÃÉú³ÉÂß¼­
+        if (roomType == RoomType.Boss)
         {
             return GetBossSpawnPosition();
         }
 
-        // æ ¹æ®åŠ¨æ€ç”Ÿæˆçš„ç”Ÿæˆä½ç½®æ¨¡å¼æ¥é€‰æ‹©ç”Ÿæˆé€»è¾‘
-        return roomConfig.dynamicSpawnPosition switch
+        // ¸ù¾İ¶¯Ì¬Éú³ÉµÄÉú³ÉÎ»ÖÃÄ£Ê½À´Ñ¡ÔñÉú³ÉÂß¼­
+        return dynamicSpawnPosition switch
         {
-            RoomConfig.SpawnPosition.Random => GetRandomPosition(),    
-            RoomConfig.SpawnPosition.Perimeter => GetPerimeterPosition(), 
-            RoomConfig.SpawnPosition.FixedPoints => GetRandomPosition(), // ä¸æ”¯æŒå›ºå®šç‚¹ç”Ÿæˆ
+            SpawnPosition.Random => GetRandomPosition(),
+            SpawnPosition.Perimeter => GetPerimeterPosition(),
+            // FixedPoints ²»ÊÊÓÃÓÚ¶¯Ì¬Éú³É£¬Ä¬ÈÏ²ÉÓÃËæ»úÎ»ÖÃ
+            SpawnPosition.FixedPoints => GetRandomPosition(),
             _ => GetRandomPosition()
         };
     }
 
-    // ç”Ÿæˆåœ¨æˆ¿é—´è¾¹ç¼˜çš„ä½ç½®
+    // ÔÚ·¿¼ä±ßÔµÉú³ÉÒ»¸öÎ»ÖÃ
     private Vector2 GetPerimeterPosition()
     {
         Vector2 roomCenter = transform.position;
@@ -147,9 +205,8 @@ public class IntelligentSpawner : MonoBehaviour
             Mathf.Sin(angle * Mathf.Deg2Rad)
         );
 
-        return roomCenter + dir * roomSize / 2 * 0.9f;
+        return roomCenter + dir * (roomSize / 2f) * 0.9f;
     }
-
 
     private Vector2 GetBossSpawnPosition()
     {
@@ -157,31 +214,27 @@ public class IntelligentSpawner : MonoBehaviour
     }
     #endregion
 
-    #region é™æ€æ³¢æ¬¡
+    #region ¾²Ì¬²¨´ÎÉú³É
     private IEnumerator SpawnStaticWaves()
     {
-        foreach (var wave in roomConfig.waveGroups)
+        foreach (var wave in waveGroups)
         {
             yield return new WaitForSeconds(wave.preDelay);
 
             List<Coroutine> spawnRoutines = new List<Coroutine>();
             foreach (var unit in wave.units)
             {
-                spawnRoutines.Add(StartCoroutine(
-                    SpawnUnit(unit)
-                ));
+                spawnRoutines.Add(StartCoroutine(SpawnUnit(unit)));
             }
 
             foreach (var routine in spawnRoutines)
             {
                 yield return routine;
             }
-
-            //yield return new WaitForSeconds(wave.postDelay);
         }
     }
 
-    private IEnumerator SpawnUnit(RoomConfig.EnemySpawnUnit unit)
+    private IEnumerator SpawnUnit(EnemySpawnUnit unit)
     {
         for (int i = 0; i < unit.count; i++)
         {
@@ -190,20 +243,15 @@ public class IntelligentSpawner : MonoBehaviour
         }
     }
 
-    private Vector2 GetStaticSpawnPosition(RoomConfig.EnemySpawnUnit unit)
+    private Vector2 GetStaticSpawnPosition(EnemySpawnUnit unit)
     {
         return unit.positionType switch
         {
-            RoomConfig.SpawnPosition.FixedPoints => GetConfiguredFixedPosition(unit),
-            RoomConfig.SpawnPosition.Perimeter => GetPerimeterPosition(),
+            SpawnPosition.FixedPoints => GetConfiguredFixedPosition(unit),
+            SpawnPosition.Perimeter => GetPerimeterPosition(),
             _ => GetRandomPosition()
         };
     }
-
-    //private Vector2 GetFixedPointPosition()
-    //{
-    //    return fixedSpawnPoints[UnityEngine.Random.Range(0, fixedSpawnPoints.Length)].position;
-    //}
 
     private Vector2 GetRandomPosition()
     {
@@ -212,30 +260,26 @@ public class IntelligentSpawner : MonoBehaviour
             UnityEngine.Random.Range(-roomSize.y / 2, roomSize.y / 2)
         );
     }
-    private Vector2 GetConfiguredFixedPosition(RoomConfig.EnemySpawnUnit unit)
+
+    private Vector2 GetConfiguredFixedPosition(EnemySpawnUnit unit)
     {
         if (unit.spawnPositions.Count == 0)
         {
-            Debug.LogWarning($"å•ä½ {unit.enemy.displayName} æœªé…ç½®ç”Ÿæˆä½ç½®ï¼Œä½¿ç”¨éšæœºä½ç½®");
+            Debug.LogWarning($"µ¥Î» {unit.enemy.displayName} Î´ÅäÖÃÉú³ÉÎ»ÖÃ£¬Ê¹ÓÃËæ»úÎ»ÖÃ");
             return GetRandomPosition();
         }
 
-        // éšæœºé€‰æ‹©ä¸€ä¸ªé¢„è®¾ä½ç½®
+        // Ëæ»úÑ¡ÔñÒ»¸öÔ¤ÉèÎ»ÖÃ£¬²¢×ª»»ÎªÊÀ½ç×ø±ê£¨¿¼ÂÇ·¿¼äµÄ±ä»»£©
         Vector2 localPos = unit.spawnPositions[UnityEngine.Random.Range(0, unit.spawnPositions.Count)];
-
-        // è½¬æ¢ä¸ºä¸–ç•Œåæ ‡ï¼ˆè€ƒè™‘æˆ¿é—´æ—‹è½¬å’Œç¼©æ”¾ï¼‰
         return transform.TransformPoint(localPos);
     }
-
     #endregion
 
-    #region é€šç”¨é€»è¾‘
+    #region Í¨ÓÃÂß¼­
     private void CalculateDifficulty()
     {
-        // éš¾åº¦è®¡ç®—å…¬å¼
-        //currentDifficulty = 1f + roomCount;
+        // ÕâÀï¿ÉÒÔ¸ù¾İ·¿¼äÊıÁ¿»òÆäËüÂß¼­µ÷ÕûÄÑ¶È£¬Ä¿Ç°¹Ì¶¨Îª 1
         currentDifficulty = 1f;
-
     }
 
     private void FilterValidEnemies()
@@ -250,16 +294,15 @@ public class IntelligentSpawner : MonoBehaviour
 
     private bool IsEnemyValid(EnemyConfig enemy)
     {
-        bool validType = roomConfig.roomType switch
+        bool validType = roomType switch
         {
-            RoomConfig.RoomType.Normal => enemy.allowInNormal,
-            RoomConfig.RoomType.Elite => enemy.allowInElite,
-            RoomConfig.RoomType.Boss => enemy.allowInBoss,
+            RoomType.Normal => enemy.allowInNormal,
+            RoomType.Elite => enemy.allowInElite,
+            RoomType.Boss => enemy.allowInBoss,
             _ => false
         };
 
-        return validType &&
-               currentDifficulty >= enemy.difficultyThreshold;
+        return validType && currentDifficulty >= enemy.difficultyThreshold;
     }
 
     private EnemyConfig SelectEnemyByWeight()
@@ -280,7 +323,8 @@ public class IntelligentSpawner : MonoBehaviour
 
     private void SpawnEnemy(EnemyConfig config, Vector2 position)
     {
-        Instantiate(config.prefab, position, Quaternion.identity);
+        GameObject enemyInstance = Instantiate(config.prefab, position, Quaternion.identity);
+        RegisterEnemy(enemyInstance);
     }
     #endregion
 }

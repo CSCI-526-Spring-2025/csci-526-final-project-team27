@@ -281,11 +281,12 @@ public class RoomManager_BC : MonoBehaviour
             cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
         }
 
-        EnemySpawner enemySpawner = newRoomInstance.GetComponent<EnemySpawner>();
-        if(enemySpawner != null)
+        //EnemySpawner enemySpawner = newRoomInstance.GetComponent<EnemySpawner>();
+         SimpleSpawner enemySpawner = newRoomInstance.GetComponent<SimpleSpawner>();
+        if (enemySpawner != null)
         {
             DoorControl(false);
-            enemySpawner.StartSpawn();
+            //enemySpawner.StartSpawn();
             // enemySpawner.RoomClearEvent += DoorControl;
             enemySpawner.RoomClearEvent += OnRoomClear;
 

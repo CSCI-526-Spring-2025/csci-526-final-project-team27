@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Events;
 
 public class EnemyHealth : Health
@@ -6,9 +6,9 @@ public class EnemyHealth : Health
     private EnemySpawner enemySpawner;
 
     [System.Serializable]
-    // ÓÃÓÚËÀÍöÊÂ¼ş
+    // ç”¨äºæ­»äº¡äº‹ä»¶
     public class DeathEvent : UnityEvent<GameObject> { }
-    // ÓÃÓÚ·ÖÁÑ¡¢ÕÙ»½µÈÇé¿ö£¬²»È·¶¨·ÅÕâ¶ùºÏ²»ºÏÊÊ¡£ÓÃ·¨£ºOnIncrease.Invoke(this.gameObject, newEnemies);
+    // ç”¨äºåˆ†è£‚ã€å¬å”¤ç­‰æƒ…å†µï¼Œä¸ç¡®å®šæ”¾è¿™å„¿åˆä¸åˆé€‚ã€‚ç”¨æ³•ï¼šOnIncrease.Invoke(this.gameObject, newEnemies);
     public class IncreaseEvent : UnityEvent<GameObject, GameObject[]> { } 
 
     public DeathEvent OnDeath = new DeathEvent();
@@ -35,7 +35,7 @@ public class EnemyHealth : Health
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
-        // Éú³ÉºìÉ«ÖÎÁÆÌØĞ§£¬Æ«ÒÆÁ¿Ê¹Æä³öÏÖÔÚ½ÇÉ«ÓÒÉÏ½Ç
+        // ç”Ÿæˆçº¢è‰²æ²»ç–—ç‰¹æ•ˆï¼Œåç§»é‡ä½¿å…¶å‡ºç°åœ¨è§’è‰²å³ä¸Šè§’
         ShowFloatingText("+" + amount + "!", Color.red, new Vector3(0.5f, 1f, 0));
     }
 
@@ -43,11 +43,11 @@ public class EnemyHealth : Health
     {
         Debug.Log(this.gameObject.name + " is dead");
         base.Die();
-        //ÊÊÅäĞÂµÄÉú³ÉÆ÷
+        //é€‚é…æ–°çš„ç”Ÿæˆå™¨
         OnDeath.Invoke(this.gameObject);
 
-        //¾ÉµÄÉú³ÉÆ÷
-        enemySpawner.EnemyDie();
+        //æ—§çš„ç”Ÿæˆå™¨
+        //enemySpawner.EnemyDie();
     }
 
     private void IncreaseEnemy()

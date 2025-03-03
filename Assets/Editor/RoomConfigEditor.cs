@@ -1,99 +1,321 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(RoomConfig))]
 public class RoomConfigEditor : Editor
 {
-    private SerializedProperty dynamicSpawnRange;
+    private SerializedProperty dynamicSpawnRangeMin;
+    private SerializedProperty dynamicSpawnRangeMax;
     private SerializedProperty waveGroups;
     private bool showWaveSettings = true;
 
+    // 可视化编辑状态
+    private int selectedWaveIndex = -1;
+    private int selectedUnitIndex = -1;
+    private bool isPlacingPoints = false;
+    private RoomConfig.SpawnPosition currentPositionType;
+
+    private Dictionary<int, bool> waveFoldoutStates = new Dictionary<int, bool>();
+
     private void OnEnable()
     {
-        dynamicSpawnRange = serializedObject.FindProperty("dynamicSpawnRange");
+        dynamicSpawnRangeMin = serializedObject.FindProperty("dynamicSpawnRangeMin");
+        dynamicSpawnRangeMax = serializedObject.FindProperty("dynamicSpawnRangeMax");
         waveGroups = serializedObject.FindProperty("waveGroups");
+        SceneView.duringSceneGui += OnSceneGUI;
+    }
+
+    private void OnDisable()
+    {
+        SceneView.duringSceneGui -= OnSceneGUI;
+    }
+
+    private void OnSceneGUI(SceneView sceneView)
+    {
+        RoomConfig config = target as RoomConfig;
+        if (config == null || config.roomPrefab == null)
+            return;
+
+        // 避免在 Inspector 操作时干扰（当有其他控件处于激活状态时返回）
+        //if (GUIUtility.hotControl != 0)
+        //    return;
+
+        // 检查索引是否有效
+        if (waveGroups.arraySize == 0 || selectedWaveIndex < 0 || selectedWaveIndex >= waveGroups.arraySize)
+            return;
+
+        SerializedProperty wave = waveGroups.GetArrayElementAtIndex(selectedWaveIndex);
+        SerializedProperty units = wave.FindPropertyRelative("units");
+        if (units.arraySize == 0 || selectedUnitIndex < 0 || selectedUnitIndex >= units.arraySize)
+            return;
+
+        SerializedProperty unit = units.GetArrayElementAtIndex(selectedUnitIndex);
+        SerializedProperty positionType = unit.FindPropertyRelative("positionType");
+        SerializedProperty spawnPositions = unit.FindPropertyRelative("spawnPositions");
+
+        currentPositionType = (RoomConfig.SpawnPosition)positionType.enumValueIndex;
+        if (currentPositionType != RoomConfig.SpawnPosition.FixedPoints)
+            return;
+
+        // 仅在 Repaint 或鼠标拖拽事件时绘制，降低不必要的调用
+        if (Event.current.type == EventType.Repaint || Event.current.type == EventType.MouseDrag)
+        {
+            DrawPositionHandles(config, spawnPositions);
+        }
+
+        ProcessSceneEvents(config, spawnPositions);
+    }
+
+    private void DrawPositionHandles(RoomConfig config, SerializedProperty spawnPositions)
+    {
+        if (config.roomPrefab == null) return;
+        Transform roomTransform = config.roomPrefab.transform;
+
+        for (int i = 0; i < spawnPositions.arraySize; i++)
+        {
+            SerializedProperty posProp = spawnPositions.GetArrayElementAtIndex(i);
+            Vector2 localPos = posProp.vector2Value;
+            Vector3 worldPos = roomTransform.TransformPoint(localPos);
+
+            EditorGUI.BeginChangeCheck();
+            Vector3 newWorldPos = Handles.PositionHandle(worldPos, Quaternion.identity);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(config, "Move Spawn Point");
+                posProp.vector2Value = roomTransform.InverseTransformPoint(newWorldPos);
+                serializedObject.ApplyModifiedProperties();
+            }
+            Handles.Label(worldPos, $"Point {i + 1}");
+        }
+    }
+
+    private void ProcessSceneEvents(RoomConfig config, SerializedProperty spawnPositions)
+    {
+        if (config.roomPrefab == null) return;
+        Transform roomTransform = config.roomPrefab.transform;
+
+        Event e = Event.current;
+        // 只处理鼠标按下事件，并确保只有在编辑模式下才处理
+        if (e.type != EventType.MouseDown || e.button != 0 || !isPlacingPoints)
+            return;
+
+        Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Undo.RecordObject(config, "Add Spawn Point");
+
+            int newIndex = spawnPositions.arraySize;
+            spawnPositions.arraySize = newIndex + 1;
+            SerializedProperty newPos = spawnPositions.GetArrayElementAtIndex(newIndex);
+
+            Vector3 localPos = roomTransform.InverseTransformPoint(hit.point);
+            newPos.vector2Value = new Vector2(localPos.x, localPos.y);
+
+            serializedObject.ApplyModifiedProperties();
+            e.Use();
+        }
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        // 基础设置
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("房间基础配置", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("roomType"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnMode"));
 
-        // 动态生成设置
         if (serializedObject.FindProperty("spawnMode").enumValueIndex ==
             (int)RoomConfig.SpawnMode.Dynamic)
         {
-            EditorGUILayout.PropertyField(dynamicSpawnRange);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("difficultyCurve"));
+            DrawDynamicSettings();
         }
-        // 静态波次设置
         else
         {
-            showWaveSettings = EditorGUILayout.Foldout(showWaveSettings, "波次配置");
-            if (showWaveSettings)
-            {
-                EditorGUI.indentLevel++;
-                for (int i = 0; i < waveGroups.arraySize; i++)
-                {
-                    DrawWaveGroup(waveGroups.GetArrayElementAtIndex(i), i);
-                }
-                WaveManagementButtons();
-                EditorGUI.indentLevel--;
-            }
+            DrawStaticWaveSettings();
         }
 
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawWaveGroup(SerializedProperty wave, int index)
+    private void DrawDynamicSettings()
     {
-        EditorGUILayout.BeginVertical("box");
-
-        // 波次标题
-        EditorGUILayout.BeginHorizontal();
-        wave.isExpanded = EditorGUILayout.Foldout(
-            wave.isExpanded,
-            $"波次 {index + 1}: {wave.FindPropertyRelative("waveName").stringValue}",
-            true
-        );
-        if (GUILayout.Button("×", GUILayout.Width(20)))
-        {
-            waveGroups.DeleteArrayElementAtIndex(index);
-            return;
-        }
-        EditorGUILayout.EndHorizontal();
-
-        if (wave.isExpanded)
-        {
-            // 基本参数
-            EditorGUILayout.PropertyField(wave.FindPropertyRelative("waveName"));
-            EditorGUILayout.PropertyField(wave.FindPropertyRelative("preDelay"));
-            EditorGUILayout.PropertyField(wave.FindPropertyRelative("postDelay"));
-
-            // 生成单元
-            SerializedProperty units = wave.FindPropertyRelative("units");
-            EditorGUILayout.PropertyField(units, true);
-        }
-
-        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("动态生成设置", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(dynamicSpawnRangeMin);
+        EditorGUILayout.PropertyField(dynamicSpawnRangeMax);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("difficultyCurve"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("dynamicSpawnPosition"));
     }
 
-    private void WaveManagementButtons()
+    private void DrawStaticWaveSettings()
     {
+        EditorGUILayout.Space();
+        showWaveSettings = EditorGUILayout.Foldout(showWaveSettings, "静态波次配置", true);
+
+        if (!showWaveSettings) return;
+
+        EditorGUI.indentLevel++;
+
+        for (int i = 0; i < waveGroups.arraySize; i++)
+        {
+            DrawWaveGroup(i);
+        }
+
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("添加波次"))
         {
             waveGroups.arraySize++;
         }
-        if (GUILayout.Button("清空全部"))
+        if (GUILayout.Button("清空全部波次"))
         {
             waveGroups.ClearArray();
         }
         EditorGUILayout.EndHorizontal();
+
+        EditorGUI.indentLevel--;
+    }
+
+    private void DrawWaveGroup(int waveIndex)
+    {
+        SerializedProperty wave = waveGroups.GetArrayElementAtIndex(waveIndex);
+        SerializedProperty waveName = wave.FindPropertyRelative("waveName");
+        SerializedProperty units = wave.FindPropertyRelative("units");
+
+        EditorGUILayout.BeginVertical("box");
+
+        // 使用字典维护每个波次的折叠状态
+        if (!waveFoldoutStates.ContainsKey(waveIndex))
+            waveFoldoutStates[waveIndex] = true;
+        bool isExpanded = waveFoldoutStates[waveIndex];
+
+        EditorGUILayout.BeginHorizontal();
+        isExpanded = EditorGUILayout.Foldout(isExpanded, $"波次 {waveIndex + 1}: {waveName.stringValue}", true);
+        waveFoldoutStates[waveIndex] = isExpanded;
+        if (GUILayout.Button("×", GUILayout.Width(20)))
+        {
+            waveGroups.DeleteArrayElementAtIndex(waveIndex);
+            return;
+        }
+        EditorGUILayout.EndHorizontal();
+
+        if (isExpanded)
+        {
+            EditorGUILayout.PropertyField(waveName);
+            EditorGUILayout.PropertyField(wave.FindPropertyRelative("preDelay"));
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("敌人生成单元", EditorStyles.boldLabel);
+
+            for (int i = 0; i < units.arraySize; i++)
+            {
+                DrawSpawnUnit(waveIndex, i, units.GetArrayElementAtIndex(i));
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("添加生成单元"))
+            {
+                units.arraySize++;
+            }
+            if (GUILayout.Button("清空单元"))
+            {
+                units.ClearArray();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.EndVertical();
+    }
+
+    private void DrawSpawnUnit(int waveIndex, int unitIndex, SerializedProperty unit)
+    {
+        EditorGUILayout.BeginVertical("box");
+
+        // 单元标题
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField($"生成单元 {unitIndex + 1}", EditorStyles.boldLabel);
+        if (GUILayout.Button("×", GUILayout.Width(20)))
+        {
+            SerializedProperty wave = waveGroups.GetArrayElementAtIndex(waveIndex);
+            SerializedProperty units = wave.FindPropertyRelative("units");
+            units.DeleteArrayElementAtIndex(unitIndex);
+            return;
+        }
+        EditorGUILayout.EndHorizontal();
+
+        // 基础设置
+        EditorGUILayout.PropertyField(unit.FindPropertyRelative("enemy"));
+        EditorGUILayout.PropertyField(unit.FindPropertyRelative("count"));
+        EditorGUILayout.PropertyField(unit.FindPropertyRelative("interval"));
+
+        // 位置设置
+        SerializedProperty positionType = unit.FindPropertyRelative("positionType");
+        EditorGUILayout.PropertyField(positionType);
+
+        // FixedPoints特殊处理
+        if ((RoomConfig.SpawnPosition)positionType.enumValueIndex == RoomConfig.SpawnPosition.FixedPoints)
+        {
+            DrawFixedPointsSettings(waveIndex, unitIndex, unit);
+        }
+
+        EditorGUILayout.EndVertical();
+    }
+
+    private void DrawFixedPointsSettings(int waveIndex, int unitIndex, SerializedProperty unit)
+    {
+        SerializedProperty spawnPositions = unit.FindPropertyRelative("spawnPositions");
+
+        EditorGUILayout.BeginVertical("helpbox");
+
+        // 编辑模式开关（仅在状态切换时调用一次 RepaintAll，避免连续重绘造成卡顿）
+        bool wasPlacing = isPlacingPoints;
+        isPlacingPoints = GUILayout.Toggle(isPlacingPoints, "场景编辑模式", "Button", GUILayout.Height(25));
+        if (isPlacingPoints && !wasPlacing)
+        {
+            selectedWaveIndex = waveIndex;
+            selectedUnitIndex = unitIndex;
+            SceneView.RepaintAll();
+        }
+
+        EditorGUILayout.LabelField("预设位置列表（相对房间中心）：");
+        for (int i = 0; i < spawnPositions.arraySize; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(spawnPositions.GetArrayElementAtIndex(i), GUIContent.none);
+            if (GUILayout.Button("定位", GUILayout.Width(50)))
+            {
+                Vector3 worldPos = (target as RoomConfig).roomPrefab.transform.TransformPoint(
+                    spawnPositions.GetArrayElementAtIndex(i).vector2Value
+                );
+                SceneView.lastActiveSceneView.pivot = worldPos;
+                SceneView.lastActiveSceneView.Repaint();
+            }
+            if (GUILayout.Button("×", GUILayout.Width(20)))
+            {
+                spawnPositions.DeleteArrayElementAtIndex(i);
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("添加位置"))
+        {
+            Undo.RecordObject(target as RoomConfig, "Add Spawn Point");
+            int newIndex = spawnPositions.arraySize;
+            spawnPositions.arraySize = newIndex + 1;
+            serializedObject.ApplyModifiedProperties();
+        }
+        if (GUILayout.Button("清除全部"))
+        {
+            Undo.RecordObject(target as RoomConfig, "Clear Spawn Points");
+            spawnPositions.ClearArray();
+            serializedObject.ApplyModifiedProperties();
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.EndVertical();
     }
 }
 #endif
