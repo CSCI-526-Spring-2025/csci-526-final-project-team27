@@ -3,6 +3,9 @@ using UnityEngine.Events;
 
 public class EnemyHealth : Health
 {
+    [Header("Coin Drop")]
+    [SerializeField] private GameObject coinPrefab;
+
     private EnemySpawner enemySpawner;
 
     [System.Serializable]
@@ -44,8 +47,24 @@ public class EnemyHealth : Health
     public override void Die()
     {
         Debug.Log(this.gameObject.name + " is dead");
-        //适配新的生成器
-        OnDeath.Invoke(this.gameObject);
+
+        // Notify spawner
+        if (enemySpawner != null)
+        {
+            enemySpawner.EnemyDie();
+        }
+
+        // 1. Spawn coin (if you have assigned coinPrefab)
+        if (coinPrefab != null)
+        {
+            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("coinPrefab not set on " + gameObject.name);
+        }
+
+        // 2. Call base.Die to handle anything else from the parent Health
         base.Die();
         //旧的生成器
         //enemySpawner.EnemyDie();

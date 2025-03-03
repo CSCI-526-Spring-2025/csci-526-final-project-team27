@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class SlimeHealth : EnemyHealth
 {
@@ -8,6 +9,8 @@ public class SlimeHealth : EnemyHealth
 
     private bool hasSplit = false; // Prevent multiple splits at the same threshold
 
+    const float fac = 0.03f;
+
     void Update()
     {
         if (!hasSplit && splitCounter > 1 && currentHealth <= maxHealth * splitThreshold)
@@ -15,6 +18,8 @@ public class SlimeHealth : EnemyHealth
             Split();
             hasSplit = true; // Prevent further splits at this threshold
         }
+
+        if (currentHealth <= 0) DeadSlime();
     }
 
     private void Split()
@@ -24,7 +29,22 @@ public class SlimeHealth : EnemyHealth
         for (int i = 0; i < 2; i++)
         {
             // Spawn new slime at a slight offset from the parent position
-            GameObject newSlime = Instantiate(slimePrefab, transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f)), Quaternion.identity);
+            GameObject newSlime = Instantiate(slimePrefab, transform.position + new Vector3(Random.Range(-1.5f, 1.5f), 0, Random.Range(-1.5f, 1.5f)), Quaternion.identity);
+            float sSize = fac * (float)splitCounter;
+            newSlime.transform.localScale = new Vector3(sSize, sSize, sSize);
+            SpriteShapeRenderer sRenderer = newSlime.GetComponent<SpriteShapeRenderer>();
+            switch (splitCounter)
+            {
+                case 8:
+                    sRenderer.color = Color.blue;
+                    break;
+                case 4:
+                    sRenderer.color = Color.cyan;
+                    break;
+                case 2:
+                    sRenderer.color = Color.gray;
+                    break;
+            }
 
             // Get the health component of the new slime
             SlimeHealth newSlimeHealth = newSlime.GetComponent<SlimeHealth>();
@@ -38,6 +58,12 @@ public class SlimeHealth : EnemyHealth
         }
 
         // Optionally destroy the parent slime after splitting
+        Destroy(gameObject);
+    }
+
+    private void DeadSlime()
+    {
+        Debug.Log(this.gameObject.name + " is dead");
         Destroy(gameObject);
     }
 }

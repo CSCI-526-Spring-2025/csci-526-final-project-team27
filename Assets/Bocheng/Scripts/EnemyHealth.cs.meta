@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: a02896bce7ea32544919dffef61c19c1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - FloatingHPCanvas: {instanceID: 0}
+  - coinPrefab: {fileID: 1254284907342112680, guid: 18ed9d638017f406faec4cb5d646538d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
