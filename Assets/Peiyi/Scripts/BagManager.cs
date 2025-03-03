@@ -6,6 +6,8 @@ using TMPro;
 
 public class BagManager : MonoBehaviour
 {
+    public static BagManager Instance { get; private set; } // 单例实例
+
     public List<Item> inventory = new List<Item>(); 
     public Transform inventoryGrid; 
     public GameObject inventorySlotPrefab; 
@@ -14,6 +16,24 @@ public class BagManager : MonoBehaviour
     public int coinCount = 0; // 
     public TextMeshProUGUI coinText; // UI OF COIN
     public Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+
+
+    private void Awake()
+    {
+        // 确保单例唯一性
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 确保场景切换时不会销毁
+        }
+        else
+        {
+            Destroy(gameObject); // 如果已经存在实例，销毁当前对象
+            return;
+        }
+    }
+
+
     void Start()
     {
         InitializeInventoryUI();

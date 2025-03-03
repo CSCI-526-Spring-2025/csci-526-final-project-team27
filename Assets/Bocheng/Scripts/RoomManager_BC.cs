@@ -188,6 +188,7 @@ public class RoomManager_BC : MonoBehaviour
         List<Vector2Int> path = DFSPathToEnd(startRoom, endRoom);
         if (path.Count > 1) // 确保路径有效
         {
+
             int shopRoomIndex = Random.Range(path.Count / 2, path.Count); // 1/2路径后随机选一个
             Vector2Int shopRoomPos = path[shopRoomIndex];
 
@@ -261,6 +262,12 @@ public class RoomManager_BC : MonoBehaviour
         }
         path.Add(start);
         path.Reverse();
+
+        // 确保 end 不在路径中
+        if (path.Count > 0 && path[path.Count - 1] == end)
+        {
+            path.RemoveAt(path.Count - 1);
+        }
 
         return path;
     }
