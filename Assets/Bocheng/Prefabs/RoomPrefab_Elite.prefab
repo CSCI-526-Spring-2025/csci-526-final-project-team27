@@ -618,6 +618,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4840226400624763445}
+  - component: {fileID: 2877337435021015230}
   m_Layer: 0
   m_Name: RoomPrefab_Elite
   m_TagString: Untagged
@@ -653,6 +654,62 @@ Transform:
   - {fileID: 65515553123503191}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2877337435021015230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076533052321158648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c46b4309c100fa649b241fa4b7d262e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPrefab: {fileID: 4076533052321158648}
+  roomType: 0
+  spawnMode: 1
+  dynamicSpawnRangeMin: 1
+  dynamicSpawnRangeMax: 10
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dynamicSpawnPosition: 0
+  waveGroups:
+  - waveName: Slime
+    preDelay: 0
+    units:
+    - enemyPrefab: {fileID: 2027857850954515486, guid: 8f15ba02e1a1480408f4771a9e3d2341, type: 3}
+      count: 1
+      interval: 0
+      positionType: 1
+      spawnPositions:
+      - {x: 0, y: 0}
+  enemyLibrary: {fileID: 0}
+  currentDifficulty: 0
+  spawnIntervalMin: 1
+  spawnIntervalMax: 3
 --- !u!1 &4512887401930351777
 GameObject:
   m_ObjectHideFlags: 0

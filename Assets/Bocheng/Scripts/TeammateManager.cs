@@ -43,7 +43,7 @@ public class TeammateManager : MonoBehaviour
 
         if (teammates.Count == 0)
         {
-
+            Time.timeScale = 0;
             // 显示UI
             Debug.Log("游戏结束");
             gameOverUI = Instantiate(gameOverUI);

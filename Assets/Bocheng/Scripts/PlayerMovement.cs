@@ -45,7 +45,8 @@ public class PlayerMovement : MonoBehaviour
     {
         // 显示UI
         Debug.Log("游戏结束");
-        if(gameOverUI != null)
+        Time.timeScale = 0;
+        if (gameOverUI != null)
             gameOverUI = Instantiate(gameOverUI);
     }
 }

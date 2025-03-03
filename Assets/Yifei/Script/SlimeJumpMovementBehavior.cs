@@ -6,7 +6,7 @@ using UnityEngine;
 /// 在二维平面（X/Y）上跳跃，通过在Y轴方向添加一个抛物线偏移来模拟真实跳跃效果。 
 /// 如果目标在跳跃距离内，则直接跳到目标位置；否则跳跃固定距离。
 /// </summary>
-public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBehavior
+public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
 {
     [Header("Jump Settings")]
     [Tooltip("每次跳跃水平方向（沿目标方向）的最大距离")]
@@ -26,32 +26,41 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBeha
 
     /// <summary>
     /// 根据目标方向发起一次跳跃。
+    /// 注意：参数 moveSpeed 在本实现中未使用，跳跃距离由 jumpDistance 控制。
     /// </summary>
-    /// <param name="target">目标对象的Transform</param>
-    /// <param name="rb">角色的Rigidbody2D（本实现中未直接使用）</param>
-    /// <param name="moveSpeed">移动速度参数（本实现中不使用，跳跃距离由jumpDistance控制）</param>
-    public void Move(Transform target, Rigidbody2D rb, float moveSpeed)
+    /// <param name="self">当前角色的 Transform（使用传入的 self 代替内部 transform）</param>
+    /// <param name="rb">角色的 Rigidbody2D（本实现中未直接使用）</param>
+    /// <param name="target">目标对象的 Transform</param>
+    /// <param name="moveSpeed">移动速度参数（本实现中不使用）</param>
+    public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
         if (!isJumping && Time.time - lastJumpTime >= jumpInterval)
         {
-            StartCoroutine(JumpTowardsTarget(target));
+            StartCoroutine(JumpTowardsTarget(self, target));
         }
     }
+
+    void LateUpdate()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 180);
+    }
+
 
     /// <summary>
     /// 协程：执行一次抛物线跳跃，并在二维平面上更新角色位置。
     /// 如果目标在跳跃距离内，则跳到目标位置；否则按照固定跳跃距离计算落点。
     /// </summary>
-    /// <param name="target">目标Transform</param>
+    /// <param name="self">当前角色的 Transform</param>
+    /// <param name="target">目标 Transform</param>
     /// <returns></returns>
-    private IEnumerator JumpTowardsTarget(Transform target)
+    private IEnumerator JumpTowardsTarget(Transform self, Transform target)
     {
         isJumping = true;
         lastJumpTime = Time.time;
 
-        // 记录跳跃起点（当前二维平面位置）
-        Vector2 startPos = transform.position;
+        // 记录跳跃起点（使用传入的 self 位置）
+        Vector2 startPos = self.position;
         // 计算目标与起点的距离
         float targetDistance = Vector2.Distance(startPos, (Vector2)target.position);
         // 如果目标距离小于跳跃距离，则实际跳跃距离为目标距离，否则为设定的跳跃距离
@@ -71,15 +80,14 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMovementBeha
             Vector2 pos = Vector2.Lerp(startPos, endPos, t);
             // 使用简单二次函数模拟抛物线：t*(1-t)在 t=0 与 t=1 时为 0，在 t=0.5 时取得最大值
             float verticalOffset = 4 * maxJumpHeight * t * (1 - t);
-            // 将偏移加到Y轴上，模拟跳跃弧线
             pos.y += verticalOffset;
 
-            transform.position = pos;
-            yield return null;  // 暂停执行，等待下一帧再继续
+            self.position = pos;
+            yield return null;
         }
 
         // 确保跳跃结束时位置精确落在预定的落点
-        transform.position = endPos;
+        self.position = endPos;
         isJumping = false;
     }
 }

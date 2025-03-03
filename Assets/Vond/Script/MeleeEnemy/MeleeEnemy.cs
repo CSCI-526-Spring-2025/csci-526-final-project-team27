@@ -32,14 +32,17 @@ public class MeleeEnemy : BaseEnemy
         rb = GetComponent<Rigidbody2D>();
 
         // 若未注入，则使用默认实现
+        targetFinder = GetComponent<ITargetFinder>();
         if (targetFinder == null)
         {
             targetFinder = new NearestTeamFinder();
         }
+        mover = GetComponent<IMover>();
         if (mover == null)
         {
             mover = new SimpleMover();
         }
+        meleeAttacker = GetComponent<IEnemyMelee>();
         if (meleeAttacker == null)
         {
             meleeAttacker = new EnemyMeleeAttacker();
