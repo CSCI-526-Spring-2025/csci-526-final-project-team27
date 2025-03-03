@@ -317,6 +317,7 @@ MonoBehaviour:
   gridHeight: 5
   minPathLength: 4
   normalRoomPrefabs:
+  - {fileID: 7752736070594661851, guid: d69f7f1ea6f9e5246a6a7f24b336decf, type: 3}
   - {fileID: 7752736070594661851, guid: 315f1a68f83adca44b81ae29d2f1aed8, type: 3}
   eliteRoomPrefabs:
   - {fileID: 4076533052321158648, guid: 8400598fe8230504e8fc6756bafbed8e, type: 3}
@@ -4427,10 +4428,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3453530852043067426, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
-      propertyPath: m_Constraints
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 3701584900275016987, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: 'teammates.Array.data[0]'
       value: 
