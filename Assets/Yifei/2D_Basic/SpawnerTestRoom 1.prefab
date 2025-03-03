@@ -1262,7 +1262,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7018451029380841082}
   - component: {fileID: 5655942396197303397}
-  - component: {fileID: 5060599790919705057}
   - component: {fileID: 4178869388124672663}
   m_Layer: 0
   m_Name: SpawnerTestRoom 1
@@ -1311,23 +1310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98869052765e42c4e9d0a3e1e21ac40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5060599790919705057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7752736070594661851}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f7c76edf70ded141a4d7eb4fac92b83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomConfig: {fileID: 11400000, guid: 130c61e378629d349a8e0233d0103ca6, type: 2}
-  enemyLibrary: {fileID: 11400000, guid: ef9369fe42c65f343b181af4d78b165f, type: 2}
-  currentDifficulty: 1
-  spawnIntervalMin: 0.5
-  spawnIntervalMax: 1
 --- !u!114 &4178869388124672663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,7 +1356,7 @@ MonoBehaviour:
   - waveName: 0
     preDelay: 0
     units:
-    - enemy: {fileID: 11400000, guid: 33d6057685621bd46b968bb1d23ed237, type: 2}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
       count: 1
       interval: 1
       positionType: 1
@@ -1383,10 +1365,31 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemy: {fileID: 11400000, guid: 33d6057685621bd46b968bb1d23ed237, type: 2}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
       count: 1
       interval: 1
       positionType: 2
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}
+      - {x: -10, y: 5}
+  - waveName: 1
+    preDelay: 3
+    units:
+    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      count: 5
+      interval: 1
+      positionType: 1
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}
+      - {x: -10, y: 5}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+      count: 1
+      interval: 1
+      positionType: 1
       spawnPositions:
       - {x: 10, y: 5}
       - {x: -10, y: -5}

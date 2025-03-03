@@ -19,7 +19,7 @@ public class EnemyLibraryEditor : Editor
             EditorUtility.SetDirty(library);
         }
 
-        GUILayout.Label($"当前包含敌人数量: {library.allEnemies.Count}");
+        GUILayout.Label($"当前包含敌人数量: {library.enemyPrefabs.Count}");
     }
 }
 #endif

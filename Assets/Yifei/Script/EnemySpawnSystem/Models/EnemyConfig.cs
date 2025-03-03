@@ -32,18 +32,18 @@ public class EnemyConfig : ScriptableObject
 
 }
 
-public enum AttackPattern
-{
-    // 不一定用得上
-    Melee,
-    Ranged,
-}
+//public enum AttackPattern
+//{
+//    // 不一定用得上
+//    Melee,
+//    Ranged,
+//}
 
-[System.Serializable]
-public class EnemySkill
-{
-    // 不一定用得上
-    public string skillName;
-    public float cooldown;
-    public GameObject[] effectPrefabs;
-}
+//[System.Serializable]
+//public class EnemySkill
+//{
+//    // 不一定用得上
+//    public string skillName;
+//    public float cooldown;
+//    public GameObject[] effectPrefabs;
+//}

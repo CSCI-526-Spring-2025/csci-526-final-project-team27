@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MeleeEnemy : MonoBehaviour
+public class MeleeEnemy : BaseEnemy
 {
     public enum MoveMode { Aggressive, PlayerOnly } // 行动模式
     public MoveMode moveMode = MoveMode.Aggressive; // 默认行为模式

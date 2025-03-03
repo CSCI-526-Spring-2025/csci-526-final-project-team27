@@ -6,10 +6,10 @@ public class RoomDebug : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        var spawner = GetComponent<IntelligentSpawner>();
+        var spawner = GetComponent<SimpleSpawner>();
         if (spawner != null)
         {
-            var roomSizeField = typeof(IntelligentSpawner).GetField("roomSize", BindingFlags.NonPublic | BindingFlags.Instance);
+            var roomSizeField = typeof(SimpleSpawner).GetField("roomSize", BindingFlags.NonPublic | BindingFlags.Instance);
             if (roomSizeField != null)
             {
                 Vector3 roomSize = (Vector2)roomSizeField.GetValue(spawner);

@@ -11,7 +11,7 @@ public class SimpleSpawner : MonoBehaviour
     public enum SpawnPosition { Random, FixedPoints, Perimeter }
 
     [Header("房间配置")]
-    [Tooltip("房间预制体（建议填写场景中该房间的根物体）")]
+    [Tooltip("房间预制体")]
     public GameObject roomPrefab;
     [Tooltip("房间类型")]
     public RoomType roomType;
@@ -45,8 +45,8 @@ public class SimpleSpawner : MonoBehaviour
     [Serializable]
     public class EnemySpawnUnit
     {
-        [Tooltip("敌人类型配置")]
-        public EnemyConfig enemy;
+        [Tooltip("敌人预制体（需挂载 EnemyBase 组件）")]
+        public GameObject enemyPrefab;
         [Tooltip("生成数量")]
         [Min(1)] public int count = 3;
         [Tooltip("生成间隔（秒）")]
@@ -62,7 +62,7 @@ public class SimpleSpawner : MonoBehaviour
     [Header("运行时参数")]
     [SerializeField] private GlobalEnemyLibrary enemyLibrary;
     private Vector2 roomSize = Vector2.one * 10f;
-    private List<EnemyConfig> validEnemies = new List<EnemyConfig>();
+    private List<GameObject> validEnemies = new List<GameObject>();
     [SerializeField] private float currentDifficulty;
     [SerializeField] private float spawnIntervalMin = 1f;
     [SerializeField] private float spawnIntervalMax = 3f;
@@ -74,6 +74,9 @@ public class SimpleSpawner : MonoBehaviour
     private int totalEnemiesSpawned;
     private int enemiesRemaining;
     private int roomCount; // 可用于计算难度，从房间管理器获取？
+
+    // 标识是否所有敌人都已生成完成
+    private bool spawningFinished = false;
     #endregion
 
     private void Start()
@@ -112,6 +115,7 @@ public class SimpleSpawner : MonoBehaviour
         activeEnemies.Clear();
         totalEnemiesSpawned = 0;
         enemiesRemaining = 0;
+        spawningFinished = false;
     }
 
     public void RegisterEnemy(GameObject enemy)
@@ -128,7 +132,6 @@ public class SimpleSpawner : MonoBehaviour
         if (health != null)
         {
             health.OnDeath.AddListener(HandleEnemyDeath);
-            //Debug.Log("Enemy " + enemy.name + " dead");
             health.OnIncrease.AddListener(HandleEnemyIncrease);
         }
     }
@@ -149,9 +152,10 @@ public class SimpleSpawner : MonoBehaviour
         }
     }
 
+    // 修改后的清空判断，只有当所有敌人生成完毕且敌人数量归零时，才算房间清空
     private void CheckRoomClear()
     {
-        if (enemiesRemaining <= 0)
+        if (spawningFinished && enemiesRemaining <= 0)
         {
             RoomClearEvent?.Invoke(true);
             Debug.Log("Room " + name + " clear");
@@ -163,17 +167,19 @@ public class SimpleSpawner : MonoBehaviour
     private IEnumerator SpawnDynamicWave()
     {
         int spawnCount = Mathf.RoundToInt(
-            UnityEngine.Random.Range(dynamicSpawnRangeMin,
-            Mathf.Max(dynamicSpawnRangeMax, dynamicSpawnRangeMin))
+            UnityEngine.Random.Range(dynamicSpawnRangeMin, Mathf.Max(dynamicSpawnRangeMax, dynamicSpawnRangeMin))
             * difficultyCurve.Evaluate(currentDifficulty)
         );
 
         for (int i = 0; i < spawnCount; i++)
         {
-            EnemyConfig enemy = SelectEnemyByWeight();
-            SpawnEnemy(enemy, GetDynamicSpawnPosition());
+            GameObject enemyPrefab = SelectEnemyByWeight();
+            SpawnEnemy(enemyPrefab, GetDynamicSpawnPosition());
             yield return new WaitForSeconds(UnityEngine.Random.Range(spawnIntervalMin, spawnIntervalMax));
         }
+        // 动态生成完成后设置标志，并检查房间是否清空
+        spawningFinished = true;
+        CheckRoomClear();
     }
 
     private Vector2 GetDynamicSpawnPosition()
@@ -219,11 +225,13 @@ public class SimpleSpawner : MonoBehaviour
     {
         foreach (var wave in waveGroups)
         {
+            Debug.Log("Starting wave: " + wave.waveName + " in " + name);
             yield return new WaitForSeconds(wave.preDelay);
 
             List<Coroutine> spawnRoutines = new List<Coroutine>();
             foreach (var unit in wave.units)
             {
+                Debug.Log("Spawning " + unit.count + " " + unit.enemyPrefab.name);
                 spawnRoutines.Add(StartCoroutine(SpawnUnit(unit)));
             }
 
@@ -232,13 +240,16 @@ public class SimpleSpawner : MonoBehaviour
                 yield return routine;
             }
         }
+        // 静态波次生成全部完成后设置标志，并检查房间是否清空
+        spawningFinished = true;
+        CheckRoomClear();
     }
 
     private IEnumerator SpawnUnit(EnemySpawnUnit unit)
     {
         for (int i = 0; i < unit.count; i++)
         {
-            SpawnEnemy(unit.enemy, GetStaticSpawnPosition(unit));
+            SpawnEnemy(unit.enemyPrefab, GetStaticSpawnPosition(unit));
             yield return new WaitForSeconds(unit.interval);
         }
     }
@@ -265,7 +276,10 @@ public class SimpleSpawner : MonoBehaviour
     {
         if (unit.spawnPositions.Count == 0)
         {
-            Debug.LogWarning($"单位 {unit.enemy.displayName} 未配置生成位置，使用随机位置");
+            // 获取 BaseEnemy 中的 displayName
+            var enemyBase = unit.enemyPrefab.GetComponent<BaseEnemy>();
+            string enemyName = enemyBase != null ? enemyBase.displayName : "Unknown";
+            Debug.LogWarning($"单位 {enemyName} 未配置生成位置，使用随机位置");
             return GetRandomPosition();
         }
 
@@ -285,45 +299,56 @@ public class SimpleSpawner : MonoBehaviour
     private void FilterValidEnemies()
     {
         validEnemies.Clear();
-        foreach (var enemy in enemyLibrary.allEnemies)
+        foreach (var enemyPrefab in enemyLibrary.enemyPrefabs)
         {
-            if (IsEnemyValid(enemy))
-                validEnemies.Add(enemy);
+            if (IsEnemyValid(enemyPrefab))
+                validEnemies.Add(enemyPrefab);
         }
     }
 
-    private bool IsEnemyValid(EnemyConfig enemy)
+    private bool IsEnemyValid(GameObject enemyPrefab)
     {
+        BaseEnemy enemyBase = enemyPrefab.GetComponent<BaseEnemy>();
+        if (enemyBase == null)
+        {
+            Debug.LogWarning($"预制体 {enemyPrefab.name} 没有 EnemyBase 组件");
+            return false;
+        }
+
         bool validType = roomType switch
         {
-            RoomType.Normal => enemy.allowInNormal,
-            RoomType.Elite => enemy.allowInElite,
-            RoomType.Boss => enemy.allowInBoss,
+            RoomType.Normal => enemyBase.allowInNormal,
+            RoomType.Elite => enemyBase.allowInElite,
+            RoomType.Boss => enemyBase.allowInBoss,
             _ => false
         };
 
-        return validType && currentDifficulty >= enemy.difficultyThreshold;
+        return validType && currentDifficulty >= enemyBase.difficultyThreshold;
     }
 
-    private EnemyConfig SelectEnemyByWeight()
+    private GameObject SelectEnemyByWeight()
     {
         float totalWeight = 0f;
-        foreach (var e in validEnemies)
-            totalWeight += e.spawnWeight;
+        foreach (var enemyPrefab in validEnemies)
+        {
+            BaseEnemy enemyBase = enemyPrefab.GetComponent<BaseEnemy>();
+            totalWeight += enemyBase.spawnWeight;
+        }
 
         float randomPoint = UnityEngine.Random.Range(0, totalWeight);
-        foreach (var e in validEnemies)
+        foreach (var enemyPrefab in validEnemies)
         {
-            if (randomPoint < e.spawnWeight)
-                return e;
-            randomPoint -= e.spawnWeight;
+            BaseEnemy enemyBase = enemyPrefab.GetComponent<BaseEnemy>();
+            if (randomPoint < enemyBase.spawnWeight)
+                return enemyPrefab;
+            randomPoint -= enemyBase.spawnWeight;
         }
         return validEnemies[0];
     }
 
-    private void SpawnEnemy(EnemyConfig config, Vector2 position)
+    private void SpawnEnemy(GameObject enemyPrefab, Vector2 position)
     {
-        GameObject enemyInstance = Instantiate(config.prefab, position, Quaternion.identity);
+        GameObject enemyInstance = Instantiate(enemyPrefab, position, Quaternion.identity);
         RegisterEnemy(enemyInstance);
     }
     #endregion

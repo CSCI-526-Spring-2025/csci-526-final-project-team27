@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd010afc260b5be489995a8418436753, type: 3}
   m_Name: Global Enemy Library
   m_EditorClassIdentifier: 
-  allEnemies:
-  - {fileID: 11400000, guid: 33d6057685621bd46b968bb1d23ed237, type: 2}
+  enemyPrefabs:
+  - {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}

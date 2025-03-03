@@ -9,6 +9,8 @@ public class EnemyHealth : Health
     // 用于死亡事件
     public class DeathEvent : UnityEvent<GameObject> { }
     // 用于分裂、召唤等情况，不确定放这儿合不合适。用法：OnIncrease.Invoke(this.gameObject, newEnemies);
+    // 第一个参数是原始敌人，第二个参数是新生成的敌人
+    // 需要保证OnIncrease先于OnDeath调用！
     public class IncreaseEvent : UnityEvent<GameObject, GameObject[]> { } 
 
     public DeathEvent OnDeath = new DeathEvent();
@@ -42,10 +44,9 @@ public class EnemyHealth : Health
     public override void Die()
     {
         Debug.Log(this.gameObject.name + " is dead");
-        base.Die();
         //适配新的生成器
         OnDeath.Invoke(this.gameObject);
-
+        base.Die();
         //旧的生成器
         //enemySpawner.EnemyDie();
     }
