@@ -578,7 +578,7 @@ MonoBehaviour:
   gridHeight: 5
   minPathLength: 4
   normalRoomPrefabs:
-  - {fileID: 4076533052321158648, guid: 888c6d2e576828d4e8fd623622e581b9, type: 3}
+  - {fileID: 7752736070594661851, guid: 315f1a68f83adca44b81ae29d2f1aed8, type: 3}
   eliteRoomPrefabs:
   - {fileID: 4076533052321158648, guid: 8400598fe8230504e8fc6756bafbed8e, type: 3}
   shopRoomPrefabs:

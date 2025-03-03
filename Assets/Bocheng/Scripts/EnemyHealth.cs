@@ -6,7 +6,7 @@ public class EnemyHealth : Health
     [Header("Coin Drop")]
     [SerializeField] private GameObject coinPrefab;
 
-    private EnemySpawner enemySpawner;
+    private SimpleSpawner enemySpawner;
 
     [System.Serializable]
     // 用于死亡事件
@@ -31,7 +31,7 @@ public class EnemyHealth : Health
         
     }
 
-    public void SetSpawnner(EnemySpawner spawner)
+    public void SetSpawnner(SimpleSpawner spawner)
     {
         enemySpawner = spawner;
     }
@@ -49,11 +49,9 @@ public class EnemyHealth : Health
         Debug.Log(this.gameObject.name + " is dead");
 
         // Notify spawner
-        if (enemySpawner != null)
-        {
-            enemySpawner.EnemyDie();
-        }
 
+        OnDeath.Invoke(this.gameObject);
+ 
         // 1. Spawn coin (if you have assigned coinPrefab)
         if (coinPrefab != null)
         {

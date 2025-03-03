@@ -762,7 +762,7 @@ public class RoomManager_BC : MonoBehaviour
 
         if(open)
         {
-            EnemySpawner enemySpawner = room.GetComponent<EnemySpawner>();
+            SimpleSpawner enemySpawner = room.GetComponent<SimpleSpawner>();
             if (enemySpawner != null)
             {
                 enemySpawner.RoomClearEvent -= DoorControl;

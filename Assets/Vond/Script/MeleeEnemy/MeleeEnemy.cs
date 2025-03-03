@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MeleeEnemy : MonoBehaviour
+public class MeleeEnemy : BaseEnemy
 {
     public enum MoveMode { Aggressive, PlayerOnly }
     public MoveMode moveMode = MoveMode.Aggressive;   // 可在 Inspector 中配置
