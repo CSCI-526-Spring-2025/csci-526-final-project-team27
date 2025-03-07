@@ -10,7 +10,9 @@ public class RoomManager_BC : MonoBehaviour
     public int minPathLength = 5; // 最短路径长度
 
     [Header("房间预制体")]
-    public GameObject roomPrefab; // 普通房间
+    public List<GameObject> normalRoomPrefabs;// 普通房间
+    public List<GameObject> eliteRoomPrefabs;
+    public List<GameObject> shopRoomPrefabs;
     public GameObject startRoomPrefab; // 起点房间
     public GameObject endRoomPrefab; // 终点房间
 
@@ -19,11 +21,17 @@ public class RoomManager_BC : MonoBehaviour
     public float roomSizeY = 2f; // 房间高度
     public float offset = 2f; // 额外的间隔距离
 
+    [Header("房间生成比例")]
+    [Range(0f, 1f)] public float eliteRoomRatio = 0.3f; // 精英房间比例
+
+
     [Header("玩家相机")]
     public CameraFollow cameraFollow; // **手动指定相机跟随组件**
 
     [Header("小地图")]
-    public GameObject roomUIPrefab;  // 房间UI的预制体
+    public GameObject roomUIPrefab;
+    public GameObject eliteRoomUIPrefab;
+    public GameObject shopRoomUIPrefab;
     public GameObject startRoomUIPrefab;
     public GameObject endRoomUIPrefab;
     public RectTransform panel;  // 小地图的UI Panel
@@ -46,7 +54,7 @@ public class RoomManager_BC : MonoBehaviour
 
     public static RoomManager_BC Instance;
 
-    private bool[,] map; // 房间网格
+    private Room[,] map; // 房间网格
     private Vector2Int startRoom, endRoom; // 起点和终点
     private List<Vector2Int> roomPositions = new List<Vector2Int>(); // 已生成房间
 
@@ -75,7 +83,7 @@ public class RoomManager_BC : MonoBehaviour
 
         CurrentRoom = startRoom;
         panel.transform.parent.gameObject.SetActive(false);
-        Debug.Log(startRoom);
+
     }
 
     void Update()
@@ -85,21 +93,35 @@ public class RoomManager_BC : MonoBehaviour
 
     void GenerateMap()
     {
-        map = new bool[gridWidth, gridHeight];
+        map = new Room[gridWidth, gridHeight];
         CreatedRooms = new bool[gridWidth, gridHeight];
 
         // 选择起点
-        startRoom = new Vector2Int(Random.Range(0, gridWidth), Random.Range(0, gridHeight));
-        map[startRoom.x, startRoom.y] = true;
+        startRoom = GenerateStartRoom();
+        map[startRoom.x, startRoom.y] = new Room(startRoom, Room.RoomType.Start);
         roomPositions.Add(startRoom);
 
         // 选择终点，并确保距离够远
+        /*
         do
         {
             endRoom = new Vector2Int(Random.Range(0, gridWidth), Random.Range(0, gridHeight));
         } while (Vector2Int.Distance(startRoom, endRoom) < minPathLength);
+        */
 
-        map[endRoom.x, endRoom.y] = true; // 预留位置
+        List<Vector2Int> validEndRooms = FindValidEndRooms(startRoom, minPathLength);
+        if (validEndRooms.Count > 0)
+        {
+            endRoom = validEndRooms[Random.Range(0, validEndRooms.Count)];
+            map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End);
+        }
+        else
+        {
+            Debug.LogError("无法找到合适的终点房间！");
+            return;
+        }
+
+        map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End); // 预留位置
 
         // **第一步**: 先创建 `startRoom → endRoom` 的主路径
         CreatePath(startRoom, endRoom);
@@ -110,10 +132,185 @@ public class RoomManager_BC : MonoBehaviour
         // **确保 `endRoom` 仍然存在**
         roomPositions.Add(endRoom);
 
+        // **第三步**: 修改房间类型
+        ModifyRoomTypes();
+
         //debug startroom and end room
-        Debug.Log(startRoom);
-        Debug.Log(endRoom);
+        Debug.Log($"开始房间: {startRoom}");
+        Debug.Log($"结束房间: {endRoom}");
     }
+
+    Vector2Int GenerateStartRoom()
+    {
+        int x = (Random.value < 0.5f) ? 0 : Random.Range(0, gridWidth);  // 50% 生成在 x=0
+        int y = (x == 0) ? Random.Range(0, gridHeight) : 0;  // 如果 x=0，则 y 随机；否则 y=0
+        return new Vector2Int(x, y);
+    }
+
+
+    List<Vector2Int> FindValidEndRooms(Vector2Int start, int minDistance)
+    {
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        Dictionary<Vector2Int, int> distances = new Dictionary<Vector2Int, int>();
+        List<Vector2Int> candidates = new List<Vector2Int>();
+
+        queue.Enqueue(start);
+        distances[start] = 0;
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            int currentDistance = distances[current];
+
+            // **找到符合条件的房间**
+            if (currentDistance >= minDistance)
+            {
+                candidates.Add(current);
+            }
+
+            foreach (Vector2Int neighbor in GetValidNeighbors(current))
+            {
+                if (!distances.ContainsKey(neighbor) && map[neighbor.x, neighbor.y] == null) // 只考虑未使用的房间格子
+                {
+                    queue.Enqueue(neighbor);
+                    distances[neighbor] = currentDistance + 1;
+                }
+            }
+        }
+
+        return candidates;
+    }
+
+
+    void ModifyRoomTypes()
+    {
+        // Step 1: DFS 选择商人房间
+        List<Vector2Int> path = DFSPathToEnd(startRoom, endRoom);
+        if (path.Count > 1) // 确保路径有效
+        {
+
+            int shopRoomIndex = Random.Range(path.Count / 2, path.Count); // 1/2路径后随机选一个
+            Vector2Int shopRoomPos = path[shopRoomIndex];
+
+            if (map[shopRoomPos.x, shopRoomPos.y].Type == Room.RoomType.Normal) // 只能改普通房间
+            {
+                map[shopRoomPos.x, shopRoomPos.y] = new Room(shopRoomPos, Room.RoomType.Shop);
+                Debug.Log($"商人房间: {shopRoomPos}");
+            }
+        }
+
+        // Step 2: BFS 选择精英房间
+        List<Vector2Int> eligibleEliteRooms = BFSRoomsFarFromStart(startRoom, 1);
+
+        // 至少要有一个精英房间
+        int eliteCount = Mathf.Max(1, Mathf.RoundToInt(eligibleEliteRooms.Count * eliteRoomRatio));
+        HashSet<Vector2Int> chosenEliteRooms = new HashSet<Vector2Int>();
+
+        while (chosenEliteRooms.Count < eliteCount && eligibleEliteRooms.Count > 0)
+        {
+            int index = Random.Range(0, eligibleEliteRooms.Count);
+            Vector2Int elitePos = eligibleEliteRooms[index];
+
+            if (map[elitePos.x, elitePos.y].Type == Room.RoomType.Normal) // 只能改普通房间
+            {
+                map[elitePos.x, elitePos.y] = new Room(elitePos, Room.RoomType.Elite);
+                chosenEliteRooms.Add(elitePos);
+                Debug.Log($"精英房间: {elitePos}");
+            }
+            eligibleEliteRooms.RemoveAt(index);
+        }
+    }
+
+
+    List<Vector2Int> DFSPathToEnd(Vector2Int start, Vector2Int end)
+    {
+        Stack<Vector2Int> stack = new Stack<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        Dictionary<Vector2Int, Vector2Int> parentMap = new Dictionary<Vector2Int, Vector2Int>();
+
+        stack.Push(start);
+        visited.Add(start);
+
+        while (stack.Count > 0)
+        {
+            Vector2Int current = stack.Pop();
+
+            if (current == end)
+            {
+                break; // 找到终点
+            }
+
+            foreach (Vector2Int neighbor in GetValidNeighbors(current))
+            {
+                if (!visited.Contains(neighbor) && map[neighbor.x, neighbor.y] != null)
+                {
+                    stack.Push(neighbor);
+                    visited.Add(neighbor);
+                    parentMap[neighbor] = current;
+                }
+            }
+        }
+
+        // 回溯路径
+        List<Vector2Int> path = new List<Vector2Int>();
+        Vector2Int trace = end;
+
+        while (parentMap.ContainsKey(trace))
+        {
+            path.Add(trace);
+            trace = parentMap[trace];
+        }
+        path.Add(start);
+        path.Reverse();
+
+        // 确保 end 不在路径中
+        if (path.Count > 0 && path[path.Count - 1] == end)
+        {
+            path.RemoveAt(path.Count - 1);
+        }
+
+        return path;
+    }
+
+    List<Vector2Int> BFSRoomsFarFromStart(Vector2Int start, int farLimit)
+    {
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        List<Vector2Int> result = new List<Vector2Int>();
+
+        queue.Enqueue(start);
+        visited.Add(start);
+        int depth = 0;
+
+        while (queue.Count > 0)
+        {
+            int size = queue.Count;
+            depth++;
+
+            for (int i = 0; i < size; i++)
+            {
+                Vector2Int current = queue.Dequeue();
+
+                foreach (Vector2Int neighbor in GetValidNeighbors(current))
+                {
+                    if (!visited.Contains(neighbor) && map[neighbor.x, neighbor.y] != null)
+                    {
+                        queue.Enqueue(neighbor);
+                        visited.Add(neighbor);
+
+                        // 只考虑 `距离起点 > 1` 的普通房间
+                        if (depth > farLimit && map[neighbor.x, neighbor.y].Type == Room.RoomType.Normal)
+                        {
+                            result.Add(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
 
     void CreatePath(Vector2Int start, Vector2Int end)
     {
@@ -133,9 +330,9 @@ public class RoomManager_BC : MonoBehaviour
                 Vector2Int move = possibleMoves[Random.Range(0, possibleMoves.Count)];
                 current += move;
 
-                if (!map[current.x, current.y]) // 避免重复添加
+                if (map[current.x, current.y] == null) // 避免重复添加
                 {
-                    map[current.x, current.y] = true;
+                    map[current.x, current.y] = new Room(current, Room.RoomType.Normal);
                     roomPositions.Add(current);
                 }
             }
@@ -163,9 +360,9 @@ public class RoomManager_BC : MonoBehaviour
             {
                 if (neighbor == endRoom) continue; // 跳过终点
 
-                if (!map[neighbor.x, neighbor.y] && Random.value < expansionChance)
+                if (map[neighbor.x, neighbor.y] == null && Random.value < expansionChance)
                 {
-                    map[neighbor.x, neighbor.y] = true;
+                    map[neighbor.x, neighbor.y] = new Room(neighbor, Room.RoomType.Normal);
                     roomPositions.Add(neighbor);
                     queue.Enqueue(neighbor);
                 }
@@ -265,6 +462,21 @@ public class RoomManager_BC : MonoBehaviour
 
         // 房间未创建，则生成
         //Vector3 worldPos = GetWorldPosition(newRoom);
+        GameObject roomPrefab;
+
+        if (map[newRoom.x, newRoom.y].Type == Room.RoomType.Elite)
+        {
+            roomPrefab = eliteRoomPrefabs[Random.Range(0, eliteRoomPrefabs.Count)];
+        }
+        else if (map[newRoom.x, newRoom.y].Type == Room.RoomType.Shop)
+        {
+            roomPrefab = shopRoomPrefabs[Random.Range(0, shopRoomPrefabs.Count)];
+        }
+        else // map[newRoom.x, newRoom.y].Type == Room.RoomType.Normal
+        {
+            roomPrefab = normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Count)];
+        }
+
         GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);
         //newRoomInstance.transform.localScale = new Vector3(roomSizeX, roomSizeY, 1);
         Debug.Log($"Created room at {newRoom}.");
@@ -281,11 +493,12 @@ public class RoomManager_BC : MonoBehaviour
             cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
         }
 
-        EnemySpawner enemySpawner = newRoomInstance.GetComponent<EnemySpawner>();
-        if(enemySpawner != null)
+        //EnemySpawner enemySpawner = newRoomInstance.GetComponent<EnemySpawner>();
+         SimpleSpawner enemySpawner = newRoomInstance.GetComponent<SimpleSpawner>();
+        if (enemySpawner != null)
         {
             DoorControl(false);
-            enemySpawner.StartSpawn();
+            //enemySpawner.StartSpawn();
             // enemySpawner.RoomClearEvent += DoorControl;
             enemySpawner.RoomClearEvent += OnRoomClear;
 
@@ -296,25 +509,25 @@ public class RoomManager_BC : MonoBehaviour
     {
         if (room == null) return;
 
-        if (roomPos.x == 0 || !map[roomPos.x - 1, roomPos.y])
+        if (roomPos.x == 0 || map[roomPos.x - 1, roomPos.y] == null)
         {
             Transform leftDoor = room.transform.Find("Door_Left");
             if (leftDoor) Destroy(leftDoor.gameObject);
         }
 
-        if (roomPos.x == gridWidth - 1 || !map[roomPos.x + 1, roomPos.y])
+        if (roomPos.x == gridWidth - 1 || map[roomPos.x + 1, roomPos.y] == null)
         {
             Transform rightDoor = room.transform.Find("Door_Right");
             if (rightDoor) Destroy(rightDoor.gameObject);
         }
 
-        if (roomPos.y == 0 || !map[roomPos.x, roomPos.y - 1])
+        if (roomPos.y == 0 || map[roomPos.x, roomPos.y - 1] == null)
         {
             Transform bottomDoor = room.transform.Find("Door_Bottom");
             if (bottomDoor) Destroy(bottomDoor.gameObject);
         }
 
-        if (roomPos.y == gridHeight - 1 || !map[roomPos.x, roomPos.y + 1])
+        if (roomPos.y == gridHeight - 1 || map[roomPos.x, roomPos.y + 1] == null)
         {
             Transform topDoor = room.transform.Find("Door_Top");
             if (topDoor) Destroy(topDoor.gameObject);
@@ -338,7 +551,7 @@ public class RoomManager_BC : MonoBehaviour
         }
 
         // 确保目标房间存在
-        if (!map[newRoomPos.x, newRoomPos.y])
+        if (map[newRoomPos.x, newRoomPos.y] == null)
         {
             Debug.Log("Invalid move: No room in that direction.");
             return;
@@ -415,7 +628,18 @@ public class RoomManager_BC : MonoBehaviour
         }
         else
         {
-            roomUIInstance = Instantiate(roomUIPrefab, panel);
+            if (map[roomPos.x, roomPos.y].Type == Room.RoomType.Elite)
+            {
+                roomUIInstance = Instantiate(eliteRoomUIPrefab, panel);
+            }
+            else if (map[roomPos.x, roomPos.y].Type == Room.RoomType.Shop)
+            {
+                roomUIInstance = Instantiate(shopRoomUIPrefab, panel);
+            }
+            else
+            {
+                roomUIInstance = Instantiate(roomUIPrefab, panel); 
+            }
         }
 
         RectTransform roomUITransform = roomUIInstance.GetComponent<RectTransform>();
@@ -545,7 +769,7 @@ public class RoomManager_BC : MonoBehaviour
 
         if(open)
         {
-            EnemySpawner enemySpawner = room.GetComponent<EnemySpawner>();
+            SimpleSpawner enemySpawner = room.GetComponent<SimpleSpawner>();
             if (enemySpawner != null)
             {
                 enemySpawner.RoomClearEvent -= DoorControl;

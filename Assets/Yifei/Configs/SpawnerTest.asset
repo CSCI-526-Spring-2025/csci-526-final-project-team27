@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31aa4a20bbbdc44e8a69d7be1f5850a, type: 3}
+  m_Name: SpawnerTest
+  m_EditorClassIdentifier: 
+  roomPrefab: {fileID: 4076533052321158648, guid: 6f04d48a41063d94cb6f6ad21de64258, type: 3}
+  roomType: 0
+  spawnMode: 1
+  dynamicSpawnRangeMin: 8
+  dynamicSpawnRangeMax: 38
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dynamicSpawnPosition: 0
+  waveGroups:
+  - waveName: 1
+    preDelay: 0
+    units:
+    - enemy: {fileID: 11400000, guid: 33d6057685621bd46b968bb1d23ed237, type: 2}
+      count: 5
+      interval: 0
+      positionType: 1
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}
+  - waveName: 2
+    preDelay: 5
+    units:
+    - enemy: {fileID: 11400000, guid: 33d6057685621bd46b968bb1d23ed237, type: 2}
+      count: 5
+      interval: 1
+      positionType: 0
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}

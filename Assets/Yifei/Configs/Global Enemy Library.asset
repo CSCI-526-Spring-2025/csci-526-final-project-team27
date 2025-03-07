@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd010afc260b5be489995a8418436753, type: 3}
+  m_Name: Global Enemy Library
+  m_EditorClassIdentifier: 
+  enemyPrefabs:
+  - {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+  - {fileID: 2027857850954515486, guid: 8f15ba02e1a1480408f4771a9e3d2341, type: 3}

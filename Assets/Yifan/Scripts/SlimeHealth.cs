@@ -25,11 +25,13 @@ public class SlimeHealth : EnemyHealth
     private void Split()
     {
         Debug.Log(gameObject.name + " is splitting!");
-
+        GameObject[] newSlimes = new GameObject[2];
+        
         for (int i = 0; i < 2; i++)
         {
             // Spawn new slime at a slight offset from the parent position
             GameObject newSlime = Instantiate(slimePrefab, transform.position + new Vector3(Random.Range(-1.5f, 1.5f), 0, Random.Range(-1.5f, 1.5f)), Quaternion.identity);
+            newSlimes[i] = newSlime;
             float sSize = fac * (float)splitCounter;
             newSlime.transform.localScale = new Vector3(sSize, sSize, sSize);
             SpriteShapeRenderer sRenderer = newSlime.GetComponent<SpriteShapeRenderer>();
@@ -56,7 +58,8 @@ public class SlimeHealth : EnemyHealth
                 newSlimeHealth.splitCounter = splitCounter / 2; // New slime gets half the split counter
             }
         }
-
+        OnIncrease.Invoke(gameObject, newSlimes);
+        OnDeath.Invoke(gameObject);
         // Optionally destroy the parent slime after splitting
         Destroy(gameObject);
     }
@@ -64,6 +67,7 @@ public class SlimeHealth : EnemyHealth
     private void DeadSlime()
     {
         Debug.Log(this.gameObject.name + " is dead");
+        OnDeath.Invoke(gameObject);
         Destroy(gameObject);
     }
 }

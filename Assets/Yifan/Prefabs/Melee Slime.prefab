@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 445820219740098354}
   - component: {fileID: -3880152435667545754}
   - component: {fileID: 8180063506914729136}
+  - component: {fileID: -183548247518927584}
   m_Layer: 0
   m_Name: Melee Slime
   m_TagString: Enemy
@@ -233,7 +234,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
 --- !u!60 &445820219740098354
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -326,6 +327,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 120
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
+  coinPrefab: {fileID: 0}
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
   slimePrefab: {fileID: 2027857850954515486}
   splitThreshold: 0.5
   splitCounter: 8
@@ -341,6 +346,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 786ede264e1fbdc4ca0adf2d05a2f41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: New Enemy
+  baseHealth: 10
+  baseDamage: 2
+  attackCooldown: 1
+  moveSpeed: 8
+  difficultyThreshold: 1
+  spawnWeight: 1
+  allowInNormal: 1
+  allowInElite: 1
+  allowInBoss: 0
+  attackPattern: 0
+  skills: []
   moveMode: 0
   moveSpeed: 8
   searchInterval: 1
@@ -349,3 +366,19 @@ MonoBehaviour:
   damage: 20
   isAttacking: 0
   currentTarget: {fileID: 0}
+--- !u!114 &-183548247518927584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027857850954515486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e202a405982134e9032eedce61c59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpDistance: 3
+  jumpDuration: 0.7
+  maxJumpHeight: 1
+  jumpInterval: 1.5
