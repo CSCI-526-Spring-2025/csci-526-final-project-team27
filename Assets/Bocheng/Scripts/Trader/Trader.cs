@@ -18,6 +18,7 @@ public class Trader : MonoBehaviour
     public List<TextMeshProUGUI> itemsPriceUI;
 
     private bool generated = false;
+    private bool isOpen = false;
 
     private void Start()
     {
@@ -36,14 +37,20 @@ public class Trader : MonoBehaviour
     {
         isPlayerNear = false;
         worldSpaceCanvas.gameObject.SetActive(false);
-        shopUI.SetActive(false); // 关闭商店UI
+        //shopUI.SetActive(false); // 关闭商店UI
     }
 
     private void Update()
     {
-        if (isPlayerNear && Input.GetKeyDown(KeyCode.E))
+        if (isPlayerNear && Input.GetKeyDown(KeyCode.E) && !isOpen)
         {
-            ToggleShop();
+            OpenShop();
+            return;
+        }
+        if(isOpen && Input.GetKeyDown(KeyCode.E))
+        {
+            CloseShop();
+            return;
         }
     }
 
@@ -67,9 +74,20 @@ public class Trader : MonoBehaviour
         generated = true;
     }
 
-    public void ToggleShop()
+    public void OpenShop()
     {
-        shopUI.SetActive(!shopUI.activeSelf);
+        shopUI.SetActive(true);
+        CtrlCtrl.Instance.LockMove(true);
+        CtrlCtrl.Instance.ToggleShootCtrler(false);
+        isOpen = true;
+    }
+
+    public void CloseShop()
+    {
+        shopUI.SetActive(false);
+        CtrlCtrl.Instance.LockMove(false);
+        CtrlCtrl.Instance.ToggleShootCtrler(true);
+        isOpen = false;
     }
 
     public void BuyItem(int index)
