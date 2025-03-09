@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
@@ -70,5 +71,10 @@ public class TutorialManager : MonoBehaviour
             teammateManager.AddTeammate(teammates[i], relativePositions[i]);
             //teammates[i].GetComponent<Health_BC>().SetHealthBar(TutorialStatic.Instance.healthBar[i]);
         }
+    }
+
+    public void CallStaticFirstFight()
+    {
+        TutorialStatic.Instance.OpenFirstFightUI();
     }
 }
