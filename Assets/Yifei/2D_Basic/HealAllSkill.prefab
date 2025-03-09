@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillDuration: 0.5
-  cooldownTime: 5
+  cooldownTime: 10
   releaseType: 0
   healAmount: 20
   friendlyTags:
