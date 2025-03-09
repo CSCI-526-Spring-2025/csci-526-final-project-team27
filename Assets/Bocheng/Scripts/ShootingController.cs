@@ -10,6 +10,7 @@ public class ShootingController : MonoBehaviour
 
     private GameObject cursorInstance;
     private bool isActive = false;
+    private bool isLocked = false;
 
     void Start()
     {
@@ -33,7 +34,7 @@ public class ShootingController : MonoBehaviour
     }
 
     // 激活/取消功能
-    void ToggleActive(bool bActive)
+    public void ToggleActive(bool bActive)
     {
         if(isActive == bActive)
         {
@@ -66,6 +67,8 @@ public class ShootingController : MonoBehaviour
     // 生成并发射子弹
     void Shoot()
     {
+        if(isLocked)
+            return;
         if (bulletPrefab != null && firePoint != null)
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
@@ -80,5 +83,10 @@ public class ShootingController : MonoBehaviour
             // 设定子弹销毁时间
             Destroy(bullet, bulletLifetime);
         }
+    }
+
+    public void LockShoot(bool bLock)
+    {
+        isLocked = bLock;
     }
 }

@@ -90,4 +90,10 @@ public class TeammateManager : MonoBehaviour
             return new Vector2(dy, -dx);  // 向左
         return new Vector2(dx, dy);       // 向下 (默认)
     }
+
+    public void AddTeammate(GameObject newTeammate, Vector2 newRelaPos)
+    {
+        teammates.Add(newTeammate);
+        relativePositions[newTeammate] = newRelaPos;
+    }
 }

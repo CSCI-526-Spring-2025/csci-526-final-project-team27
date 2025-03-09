@@ -7,7 +7,7 @@ public class Health : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] public float maxHealth = 100;  // 最大生命值
-    protected float currentHealth;                     // 当前生命值
+    public float currentHealth = 0;                     // 当前生命值
 
     [Header("Floating Text Settings")]
     public GameObject FloatingHPCanvas;            // 含 Canvas 的浮动文字预制体 
@@ -17,7 +17,8 @@ public class Health : MonoBehaviour
     void Awake()
     {
         // 游戏开始时初始化生命值
-        currentHealth = maxHealth;
+        if(currentHealth == 0)
+            currentHealth = maxHealth;
         Debug.Log($"{gameObject.name} 的生命值已初始化为 {currentHealth}");
     }
 

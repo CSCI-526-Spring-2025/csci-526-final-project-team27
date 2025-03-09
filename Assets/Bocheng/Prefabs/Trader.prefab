@@ -1350,7 +1350,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6724591585299161940}
         m_TargetAssemblyTypeName: Trader, Assembly-CSharp
-        m_MethodName: ToggleShop
+        m_MethodName: CloseShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
