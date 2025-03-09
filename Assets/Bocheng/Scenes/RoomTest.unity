@@ -294,6 +294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 175668372}
   - component: {fileID: 175668371}
+  - component: {fileID: 175668373}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -357,6 +358,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &175668373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 175668370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57a23166aa64ab42bdacb663feb8f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firebaseURL: https://cureallcrew-default-rtdb.firebaseio.com/CureAllCrew/
+  uploadInterval: 5
+  presetData:
+  - key: PlayTime
+    value: 0
+  - key: EnemyKilled
+    value: 0
 --- !u!1 &206507510
 GameObject:
   m_ObjectHideFlags: 0
