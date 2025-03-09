@@ -2,8 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
+
 public class RoomManager_BC : MonoBehaviour
 {
+    public enum SceneType
+    {
+        Tutorial,
+        Normal
+    }
+
+    [Header("场景类型")]
+    public SceneType sceneType = SceneType.Normal;
+
+
     [Header("地图尺寸")]
     public int gridWidth = 10;  // 地图网格宽度
     public int gridHeight = 10; // 地图网格高度
@@ -73,7 +84,14 @@ public class RoomManager_BC : MonoBehaviour
 
     void Start()
     {
-        GenerateMap();
+        if(sceneType == SceneType.Tutorial)
+        {
+            GenerateTutorialMap();
+        }
+        else
+        {
+            GenerateMap();
+        }
         //SpawnRooms();
         InitRoom();
         InitializeMiniMap();
@@ -89,6 +107,28 @@ public class RoomManager_BC : MonoBehaviour
     void Update()
     {
         HandleMinimapInput();
+    }
+
+    void GenerateTutorialMap()
+    {
+        gridWidth = 5;
+        gridHeight = 1;
+        map = new Room[gridWidth, gridHeight];
+        CreatedRooms = new bool[gridWidth, gridHeight];
+        startRoom = new Vector2Int(0, 0);
+        endRoom = new Vector2Int(4, 0);
+        map[startRoom.x, startRoom.y] = new Room(startRoom, Room.RoomType.Start);
+        roomPositions.Add(startRoom);
+        map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End);
+        roomPositions.Add(endRoom);
+        map[1, 0] = new Room(new Vector2Int(1, 0), Room.RoomType.Normal);
+        roomPositions.Add(new Vector2Int(1, 0));
+        map[2, 0] = new Room(new Vector2Int(2, 0), Room.RoomType.Elite);
+        roomPositions.Add(new Vector2Int(2, 0));
+        map[3, 0] = new Room(new Vector2Int(3, 0), Room.RoomType.Shop);
+        roomPositions.Add(new Vector2Int(3, 0));
+        Debug.Log($"开始房间: {startRoom}");
+        Debug.Log($"结束房间: {endRoom}");
     }
 
     void GenerateMap()

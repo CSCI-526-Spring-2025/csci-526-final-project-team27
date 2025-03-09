@@ -21,6 +21,11 @@ public class HealBallVond : MonoBehaviour
         else
         {
             // 可选：碰到其他目标时处理（如环境、墙体），视需求而定
+            if(!other.CompareTag("Player"))
+            {
+                Destroy(gameObject);
+            }
+            
         }
     }
 }
