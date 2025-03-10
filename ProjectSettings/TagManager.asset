@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Obstacle
   - Skill
+  - Wall
   layers:
   - Default
   - TransparentFX

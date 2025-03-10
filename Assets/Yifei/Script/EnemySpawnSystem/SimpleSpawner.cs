@@ -17,6 +17,8 @@ public class SimpleSpawner : MonoBehaviour
     public RoomType roomType;
     [Tooltip("生成模式")]
     public SpawnMode spawnMode;
+    [Tooltip("房间难度")]
+    public int roomDifficulty = 1;
 
     [Header("敌人动态生成")]
     [Tooltip("动态生成时的生成数量范围最小值")]

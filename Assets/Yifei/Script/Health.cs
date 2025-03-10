@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 
+public interface IDieAble
+{
+    void Die();
+}
+
 /// <summary>
 /// 基本的生命值管理组件，用于2D角色或对象
 /// </summary>
@@ -97,8 +102,17 @@ public class Health : MonoBehaviour
     /// </summary>
     virtual public void Die()
     {
-        Debug.Log($"{gameObject.name} 已经死亡！");
-        // 此处可添加更多死亡时的逻辑（例如播放动画、生成掉落物等）
-        Destroy(gameObject);
+        IDieAble dieAble = GetComponent<IDieAble>();
+        if(dieAble != null)
+        {
+            dieAble.Die();
+            return;
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} 已经死亡！");
+            // 此处可添加更多死亡时的逻辑（例如播放动画、生成掉落物等）
+            Destroy(gameObject);
+        }
     }
 }

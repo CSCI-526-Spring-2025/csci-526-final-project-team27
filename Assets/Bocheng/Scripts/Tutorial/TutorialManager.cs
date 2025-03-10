@@ -73,8 +73,19 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    public void CallStaticFirstFight()
+
+    public void CallStaticFirstFight(GameObject Trigger)
     {
-        TutorialStatic.Instance.OpenFirstFightUI();
+        TutorialStatic.Instance.OpenFirstFightUI(Trigger);
+    }
+
+    public void LeaveFirstFight()
+    {
+        TutorialStatic.Instance.LeaveFirstFightUI();
+    }
+
+    public void OpenNextScene()
+    {
+        TutorialStatic.Instance.OpenFirstLevel();
     }
 }
