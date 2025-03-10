@@ -2,8 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
+
 public class RoomManager_BC : MonoBehaviour
 {
+    public enum SceneType
+    {
+        Tutorial,
+        Normal
+    }
+
+    [Header("场景类型")]
+    public SceneType sceneType = SceneType.Normal;
+    public int tutorialRoomCount = 6;
+    private int roomCount = 0;
+
+
     [Header("地图尺寸")]
     public int gridWidth = 10;  // 地图网格宽度
     public int gridHeight = 10; // 地图网格高度
@@ -73,7 +86,14 @@ public class RoomManager_BC : MonoBehaviour
 
     void Start()
     {
-        GenerateMap();
+        if(sceneType == SceneType.Tutorial)
+        {
+            GenerateTutorialMap();
+        }
+        else
+        {
+            GenerateMap();
+        }
         //SpawnRooms();
         InitRoom();
         InitializeMiniMap();
@@ -89,6 +109,31 @@ public class RoomManager_BC : MonoBehaviour
     void Update()
     {
         HandleMinimapInput();
+    }
+
+    void GenerateTutorialMap()
+    {
+        gridWidth = tutorialRoomCount;
+        gridHeight = 1;
+        map = new Room[gridWidth, gridHeight];
+        CreatedRooms = new bool[gridWidth, gridHeight];
+        startRoom = new Vector2Int(0, 0);
+        endRoom = new Vector2Int(tutorialRoomCount - 1, 0);
+        map[startRoom.x, startRoom.y] = new Room(startRoom, Room.RoomType.Start);
+        roomPositions.Add(startRoom);
+        map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End);
+        roomPositions.Add(endRoom);
+
+        for(int i = 1; i < tutorialRoomCount - 2; i++)
+        {
+            map[i, 0] = new Room(new Vector2Int(i, 0), Room.RoomType.Normal);
+            roomPositions.Add(new Vector2Int(i, 0));
+        }
+
+        map[tutorialRoomCount - 2, 0] = new Room(new Vector2Int(3, 0), Room.RoomType.Shop);
+        roomPositions.Add(new Vector2Int(tutorialRoomCount - 2, 0));
+        Debug.Log($"开始房间: {startRoom}");
+        Debug.Log($"结束房间: {endRoom}");
     }
 
     void GenerateMap()
@@ -474,7 +519,15 @@ public class RoomManager_BC : MonoBehaviour
         }
         else // map[newRoom.x, newRoom.y].Type == Room.RoomType.Normal
         {
-            roomPrefab = normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Count)];
+            if(sceneType == SceneType.Tutorial)
+            {
+                roomPrefab = normalRoomPrefabs[roomCount];
+                roomCount++;
+            }
+            else
+            {
+                roomPrefab = normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Count)];
+            }
         }
 
         GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);
@@ -807,9 +860,14 @@ public class RoomManager_BC : MonoBehaviour
     {
         if (roomCleared)
         {
+            if(sceneType == SceneType.Tutorial)
+            {
+                TutorialStatic.Instance.EnemyClear();
+            }
             // 禁用玩家的 ShootingController 和 SkillController
             DisablePlayerControllers();
-            ShowRewardSelection();
+            DoorControl(true);
+            //ShowRewardSelection();
         }
     }
 

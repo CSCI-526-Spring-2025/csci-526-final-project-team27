@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2804977329551334080}
   m_Layer: 0
   m_Name: HealAllSkill
-  m_TagString: Untagged
+  m_TagString: Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillDuration: 0.5
-  cooldownTime: 5
+  cooldownTime: 10
   releaseType: 0
   healAmount: 20
   friendlyTags:

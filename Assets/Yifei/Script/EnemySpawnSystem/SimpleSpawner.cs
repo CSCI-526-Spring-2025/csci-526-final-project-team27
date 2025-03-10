@@ -1,65 +1,67 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SimpleSpawner : MonoBehaviour
 {
-    #region ·¿¼äÅäÖÃ
+    #region æˆ¿é—´é…ç½®
     public enum RoomType { Normal, Elite, Boss }
     public enum SpawnMode { Dynamic, Static }
     public enum SpawnPosition { Random, FixedPoints, Perimeter }
 
-    [Header("·¿¼äÅäÖÃ")]
-    [Tooltip("·¿¼äÔ¤ÖÆÌå")]
+    [Header("æˆ¿é—´é…ç½®")]
+    [Tooltip("æˆ¿é—´é¢„åˆ¶ä½“")]
     public GameObject roomPrefab;
-    [Tooltip("·¿¼äÀàĞÍ")]
+    [Tooltip("æˆ¿é—´ç±»å‹")]
     public RoomType roomType;
-    [Tooltip("Éú³ÉÄ£Ê½")]
+    [Tooltip("ç”Ÿæˆæ¨¡å¼")]
     public SpawnMode spawnMode;
+    [Tooltip("æˆ¿é—´éš¾åº¦")]
+    public int roomDifficulty = 1;
 
-    [Header("µĞÈË¶¯Ì¬Éú³É")]
-    [Tooltip("¶¯Ì¬Éú³ÉÊ±µÄÉú³ÉÊıÁ¿·¶Î§×îĞ¡Öµ")]
+    [Header("æ•ŒäººåŠ¨æ€ç”Ÿæˆ")]
+    [Tooltip("åŠ¨æ€ç”Ÿæˆæ—¶çš„ç”Ÿæˆæ•°é‡èŒƒå›´æœ€å°å€¼")]
     public int dynamicSpawnRangeMin = 1;
-    [Tooltip("¶¯Ì¬Éú³ÉÊ±µÄÉú³ÉÊıÁ¿·¶Î§×î´óÖµ")]
+    [Tooltip("åŠ¨æ€ç”Ÿæˆæ—¶çš„ç”Ÿæˆæ•°é‡èŒƒå›´æœ€å¤§å€¼")]
     public int dynamicSpawnRangeMax = 10;
-    [Tooltip("ËæÄÑ¶È±ä»¯µÄÉú³ÉÊıÁ¿ÇúÏß")] // XÖá: ±ê×¼»¯ÄÑ¶È(0-1) YÖá: ÊıÁ¿³ËÊı
+    [Tooltip("éšéš¾åº¦å˜åŒ–çš„ç”Ÿæˆæ•°é‡æ›²çº¿")] // Xè½´: æ ‡å‡†åŒ–éš¾åº¦(0-1) Yè½´: æ•°é‡ä¹˜æ•°
     public AnimationCurve difficultyCurve = AnimationCurve.Linear(0, 1, 1, 1);
-    [Tooltip("Éú³ÉÎ»ÖÃ£¨½öËæ»ú»ò±ßÔµ£©")]
+    [Tooltip("ç”Ÿæˆä½ç½®ï¼ˆä»…éšæœºæˆ–è¾¹ç¼˜ï¼‰")]
     public SpawnPosition dynamicSpawnPosition = SpawnPosition.Random;
 
-    [Header("µĞÈË¾²Ì¬²¨´Î")]
+    [Header("æ•Œäººé™æ€æ³¢æ¬¡")]
     public List<WaveGroup> waveGroups = new List<WaveGroup>();
 
     [Serializable]
     public class WaveGroup
     {
-        [Tooltip("²¨´ÎÃû³Æ£¨¿ÉÑ¡£©")]
+        [Tooltip("æ³¢æ¬¡åç§°ï¼ˆå¯é€‰ï¼‰")]
         public string waveName = "Wave";
-        [Tooltip("²¨´Î¿ªÊ¼Ç°µÄÑÓ³Ù")]
+        [Tooltip("æ³¢æ¬¡å¼€å§‹å‰çš„å»¶è¿Ÿ")]
         [Min(0)] public float preDelay;
-        [Tooltip("µĞÈËÉú³Éµ¥Ôª")]
+        [Tooltip("æ•Œäººç”Ÿæˆå•å…ƒ")]
         public List<EnemySpawnUnit> units = new List<EnemySpawnUnit>();
     }
 
     [Serializable]
     public class EnemySpawnUnit
     {
-        [Tooltip("µĞÈËÔ¤ÖÆÌå£¨Ğè¹ÒÔØ EnemyBase ×é¼ş£©")]
+        [Tooltip("æ•Œäººé¢„åˆ¶ä½“ï¼ˆéœ€æŒ‚è½½ EnemyBase ç»„ä»¶ï¼‰")]
         public GameObject enemyPrefab;
-        [Tooltip("Éú³ÉÊıÁ¿")]
+        [Tooltip("ç”Ÿæˆæ•°é‡")]
         [Min(1)] public int count = 3;
-        [Tooltip("Éú³É¼ä¸ô£¨Ãë£©")]
+        [Tooltip("ç”Ÿæˆé—´éš”ï¼ˆç§’ï¼‰")]
         [Min(0)] public float interval = 0.5f;
-        [Tooltip("Éú³ÉÎ»ÖÃÄ£Ê½")]
+        [Tooltip("ç”Ÿæˆä½ç½®æ¨¡å¼")]
         public SpawnPosition positionType;
-        [Tooltip("Éú³ÉÎ»ÖÃÁĞ±í£¨Ïà¶Ô·¿¼äÖĞĞÄ£©")]
+        [Tooltip("ç”Ÿæˆä½ç½®åˆ—è¡¨ï¼ˆç›¸å¯¹æˆ¿é—´ä¸­å¿ƒï¼‰")]
         public List<Vector2> spawnPositions = new List<Vector2>();
     }
     #endregion
 
-    #region ÔËĞĞÊ±²ÎÊı
-    [Header("ÔËĞĞÊ±²ÎÊı")]
+    #region è¿è¡Œæ—¶å‚æ•°
+    [Header("è¿è¡Œæ—¶å‚æ•°")]
     [SerializeField] private GlobalEnemyLibrary enemyLibrary;
     private Vector2 roomSize = Vector2.one * 10f;
     private List<GameObject> validEnemies = new List<GameObject>();
@@ -67,15 +69,15 @@ public class SimpleSpawner : MonoBehaviour
     [SerializeField] private float spawnIntervalMin = 1f;
     [SerializeField] private float spawnIntervalMax = 3f;
 
-    // µĞÈËÈ«²¿ËÀÍöÊ±µÄÍ¨ÖªÊÂ¼ş
+    // æ•Œäººå…¨éƒ¨æ­»äº¡æ—¶çš„é€šçŸ¥äº‹ä»¶
     public event Action<bool> RoomClearEvent;
-    // µĞÈËÊıÁ¿¼à¿Ø
+    // æ•Œäººæ•°é‡ç›‘æ§
     private List<GameObject> activeEnemies = new List<GameObject>();
     private int totalEnemiesSpawned;
     private int enemiesRemaining;
-    private int roomCount; // ¿ÉÓÃÓÚ¼ÆËãÄÑ¶È£¬´Ó·¿¼ä¹ÜÀíÆ÷»ñÈ¡£¿
+    private int roomCount; // å¯ç”¨äºè®¡ç®—éš¾åº¦ï¼Œä»æˆ¿é—´ç®¡ç†å™¨è·å–ï¼Ÿ
 
-    // ±êÊ¶ÊÇ·ñËùÓĞµĞÈË¶¼ÒÑÉú³ÉÍê³É
+    // æ ‡è¯†æ˜¯å¦æ‰€æœ‰æ•Œäººéƒ½å·²ç”Ÿæˆå®Œæˆ
     private bool spawningFinished = false;
     #endregion
 
@@ -84,7 +86,7 @@ public class SimpleSpawner : MonoBehaviour
         InitializeRoom();
         Debug.Log("Room " + name + " initialized");
 
-        // »ñÈ¡·¿¼ä´óĞ¡£¨ÒÔ·¿¼äÖĞÃûÎª Floor µÄ×ÓÎïÌåÎª×¼£©
+        // è·å–æˆ¿é—´å¤§å°ï¼ˆä»¥æˆ¿é—´ä¸­åä¸º Floor çš„å­ç‰©ä½“ä¸ºå‡†ï¼‰
         Transform floor = transform.Find("Floor");
         if (floor != null)
             roomSize = new Vector2(floor.localScale.x, floor.localScale.z);
@@ -109,7 +111,7 @@ public class SimpleSpawner : MonoBehaviour
         }
     }
 
-    #region ·¿¼ä¹ÜÀí
+    #region æˆ¿é—´ç®¡ç†
     private void InitializeRoom()
     {
         activeEnemies.Clear();
@@ -152,7 +154,7 @@ public class SimpleSpawner : MonoBehaviour
         }
     }
 
-    // ĞŞ¸ÄºóµÄÇå¿ÕÅĞ¶Ï£¬Ö»ÓĞµ±ËùÓĞµĞÈËÉú³ÉÍê±ÏÇÒµĞÈËÊıÁ¿¹éÁãÊ±£¬²ÅËã·¿¼äÇå¿Õ
+    // ä¿®æ”¹åçš„æ¸…ç©ºåˆ¤æ–­ï¼Œåªæœ‰å½“æ‰€æœ‰æ•Œäººç”Ÿæˆå®Œæ¯•ä¸”æ•Œäººæ•°é‡å½’é›¶æ—¶ï¼Œæ‰ç®—æˆ¿é—´æ¸…ç©º
     private void CheckRoomClear()
     {
         if (spawningFinished && enemiesRemaining <= 0)
@@ -163,7 +165,7 @@ public class SimpleSpawner : MonoBehaviour
     }
     #endregion
 
-    #region ¶¯Ì¬Éú³É
+    #region åŠ¨æ€ç”Ÿæˆ
     private IEnumerator SpawnDynamicWave()
     {
         int spawnCount = Mathf.RoundToInt(
@@ -177,31 +179,31 @@ public class SimpleSpawner : MonoBehaviour
             SpawnEnemy(enemyPrefab, GetDynamicSpawnPosition());
             yield return new WaitForSeconds(UnityEngine.Random.Range(spawnIntervalMin, spawnIntervalMax));
         }
-        // ¶¯Ì¬Éú³ÉÍê³ÉºóÉèÖÃ±êÖ¾£¬²¢¼ì²é·¿¼äÊÇ·ñÇå¿Õ
+        // åŠ¨æ€ç”Ÿæˆå®Œæˆåè®¾ç½®æ ‡å¿—ï¼Œå¹¶æ£€æŸ¥æˆ¿é—´æ˜¯å¦æ¸…ç©º
         spawningFinished = true;
         CheckRoomClear();
     }
 
     private Vector2 GetDynamicSpawnPosition()
     {
-        // Èç¹û·¿¼äÀàĞÍÎª Boss£¬Ôò²ÉÓÃ Boss ×¨ÓÃÉú³ÉÂß¼­
+        // å¦‚æœæˆ¿é—´ç±»å‹ä¸º Bossï¼Œåˆ™é‡‡ç”¨ Boss ä¸“ç”¨ç”Ÿæˆé€»è¾‘
         if (roomType == RoomType.Boss)
         {
             return GetBossSpawnPosition();
         }
 
-        // ¸ù¾İ¶¯Ì¬Éú³ÉµÄÉú³ÉÎ»ÖÃÄ£Ê½À´Ñ¡ÔñÉú³ÉÂß¼­
+        // æ ¹æ®åŠ¨æ€ç”Ÿæˆçš„ç”Ÿæˆä½ç½®æ¨¡å¼æ¥é€‰æ‹©ç”Ÿæˆé€»è¾‘
         return dynamicSpawnPosition switch
         {
             SpawnPosition.Random => GetRandomPosition(),
             SpawnPosition.Perimeter => GetPerimeterPosition(),
-            // FixedPoints ²»ÊÊÓÃÓÚ¶¯Ì¬Éú³É£¬Ä¬ÈÏ²ÉÓÃËæ»úÎ»ÖÃ
+            // FixedPoints ä¸é€‚ç”¨äºåŠ¨æ€ç”Ÿæˆï¼Œé»˜è®¤é‡‡ç”¨éšæœºä½ç½®
             SpawnPosition.FixedPoints => GetRandomPosition(),
             _ => GetRandomPosition()
         };
     }
 
-    // ÔÚ·¿¼ä±ßÔµÉú³ÉÒ»¸öÎ»ÖÃ
+    // åœ¨æˆ¿é—´è¾¹ç¼˜ç”Ÿæˆä¸€ä¸ªä½ç½®
     private Vector2 GetPerimeterPosition()
     {
         Vector2 roomCenter = transform.position;
@@ -220,7 +222,7 @@ public class SimpleSpawner : MonoBehaviour
     }
     #endregion
 
-    #region ¾²Ì¬²¨´ÎÉú³É
+    #region é™æ€æ³¢æ¬¡ç”Ÿæˆ
     private IEnumerator SpawnStaticWaves()
     {
         foreach (var wave in waveGroups)
@@ -240,7 +242,7 @@ public class SimpleSpawner : MonoBehaviour
                 yield return routine;
             }
         }
-        // ¾²Ì¬²¨´ÎÉú³ÉÈ«²¿Íê³ÉºóÉèÖÃ±êÖ¾£¬²¢¼ì²é·¿¼äÊÇ·ñÇå¿Õ
+        // é™æ€æ³¢æ¬¡ç”Ÿæˆå…¨éƒ¨å®Œæˆåè®¾ç½®æ ‡å¿—ï¼Œå¹¶æ£€æŸ¥æˆ¿é—´æ˜¯å¦æ¸…ç©º
         spawningFinished = true;
         CheckRoomClear();
     }
@@ -276,23 +278,23 @@ public class SimpleSpawner : MonoBehaviour
     {
         if (unit.spawnPositions.Count == 0)
         {
-            // »ñÈ¡ BaseEnemy ÖĞµÄ displayName
+            // è·å– BaseEnemy ä¸­çš„ displayName
             var enemyBase = unit.enemyPrefab.GetComponent<BaseEnemy>();
             string enemyName = enemyBase != null ? enemyBase.displayName : "Unknown";
-            Debug.LogWarning($"µ¥Î» {enemyName} Î´ÅäÖÃÉú³ÉÎ»ÖÃ£¬Ê¹ÓÃËæ»úÎ»ÖÃ");
+            Debug.LogWarning($"å•ä½ {enemyName} æœªé…ç½®ç”Ÿæˆä½ç½®ï¼Œä½¿ç”¨éšæœºä½ç½®");
             return GetRandomPosition();
         }
 
-        // Ëæ»úÑ¡ÔñÒ»¸öÔ¤ÉèÎ»ÖÃ£¬²¢×ª»»ÎªÊÀ½ç×ø±ê£¨¿¼ÂÇ·¿¼äµÄ±ä»»£©
+        // éšæœºé€‰æ‹©ä¸€ä¸ªé¢„è®¾ä½ç½®ï¼Œå¹¶è½¬æ¢ä¸ºä¸–ç•Œåæ ‡ï¼ˆè€ƒè™‘æˆ¿é—´çš„å˜æ¢ï¼‰
         Vector2 localPos = unit.spawnPositions[UnityEngine.Random.Range(0, unit.spawnPositions.Count)];
         return transform.TransformPoint(localPos);
     }
     #endregion
 
-    #region Í¨ÓÃÂß¼­
+    #region é€šç”¨é€»è¾‘
     private void CalculateDifficulty()
     {
-        // ÕâÀï¿ÉÒÔ¸ù¾İ·¿¼äÊıÁ¿»òÆäËüÂß¼­µ÷ÕûÄÑ¶È£¬Ä¿Ç°¹Ì¶¨Îª 1
+        // è¿™é‡Œå¯ä»¥æ ¹æ®æˆ¿é—´æ•°é‡æˆ–å…¶å®ƒé€»è¾‘è°ƒæ•´éš¾åº¦ï¼Œç›®å‰å›ºå®šä¸º 1
         currentDifficulty = 1f;
     }
 
@@ -311,7 +313,7 @@ public class SimpleSpawner : MonoBehaviour
         BaseEnemy enemyBase = enemyPrefab.GetComponent<BaseEnemy>();
         if (enemyBase == null)
         {
-            Debug.LogWarning($"Ô¤ÖÆÌå {enemyPrefab.name} Ã»ÓĞ EnemyBase ×é¼ş");
+            Debug.LogWarning($"é¢„åˆ¶ä½“ {enemyPrefab.name} æ²¡æœ‰ EnemyBase ç»„ä»¶");
             return false;
         }
 

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IDieAble
 {
     public float moveSpeed = 5f;  // 移动速度
 
@@ -43,9 +43,19 @@ public class PlayerMovement : MonoBehaviour
     //修改onDestroy方法,主角死亡后游戏结束
     void OnDestroy()
     {
+        /*
         // 显示UI
         Debug.Log("游戏结束");
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
+        if (gameOverUI != null)
+            gameOverUI = Instantiate(gameOverUI);
+        */
+    }
+
+    public void Die()
+    {
+        Debug.Log("游戏结束");
+        //Time.timeScale = 0;
         if (gameOverUI != null)
             gameOverUI = Instantiate(gameOverUI);
     }

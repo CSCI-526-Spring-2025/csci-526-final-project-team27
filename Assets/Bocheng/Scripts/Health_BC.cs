@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
 
+
+
+
 public class Health_BC : Health
 {
     public HealthBar healthBar;
+
     public float defenseBuff = 1.0f;
     public float damageBuff = 1.0f;
 
     void Start()
     {
-        currentHealth = maxHealth;
+        if(currentHealth == 0)
+            currentHealth = maxHealth;
         //测试用
         // currentHealth = maxHealth * 0.7f;
         if(healthBar != null)
@@ -43,5 +48,10 @@ public class Health_BC : Health
         {
             healthBar.SetHealth(currentHealth, maxHealth);
         }
+    }
+    public void SetHealthBar(HealthBar healthBar)
+    {
+        this.healthBar = healthBar;
+        healthBar.SetHealth(currentHealth, maxHealth);
     }
 }

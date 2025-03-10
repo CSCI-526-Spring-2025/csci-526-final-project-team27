@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Teammate
   - Enemy
+  - Obstacle
+  - Skill
+  - Wall
   layers:
   - Default
   - TransparentFX
