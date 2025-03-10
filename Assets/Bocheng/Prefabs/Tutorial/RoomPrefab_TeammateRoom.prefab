@@ -1110,7 +1110,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1211,7 +1211,7 @@ GameObject:
   - component: {fileID: 4775791715621218359}
   - component: {fileID: 3429477930620871720}
   - component: {fileID: 118653798435295635}
-  - component: {fileID: 7413102143254010400}
+  - component: {fileID: 6175121775252019913}
   m_Layer: 0
   m_Name: Door_Right
   m_TagString: Untagged
@@ -1335,7 +1335,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7413102143254010400
+--- !u!114 &6175121775252019913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1344,10 +1344,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 5372793029718449215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1603942af2c5ca949b1e0aef6b32a376, type: 3}
+  m_Script: {fileID: 11500000, guid: 38139020c2782334bbcebb32be67bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: {x: 1, y: 0}
+  triggerOnEnter: 1
+  triggerOnExit: 0
+  triggerOnKeyPress: 0
+  triggerKey: 101
+  triggerOnce: 1
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5529618435125545156}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: CallStaticFirstFight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5845927608456172928
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,7 +1640,7 @@ MonoBehaviour:
   - {x: -1, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: -1.5}
-  inheritPreviousData: 1
+  inheritPreviousData: 0
 --- !u!1 &7928352009076120706
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 public class TutorialStatic : MonoBehaviour
 {
     public static TutorialStatic Instance { get; private set; } // 单例实例
+    public GameObject FirstFightUI; // 第一次战斗UI
 
     private void Awake()
     {
@@ -29,5 +30,22 @@ public class TutorialStatic : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OpenFirstFightUI()
+    {
+        FirstFightUI.SetActive(true);
+        CtrlCtrl.Instance.LockMove(true);
+        CtrlCtrl.Instance.ToggleShootCtrler(false);
+    }
+
+    public void MoveToFirstFight()
+    {
+        CtrlCtrl.Instance.LockMove(false);
+        CtrlCtrl.Instance.ToggleShootCtrler(true);
+        Debug.Log("Move to first fight");
+        FirstFightUI.SetActive(false);
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        RoomManager_BC.Instance.MoveTo(player, new Vector2Int(1,0));
     }
 }
