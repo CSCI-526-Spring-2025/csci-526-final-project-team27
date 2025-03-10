@@ -82,7 +82,6 @@ public class SkillController : MonoBehaviour
                 if (type == SkillReleaseType.Ground)
                 {
                     UseSkill(currentSkillSlotIndex, targetPos);
-                    GetComponent<CtrlCtrl>().LockShoot(false);
                 }
                 else if (type == SkillReleaseType.Target)
                 {
@@ -91,16 +90,13 @@ public class SkillController : MonoBehaviour
                     if (targetObj != null)
                     {
                         UseSkill(currentSkillSlotIndex, targetObj);
-                        GetComponent<CtrlCtrl>().LockShoot(false);
                     }
                     else
                     {
                         // 如果没有点击到单位，可以选择不释放或提示
                         Debug.Log("未点击到有效目标，取消技能释放。");
-                        GetComponent<CtrlCtrl>().LockShoot(false);
                     }
                 }
-                GetComponent<CtrlCtrl>().LockShoot(false);
                 EndTargetingMode();
             }
         }
@@ -132,7 +128,6 @@ public class SkillController : MonoBehaviour
             currentSkillSlotIndex = slotIndex;
             isTargetingMode = true;
             CreateCursor();
-            GetComponent<CtrlCtrl>().LockShoot(true);
         }
     }
 
@@ -274,7 +269,7 @@ public class SkillController : MonoBehaviour
         // for each skill slot, update the cooldown image
         for (int i = 0; i < skillSlots.Length; i++)
         {
-            if (hpFills[i] != null )
+            if (hpFills[i] != null)
             {
                 GameObject skillObject = skillInstances[i];
                 Skill skill = skillObject.GetComponent<Skill>();
