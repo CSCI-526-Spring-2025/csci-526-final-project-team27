@@ -72,10 +72,10 @@ public class BagManager : MonoBehaviour
         Debug.Log("Inventory " + (isInventoryOpen ? "Opened" : "Closed"));
     }
     public void AddCoin(int amount)
-{
-    coinCount += amount;
-    coinText.text = "Coins: " + coinCount;
-}
+    {
+        coinCount += amount;
+        coinText.text = "Coins: " + coinCount;
+    }
     public void AddItem(Item newItem)
 {
     if (itemCounts.ContainsKey(newItem.itemName))
