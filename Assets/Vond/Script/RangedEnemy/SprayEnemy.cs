@@ -1,18 +1,21 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class MeleeEnemy : BaseEnemy
+public class RangedFanSprayEnemy : BaseEnemy
 {
-    public enum MoveMode { Aggressive, PlayerOnly }
-    public MoveMode moveMode = MoveMode.Aggressive;   // 可在 Inspector 中配置
-
     [Header("Movement Settings")]
     public float searchInterval = 1.0f;
 
     [Header("Attack Settings")]
-    public float attackRange = 1.5f;
-    public float attackInterval = 1.0f;
-    public float damage = 10.0f;
+    public float attackRange = 3.0f;      // 当距离小于此值时触发攻击
+    public float attackInterval = 2.0f;   // 攻击间隔
+    public float damage = 15.0f;
+    public float sprayAngle = 90.0f;      // 喷雾攻击扇形角度（例如 90 度）
+    public float sprayRange = 5.0f;       // 喷雾攻击半径
+
+    [Header("Visual Effect Settings")]
+    public GameObject fanAttackPrefab;    // 预制体，用于显示扇形攻击的范围
+    public float fanEffectDuration = 0.5f;  // 预制体显示时长
 
     [Header("状态标志")]
     public bool isAttacking = false;
@@ -21,30 +24,32 @@ public class MeleeEnemy : BaseEnemy
     private Rigidbody2D rb;
     private bool canAttack = true;
 
-    // 接口实例（均可在 Inspector 中注入自定义实现，否则在 Awake 中使用默认实现）
+    // 接口实例（可以在 Inspector 中注入自定义实现，否则在 Start 中使用默认实现）
     public ITargetFinder targetFinder;
     public IMover mover;
-    public IEnemyMelee meleeAttacker;
+    public ISprayAttacker fanSprayAttacker;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // 若未注入，则使用默认实现
+        // 若未注入，则使用默认目标查找器
         targetFinder = GetComponent<ITargetFinder>();
         if (targetFinder == null)
         {
             targetFinder = new NearestTeamFinder();
         }
+        // 若未注入，则使用默认移动实现
         mover = GetComponent<IMover>();
         if (mover == null)
         {
             mover = new SimpleMover();
         }
-        meleeAttacker = GetComponent<IEnemyMelee>();
-        if (meleeAttacker == null)
+        // 若未注入，则使用默认扇形攻击实现
+        fanSprayAttacker = GetComponent<ISprayAttacker>();
+        if (fanSprayAttacker == null)
         {
-            meleeAttacker = new EnemyMeleeAttacker();
+            fanSprayAttacker = new EnemyFanSprayAttacker();
         }
 
         StartCoroutine(SearchTargetRoutine());
@@ -91,10 +96,20 @@ public class MeleeEnemy : BaseEnemy
     {
         canAttack = false;
         isAttacking = true;
-        yield return StartCoroutine(meleeAttacker.Attack(this, transform, currentTarget, damage, attackInterval));
+
+        // 在攻击前实例化预制体显示扇形范围（注意：预制体需要设置好合适的视觉表现）
+        if (fanAttackPrefab != null)
+        {
+            GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
+            Destroy(effect, fanEffectDuration);
+        }
+
+        // 执行扇形喷雾攻击
+        yield return StartCoroutine(fanSprayAttacker.Attack(this, transform, currentTarget, damage, attackInterval, sprayAngle, sprayRange));
         isAttacking = false;
         canAttack = true;
     }
+
 
     // 使敌人面向目标
     void FaceTarget(Vector3 targetPosition)
@@ -102,14 +117,5 @@ public class MeleeEnemy : BaseEnemy
         Vector3 direction = (targetPosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
-    }
-
-    // 外部调用：当目标消失或死亡时清空当前目标
-    public void ClearTarget(Transform target)
-    {
-        if (currentTarget == target)
-        {
-            currentTarget = null;
-        }
     }
 }
