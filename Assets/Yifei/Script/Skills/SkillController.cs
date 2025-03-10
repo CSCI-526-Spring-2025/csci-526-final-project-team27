@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -40,6 +41,8 @@ public class SkillController : MonoBehaviour
 
     private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
 
+    private ShootingController shootingController;
+
     private void Awake()
     {
         for (int i = 0; i < skillSlots.Length; i++)
@@ -51,6 +54,7 @@ public class SkillController : MonoBehaviour
                 Debug.Log("实例化" + skillInstances[i].name);
             }
         }
+        shootingController = GetComponentInParent<ShootingController>();
     }
 
     void Update()
@@ -95,6 +99,10 @@ public class SkillController : MonoBehaviour
                     {
                         // 如果没有点击到单位，可以选择不释放或提示
                         Debug.Log("未点击到有效目标，取消技能释放。");
+                        if (shootingController != null)
+                        {
+                            shootingController.LockShoot(false);
+                        }
                     }
                 }
                 EndTargetingMode();
@@ -128,6 +136,20 @@ public class SkillController : MonoBehaviour
             currentSkillSlotIndex = slotIndex;
             isTargetingMode = true;
             CreateCursor();
+            if (shootingController != null)
+            {
+                shootingController.LockShoot(true);
+            }
+        }
+    }
+
+    // 直接解锁射击似乎无法在技能释放前保持射击锁定
+    private IEnumerator UnlockShootAfterFrame()
+    {
+        yield return null; // 等待一帧
+        if (shootingController != null)
+        {
+            shootingController.LockShoot(false);
         }
     }
 
@@ -150,6 +172,8 @@ public class SkillController : MonoBehaviour
         {
             skillScript.TryInitialize(direction);
         }
+        // 等待一帧后解锁射击
+        StartCoroutine(UnlockShootAfterFrame());
     }
 
     /// <summary>
@@ -174,6 +198,7 @@ public class SkillController : MonoBehaviour
         {
             skillScript.TryInitialize(target);
         }
+        StartCoroutine(UnlockShootAfterFrame());
     }
 
     /// <summary>
