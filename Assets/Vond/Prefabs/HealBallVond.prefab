@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6147282982101997590}
   m_Layer: 0
   m_Name: HealBallVond
-  m_TagString: Untagged
+  m_TagString: Friendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
