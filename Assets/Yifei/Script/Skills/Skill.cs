@@ -29,6 +29,9 @@ public abstract class Skill : MonoBehaviour
     [Tooltip("技能释放模式（直接释放、点地释放或点击单位释放）")]
     public SkillReleaseType releaseType = SkillReleaseType.Direct;
 
+    [Header("Skill UI")]
+    public string skillName;
+
     // 静态字典记录每种技能类型上次使用的时间（按类型名区分）
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
 

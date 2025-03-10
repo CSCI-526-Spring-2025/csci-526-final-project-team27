@@ -7,6 +7,7 @@ public class EnemyHealth : Health
     [SerializeField] private GameObject coinPrefab;
 
     private SimpleSpawner enemySpawner;
+    private FirebaseDataUploader dataUploader;
 
     [System.Serializable]
     // 用于死亡事件
@@ -22,7 +23,12 @@ public class EnemyHealth : Health
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // 获取 FirebaseDataUploader 组件
+        dataUploader = FindFirstObjectByType<FirebaseDataUploader>();
+        if (dataUploader == null)
+        {
+            Debug.LogWarning("No FirebaseDataUploader found in the scene");
+        }
     }
 
     // Update is called once per frame
@@ -48,8 +54,13 @@ public class EnemyHealth : Health
     {
         Debug.Log(this.gameObject.name + " is dead");
 
-        // Notify spawner
+        // 3. renew EnemyKilled in FirebaseDataUploader
+        if (dataUploader != null)
+        {
+            dataUploader.UpdateData("EnemyKilled", dataUploader.GetData("EnemyKilled") + 1);
+        }
 
+        // Notify spawner
         OnDeath.Invoke(this.gameObject);
  
         // 1. Spawn coin (if you have assigned coinPrefab)
@@ -66,6 +77,7 @@ public class EnemyHealth : Health
         base.Die();
         //旧的生成器
         //enemySpawner.EnemyDie();
+
     }
 
     private void IncreaseEnemy()

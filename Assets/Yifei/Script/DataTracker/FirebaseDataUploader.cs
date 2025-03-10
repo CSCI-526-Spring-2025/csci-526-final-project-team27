@@ -152,7 +152,7 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
-    /// 在游戏退出时进行一次最终上传，不一定有用
+    /// 在游戏退出时进行一次最终上传，不保证上传成功
     /// </summary>
     private void OnApplicationQuit()
     {
