@@ -99,7 +99,7 @@ public class Trader : MonoBehaviour
             {
                 if (BagManager.Instance != null)
                 {
-                    BagManager.Instance.AddItem(chosenItems[index]);
+                    //BagManager.Instance.AddItem(chosenItems[index]);
                 }
             }
         }

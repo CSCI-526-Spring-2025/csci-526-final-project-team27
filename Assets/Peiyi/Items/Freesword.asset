@@ -10,8 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa72f1328c5922b438b3337d941b7aef, type: 3}
-  m_Name: Potion
+  m_Name: Freesword
   m_EditorClassIdentifier: 
-  itemName: Potion
-  icon: {fileID: 7482667652216324306, guid: a39a61181ba70e940abd0808f8470831, type: 3}
-  price: 5
+  itemName: freesword
+  price: 0
+  size: {x: 1, y: 3}
+  icon: {fileID: 3625043607559282579, guid: d67dccb4caa7b384db2707d652fa1b70, type: 3}
+  itemColor: {r: 0.20185119, g: 0.5604425, b: 0.6792453, a: 1}
+  shapeMatrix:
+  - row: 01000000
+  - row: 01000000
+  - row: 01000000
