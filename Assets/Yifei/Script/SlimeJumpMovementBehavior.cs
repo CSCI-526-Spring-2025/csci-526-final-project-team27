@@ -8,9 +8,6 @@ using UnityEngine;
 /// </summary>
 public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
 {
-    [Header("Jump Settings")]
-    [Tooltip("每次跳跃水平方向（沿目标方向）的最大距离")]
-    [SerializeField] private float jumpDistance = 3f;
 
     [Tooltip("跳跃的总时长（秒）")]
     [SerializeField] private float jumpDuration = 0.7f;
@@ -23,20 +20,22 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
 
     private float lastJumpTime = 0f;
     private bool isJumping = false;
+    private float jumpDistance = 5f;
 
     /// <summary>
     /// 根据目标方向发起一次跳跃。
-    /// 注意：参数 moveSpeed 在本实现中未使用，跳跃距离由 jumpDistance 控制。
+    /// 跳跃距离由 moveSpeed 决定。
     /// </summary>
     /// <param name="self">当前角色的 Transform（使用传入的 self 代替内部 transform）</param>
     /// <param name="rb">角色的 Rigidbody2D（本实现中未直接使用）</param>
     /// <param name="target">目标对象的 Transform</param>
-    /// <param name="moveSpeed">移动速度参数（本实现中不使用）</param>
+    /// <param name="moveSpeed">移动速度参数，决定跳跃距离</param>
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
         if (!isJumping && Time.time - lastJumpTime >= jumpInterval)
         {
+            jumpDistance = moveSpeed; // 使用 moveSpeed 作为跳跃距离
             StartCoroutine(JumpTowardsTarget(self, target));
         }
     }

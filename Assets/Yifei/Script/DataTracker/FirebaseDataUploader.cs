@@ -42,6 +42,7 @@ public class FirebaseDataUploader : MonoBehaviour
     {
          new DataEntry() { key = "PlayTime", value = 0 },
          new DataEntry() { key = "EnemyKilled", value = 0 },
+         new DataEntry() { key = "CoinCollected", value = 0 },
     };
 
 #if UNITY_WEBGL 

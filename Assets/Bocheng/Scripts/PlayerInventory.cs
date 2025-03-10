@@ -8,6 +8,10 @@ public class PlayerInventory : MonoBehaviour
 
     public static PlayerInventory Instance { get; private set; } // 单例实例
 
+    // 数据收集
+    private FirebaseDataUploader dataUploader;
+
+
     private void Awake()
     {
         // 确保单例唯一性
@@ -35,7 +39,7 @@ public class PlayerInventory : MonoBehaviour
     }
     void Start()
     {
-        
+        dataUploader = FindFirstObjectByType<FirebaseDataUploader>();
     }
 
     // Update is called once per frame
@@ -48,7 +52,14 @@ public class PlayerInventory : MonoBehaviour
     {
         currentCoins += amount;
         Debug.Log("Coins: " + currentCoins);
-        
+
+        // 硬币数据上传
+        if (dataUploader != null)
+        {
+            dataUploader.UpdateData("CoinCollected", dataUploader.GetData("CoinCollected") + amount);
+        }
+
+
         coinText.text = "Coins: " + currentCoins;
     }
 

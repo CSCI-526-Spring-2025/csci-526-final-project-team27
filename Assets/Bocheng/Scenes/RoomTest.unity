@@ -378,6 +378,8 @@ MonoBehaviour:
     value: 0
   - key: EnemyKilled
     value: 0
+  - key: CoinCollected
+    value: 0
 --- !u!1 &206507510
 GameObject:
   m_ObjectHideFlags: 0
