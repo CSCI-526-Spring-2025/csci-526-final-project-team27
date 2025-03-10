@@ -16,10 +16,12 @@ public class BagManager : MonoBehaviour
     public int coinCount = 0; // 
     public TextMeshProUGUI coinText; // UI OF COIN
     public Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+    public bool isTutorial = false;
 
 
     private void Awake()
     {
+        /*
         // 确保单例唯一性
         if (Instance == null)
         {
@@ -30,7 +32,23 @@ public class BagManager : MonoBehaviour
         {
             Destroy(gameObject); // 如果已经存在实例，销毁当前对象
             return;
+        }*/
+        if (Instance != null && Instance != this)
+        {
+            // 特殊判断 Tutorial 的情况
+            if (Instance.isTutorial)
+            {
+                Destroy(Instance.gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
 

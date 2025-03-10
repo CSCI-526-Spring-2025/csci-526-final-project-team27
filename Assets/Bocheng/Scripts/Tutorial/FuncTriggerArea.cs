@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.GraphicsBuffer;
+
+//[System.Serializable]
+//public class GameObjectEvent : UnityEvent<GameObject> { }
+
 
 public class FuncTriggerArea : MonoBehaviour
 {
@@ -13,6 +18,7 @@ public class FuncTriggerArea : MonoBehaviour
 
     [Header("触发事件")]
     public UnityEvent onTrigger; // 允许在 Inspector 里绑定方法
+    //public GameObjectEvent onTriggerWithGameObject;
 
     private bool isPlayerInside = false; // 记录玩家是否在触发区域内
 
@@ -21,6 +27,7 @@ public class FuncTriggerArea : MonoBehaviour
         if (triggerOnKeyPress && isPlayerInside && Input.GetKeyDown(triggerKey))
         {
             TriggerEvent();
+            
         }
     }
 
@@ -50,6 +57,7 @@ public class FuncTriggerArea : MonoBehaviour
         if (triggerOnce && hasTriggered) return; // 如果已经触发过，直接返回
 
         onTrigger.Invoke();
+        //onTriggerWithGameObject.Invoke(gameObject);
 
         if (triggerOnce)
         {

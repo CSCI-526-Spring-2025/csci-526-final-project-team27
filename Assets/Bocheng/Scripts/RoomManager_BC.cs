@@ -124,14 +124,12 @@ public class RoomManager_BC : MonoBehaviour
         map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End);
         roomPositions.Add(endRoom);
 
-        for(int i = 1; i < tutorialRoomCount - 3; i++)
+        for(int i = 1; i < tutorialRoomCount - 2; i++)
         {
             map[i, 0] = new Room(new Vector2Int(i, 0), Room.RoomType.Normal);
             roomPositions.Add(new Vector2Int(i, 0));
         }
 
-        map[tutorialRoomCount - 3, 0] = new Room(new Vector2Int(2, 0), Room.RoomType.Elite);
-        roomPositions.Add(new Vector2Int(tutorialRoomCount - 3, 0));
         map[tutorialRoomCount - 2, 0] = new Room(new Vector2Int(3, 0), Room.RoomType.Shop);
         roomPositions.Add(new Vector2Int(tutorialRoomCount - 2, 0));
         Debug.Log($"开始房间: {startRoom}");
@@ -862,9 +860,14 @@ public class RoomManager_BC : MonoBehaviour
     {
         if (roomCleared)
         {
+            if(sceneType == SceneType.Tutorial)
+            {
+                TutorialStatic.Instance.EnemyClear();
+            }
             // 禁用玩家的 ShootingController 和 SkillController
             DisablePlayerControllers();
-            ShowRewardSelection();
+            DoorControl(true);
+            //ShowRewardSelection();
         }
     }
 

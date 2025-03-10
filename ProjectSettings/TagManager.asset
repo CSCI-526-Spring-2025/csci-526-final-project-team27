@@ -7,6 +7,7 @@ TagManager:
   - Teammate
   - Enemy
   - Obstacle
+  - Wall
   layers:
   - Default
   - TransparentFX
