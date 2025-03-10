@@ -434,6 +434,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8586790917306438146, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
   m_PrefabInstance: {fileID: 1593615907388940593}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1243261844 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3554543112931046538, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
+  m_PrefabInstance: {fileID: 1593615907388940593}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1303204964 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8798911911599638968, guid: 51bb6bdba8a3fd540a6d5040e226498c, type: 3}
@@ -734,6 +739,10 @@ PrefabInstance:
       propertyPath: pauseMenuUI
       value: 
       objectReference: {fileID: 699819237}
+    - target: {fileID: -7012449887924442572, guid: c5b7010798c47a043bf7464481b81071, type: 3}
+      propertyPath: keyMappingPanel
+      value: 
+      objectReference: {fileID: 1243261844}
     - target: {fileID: 2139205268969813487, guid: c5b7010798c47a043bf7464481b81071, type: 3}
       propertyPath: m_Name
       value: EventSystem
