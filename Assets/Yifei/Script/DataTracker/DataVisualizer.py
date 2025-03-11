@@ -12,10 +12,9 @@ data = response.json()
 levels = [1, 2, 3, 4, 5]
 counts = {level: 0 for level in levels}
 
-
 for session_id, session_data in data.items():
-    if "DifficultyLevelReached" in session_data:
-        level_str = session_data.get("DifficultyLevelReached", "0")
+    if "a" in session_data and "DifficultyLevelReached" in session_data["a"]: # for WebGL build
+        level_str = session_data["a"].get("DifficultyLevelReached", "0")
         try:
             level = int(level_str)
         except ValueError:
