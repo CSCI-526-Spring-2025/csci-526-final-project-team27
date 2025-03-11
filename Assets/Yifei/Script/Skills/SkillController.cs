@@ -107,9 +107,23 @@ public class SkillController : MonoBehaviour
                 }
                 EndTargetingMode();
             }
+            // 点击其他技能时切换到新技能
+            else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                EndTargetingMode();
+                if (shootingController != null)
+                {
+                    shootingController.LockShoot(false);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                    ProcessSkillKey(0);
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                    ProcessSkillKey(1);
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    ProcessSkillKey(2);
+            }
         }
     }
-
     /// <summary>
     /// 处理技能键输入，根据技能槽的释放模式选择处理方式
     /// </summary>
