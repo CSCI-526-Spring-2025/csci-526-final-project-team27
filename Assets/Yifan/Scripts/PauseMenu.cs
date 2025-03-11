@@ -24,6 +24,9 @@ public class PauseMenu : MonoBehaviour
     {
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
+        Debug.Log("Unlock Movement");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
         Time.timeScale = 1f; // Resume game time
         PauseController.isPaused = false;
     }
