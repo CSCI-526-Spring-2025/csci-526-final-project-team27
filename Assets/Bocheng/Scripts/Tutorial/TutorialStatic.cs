@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -95,9 +96,9 @@ public class TutorialStatic : MonoBehaviour
 
     IEnumerator LoadNewScene()
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync(NextSceneName, LoadSceneMode.Single);
+        AsyncOperation op = SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
         yield return op;
-
+        
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(NextSceneName));
         Time.timeScale = 1f;
 
