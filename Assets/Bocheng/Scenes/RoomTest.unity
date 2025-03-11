@@ -377,13 +377,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firebaseURL: https://cureallcrew-default-rtdb.firebaseio.com/CureAllCrew/
   uploadInterval: 5
-  presetData:
-  - key: PlayTime
-    value: 0
-  - key: EnemyKilled
-    value: 0
-  - key: CoinCollected
-    value: 0
 --- !u!1 &206507510
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,9 +1196,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: []
+  store: {fileID: 1797401335}
+  realbag: {fileID: 1761025129}
   inventoryPanel: {fileID: 1717193077}
-  coinCount: 0
-  coinText: {fileID: 1482481666}
+  coin: {fileID: 1482481665}
   isTutorial: 0
 --- !u!4 &902302414
 Transform:

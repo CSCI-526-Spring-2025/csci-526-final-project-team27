@@ -179,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: -1, y: 0}
+  bActive: 1
 --- !u!1 &2324098834950985829
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: -1}
+  bActive: 1
 --- !u!1 &3692090279622809768
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,6 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 1}
+  bActive: 1
 --- !u!1 &4076533052321158648
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,6 +939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 1, y: 0}
+  bActive: 1
 --- !u!1 &5845927608456172928
 GameObject:
   m_ObjectHideFlags: 0
@@ -1395,6 +1399,10 @@ PrefabInstance:
     - target: {fileID: 6468246993292921528, guid: 83e265bf6b3b6cc4e84c3ef7796b47a9, type: 3}
       propertyPath: m_Name
       value: Trader
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744282772444968449, guid: 83e265bf6b3b6cc4e84c3ef7796b47a9, type: 3}
+      propertyPath: m_text
+      value: '[B]'
       objectReference: {fileID: 0}
     - target: {fileID: 7168872504118020149, guid: 83e265bf6b3b6cc4e84c3ef7796b47a9, type: 3}
       propertyPath: m_LocalPosition.x
