@@ -13,7 +13,7 @@ public class CtrlCtrl : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 确保场景切换时不会销毁
+            //DontDestroyOnLoad(gameObject); // 确保场景切换时不会销毁
         }
         else
         {

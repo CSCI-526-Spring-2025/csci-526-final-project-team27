@@ -78,6 +78,12 @@ public class RoomManager_BC : MonoBehaviour
 
     private bool MinimapOpen = false;
 
+    //VonD添加功能
+    private int exploredRoomCount = 0; // 已探索房间数量（初始房间不计入）
+    private int generatedRoomCount = 0; // 已生成房间数量
+    private HashSet<Vector2Int> visitedRooms = new HashSet<Vector2Int>(); // 记录已探索房间的位置
+    //VonD添加功能
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -103,7 +109,10 @@ public class RoomManager_BC : MonoBehaviour
 
         CurrentRoom = startRoom;
         panel.transform.parent.gameObject.SetActive(false);
-
+        //VonD添加功能
+        generatedRoomCount = roomPositions.Count;
+        Debug.LogWarning(generatedRoomCount);
+        //VonD添加功能
     }
 
     void Update()
@@ -483,6 +492,15 @@ public class RoomManager_BC : MonoBehaviour
         //    WinGame();
         //    return;
         //}
+        //VonD添加功能
+        // 如果进入的房间不是起点且之前未被探索过，则计数加1
+        if(newRoom != startRoom && !visitedRooms.Contains(newRoom))
+        {
+            exploredRoomCount++;
+            visitedRooms.Add(newRoom);
+            Debug.Log($"探索新房间: {newRoom}, 已探索数量: {exploredRoomCount}");
+        }
+        //VonD添加功能
 
         // 启用玩家控制
         EnablePlayerControllers();
@@ -524,10 +542,40 @@ public class RoomManager_BC : MonoBehaviour
                 roomPrefab = normalRoomPrefabs[roomCount];
                 roomCount++;
             }
+            // else
+            // {
+            //     roomPrefab = normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Count)];
+            // }
+
+            //VonD添加功能
             else
             {
-                roomPrefab = normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Count)];
+                // 计算探索比例：已探索房间数量 / 已生成房间数量
+                float ratio = generatedRoomCount > 0 ? (float)exploredRoomCount / generatedRoomCount : 0f;
+                int prefabIndex = 0;
+                if (ratio < 0.2f)
+                {
+                    prefabIndex = 0; // 最低难度
+                }
+                else if (ratio < 0.4f)
+                {
+                    prefabIndex = 1; // 次低难度
+                }
+                else if (ratio < 0.6f)
+                {
+                    prefabIndex = 2;
+                }
+                else if (ratio < 0.8f)
+                {
+                    prefabIndex = 3;
+                }
+                else
+                {
+                    prefabIndex = 4; // 最高难度
+                }
+                roomPrefab = normalRoomPrefabs[prefabIndex];
             }
+            //VonD添加功能
         }
 
         GameObject newRoomInstance = Instantiate(roomPrefab, worldPos, Quaternion.identity);

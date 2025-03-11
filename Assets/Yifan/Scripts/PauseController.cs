@@ -3,6 +3,7 @@ using UnityEngine;
 public class PauseController : MonoBehaviour
 {
     public GameObject pauseMenuUI;
+    public GameObject keyMappingPanel;
     public static bool isPaused = false; // Shared variable
 
     void Update()
@@ -11,22 +12,35 @@ public class PauseController : MonoBehaviour
         {
             Debug.Log("Esc Pressed");
             if (isPaused)
+            {
+                Debug.Log("Shall Resume");
                 ResumeGame();
+            }
             else
+            {
+                Debug.Log("Shall Pause");
                 PauseGame();
+            }
         }
     }
 
     public void ResumeGame()
     {
-        pauseMenuUI.SetActive(false);
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
+        Debug.Log("Unlock Movement");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
         Time.timeScale = 1f;
         isPaused = false; // Update the shared variable
     }
 
     public void PauseGame()
     {
-        pauseMenuUI.SetActive(true);
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+        Debug.Log("Lock Movement");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(true);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(false);
         Time.timeScale = 0f;
         isPaused = true; // Update the shared variable
     }

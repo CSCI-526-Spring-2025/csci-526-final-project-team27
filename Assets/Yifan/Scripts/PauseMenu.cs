@@ -22,15 +22,18 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
-        pauseMenuUI.SetActive(false);
-        keyMappingPanel.SetActive(false); // Hide key mapping if open
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
+        Debug.Log("Unlock Movement");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
         Time.timeScale = 1f; // Resume game time
         PauseController.isPaused = false;
     }
 
     // public void PauseGame()
     // {
-    //     pauseMenuUI.SetActive(true);
+    //     if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
     //     Time.timeScale = 0f; // Pause game time
     //     PauseController.isPaused = true;
     // }
@@ -48,11 +51,11 @@ public class PauseMenu : MonoBehaviour
 
     public void ShowKeyMapping()
     {
-        keyMappingPanel.SetActive(true);
+        if (keyMappingPanel != null) keyMappingPanel.SetActive(true);
     }
 
     public void HideKeyMapping()
     {
-        keyMappingPanel.SetActive(false);
+        if (keyMappingPanel != null) keyMappingPanel.SetActive(false);
     }
 }

@@ -71,10 +71,15 @@ public class ShootingController : MonoBehaviour
     {
         if(isLocked)
             return;
-        if(inventoryPanel.activeSelf &&EventSystem.current.IsPointerOverGameObject()){//when bag is open and cursor on bagpanel it won't shoot
-            Debug.Log("click on the panel");
-            return ;
+        if(inventoryPanel != null)
+        {
+            if (inventoryPanel.activeSelf && EventSystem.current.IsPointerOverGameObject())
+            {//when bag is open and cursor on bagpanel it won't shoot
+                Debug.Log("click on the panel");
+                return;
+            }
         }
+
         if (bulletPrefab != null && firePoint != null)
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
