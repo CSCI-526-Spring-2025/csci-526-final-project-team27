@@ -1196,9 +1196,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: []
+  store: {fileID: 0}
+  realbag: {fileID: 0}
   inventoryPanel: {fileID: 1717193077}
-  coinCount: 0
-  coinText: {fileID: 1482481666}
+  coin: {fileID: 0}
   isTutorial: 0
 --- !u!4 &902302414
 Transform:

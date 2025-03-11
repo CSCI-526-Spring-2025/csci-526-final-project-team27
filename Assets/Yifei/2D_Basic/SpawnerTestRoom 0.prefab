@@ -1359,7 +1359,7 @@ MonoBehaviour:
   dynamicSpawnPosition: 0
   waveGroups:
   - waveName: 0
-    preDelay: 0
+    preDelay: 1
     units:
     - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
       count: 2
@@ -1380,7 +1380,7 @@ MonoBehaviour:
       - {x: 10, y: -5}
       - {x: -10, y: 5}
   - waveName: 1
-    preDelay: 3
+    preDelay: 2
     units:
     - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
       count: 2
@@ -1392,7 +1392,7 @@ MonoBehaviour:
       - {x: 10, y: -5}
       - {x: -10, y: 5}
     - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
-      count: 3
+      count: 1
       interval: 1
       positionType: 1
       spawnPositions:

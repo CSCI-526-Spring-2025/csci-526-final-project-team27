@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 1}
+  bActive: 1
 --- !u!1 &2425711949434159601
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: -1}
+  bActive: 1
 --- !u!1 &2732811291352662469
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,6 +508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 1, y: 0}
+  bActive: 1
 --- !u!1 &2989590643571207265
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,6 +688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: -1, y: 0}
+  bActive: 1
 --- !u!1 &3526293489779466303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,6 +1329,7 @@ MonoBehaviour:
   roomPrefab: {fileID: 7752736070594661851}
   roomType: 0
   spawnMode: 1
+  roomDifficulty: 1
   dynamicSpawnRangeMin: 1
   dynamicSpawnRangeMax: 10
   difficultyCurve:
@@ -1354,10 +1359,10 @@ MonoBehaviour:
   dynamicSpawnPosition: 0
   waveGroups:
   - waveName: 0
-    preDelay: 0
+    preDelay: 1
     units:
     - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
-      count: 5
+      count: 3
       interval: 0.5
       positionType: 1
       spawnPositions:

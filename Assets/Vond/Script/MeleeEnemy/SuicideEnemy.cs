@@ -6,8 +6,8 @@ public class SuicideEnemy : BaseEnemy
     [Header("警戒设置")]
     [Tooltip("当玩家或队友进入该范围时触发警戒状态")]
     public float alertRange = 5f;
-    [Tooltip("冲刺速度（自爆前的高速移动）")]
-    public float rushSpeed = 10f;
+    [Tooltip("冲刺倍率（自爆前的高速移动）")]
+    public float rushSpeed = 3f;
     [Tooltip("触发爆炸前的延时")]
     public float explosionDelay = 1f;
 
@@ -58,7 +58,7 @@ public class SuicideEnemy : BaseEnemy
         // 处于警戒状态且目标存在时以高速冲刺，否则静止
         if (isAlerted && currentTarget != null && !hasExploded)
         {
-            mover.Move(transform, rb, currentTarget, rushSpeed);
+            mover.Move(transform, rb, currentTarget, rushSpeed * moveSpeed);
         }
         else
         {

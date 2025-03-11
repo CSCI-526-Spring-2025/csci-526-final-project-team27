@@ -89,6 +89,19 @@ public class GroundSlowSkill : Skill
                 //Debug.Log("Enemy slowed: " + collision.gameObject.name);
             }
         }
+        RangedEnemy rangedEnemy = collision.GetComponent<RangedEnemy>(); // 临时代码，处理 RangedEnemy 的减速
+        if (rangedEnemy != null)
+        {
+            // 避免重复记录
+            if (!affectedEnemies.Contains(collision.gameObject))
+            {
+                affectedEnemies.Add(collision.gameObject);
+                // 保存原始速度并应用减速
+                originalSpeeds[collision.gameObject] = rangedEnemy.moveSpeed;
+                rangedEnemy.moveSpeed *= slowFactor;
+                //Debug.Log("Enemy slowed: " + collision.gameObject.name);
+            }
+        }
     }
 
     /// <summary>
