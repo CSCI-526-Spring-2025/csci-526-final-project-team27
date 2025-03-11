@@ -38,6 +38,11 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Quitting Game...");
+        FirebaseDataUploader firebaseDataUploader = FindFirstObjectByType<FirebaseDataUploader>();
+        if (firebaseDataUploader != null)
+        {
+            firebaseDataUploader.ForceUploadData();
+        }
         Application.Quit(); // Quit the game (only works in a build)
     }
 
