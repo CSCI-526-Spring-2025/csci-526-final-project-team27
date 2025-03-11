@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class DataEntry
@@ -23,8 +25,16 @@ public class FirebaseDataUploader : MonoBehaviour
 
     // 游戏启动时的时间戳（作为文档名称）
     private string sessionTimeStamp;
+    // 浏览器信息
+    private string browserInfo = "Unknown";
     // 记录游戏开始时的时间（用于计算游玩时长）
     private float startTime;
+    // 设备唯一 ID
+    private string deviceID;
+    // OS 信息
+    private string osInfo = "Unknown";
+    // 分辨率
+    private string resolution = "Unknown";
 
     [Header("预设追踪的数据（键值对）")]
     [SerializeField]
@@ -32,14 +42,35 @@ public class FirebaseDataUploader : MonoBehaviour
     {
          new DataEntry() { key = "PlayTime", value = 0 },
          new DataEntry() { key = "EnemyKilled", value = 0 },
+         new DataEntry() { key = "CoinCollected", value = 0 },
     };
+
+#if UNITY_WEBGL 
+    [DllImport("__Internal")]
+    private static extern void GetBrowserInfo(string gameObjectName);
+#endif
 
     private void Start()
     {
-        // 游戏开始时间戳
+        // 游戏开始时间及文档名称初始化
         startTime = Time.time;
-        // 用当前时间生成一个时间戳，作为文档名称
         sessionTimeStamp = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+        deviceID = SystemInfo.deviceUniqueIdentifier;
+        osInfo = SystemInfo.operatingSystem;
+        resolution = Screen.width + "x" + Screen.height;
+
+#if UNITY_WEBGL 
+        // 尝试获取浏览器信息
+        try
+        {
+            GetBrowserInfo(gameObject.name);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("获取浏览器信息时出错: " + ex.Message);
+            browserInfo = "Unavailable";
+        }
+#endif
         StartCoroutine(AutoUploadData());
     }
 
@@ -85,7 +116,6 @@ public class FirebaseDataUploader : MonoBehaviour
     /// </summary>
     public void ForceUploadData()
     {
-        // 更新最新的游玩时长
         UpdateData("PlayTime", Time.time - startTime);
         StartCoroutine(SendDataToFirebase());
     }
@@ -97,7 +127,6 @@ public class FirebaseDataUploader : MonoBehaviour
     {
         while (true)
         {
-            // 在每次上传前更新游玩时间
             UpdateData("PlayTime", Time.time - startTime);
             yield return StartCoroutine(SendDataToFirebase());
             yield return new WaitForSeconds(uploadInterval);
@@ -105,13 +134,64 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
-    /// 将当前 presetData 转换为 JSON 格式，并通过 PUT 请求上传到 Firebase
+    /// 构建最终上传的 JSON 字符串，包含预设数据和 GPU 信息
+    /// </summary>
+    private string BuildJson()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("{");
+
+        bool first = true;
+        foreach (var entry in presetData)
+        {
+            if (!first)
+                sb.Append(",");
+            sb.Append("\"").Append(entry.key).Append("\":");
+            sb.Append("\"").Append(entry.value).Append("\"");
+            first = false;
+        }
+
+        # region 系统信息部分, 请勿修改
+        // 添加系统信息部分
+        sb.Append(",\"SystemInfo\":").Append("{");
+
+        // 重置内部的 first 标志，避免前面 presetData 的影响
+        bool innerFirst = true;
+
+        // 浏览器信息
+        if (!innerFirst)
+            sb.Append(",");
+        sb.Append("\"BrowserInfo\":").Append("\"").Append(browserInfo).Append("\"");
+        innerFirst = false;
+
+        // OS 信息
+        if (!innerFirst)
+            sb.Append(",");
+        sb.Append("\"OSInfo\":").Append("\"").Append(osInfo).Append("\"");
+        innerFirst = false;
+
+        // 分辨率
+        if (!innerFirst)
+            sb.Append(",");
+        sb.Append("\"Resolution\":").Append("\"").Append(resolution).Append("\"");
+
+        sb.Append("}"); // 结束 SystemInfo 对象
+        #endregion
+
+        sb.Append("}"); // 结束整个 JSON 对象
+
+        return sb.ToString();
+    }
+
+
+    /// <summary>
+    /// 将当前 JSON 数据通过 PUT 请求上传到 Firebase
     /// </summary>
     private IEnumerator SendDataToFirebase()
     {
-        string json = ListToJson(presetData);
-        // 使用时间戳作为节点名，每次 PUT 会覆盖该节点下的所有数据
-        string requestURL = firebaseURL + sessionTimeStamp + ".json";
+        string json = BuildJson();
+        // 使用时间戳和 deviceID 作为节点名，每次 PUT 会覆盖该节点下的所有数据
+        string requestURL = firebaseURL + sessionTimeStamp + "-" + deviceID + ".json";
 
         UnityWebRequest uwr = new UnityWebRequest(requestURL, "PUT");
         byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
@@ -132,30 +212,18 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
-    /// 将预设数据列表转换为 JSON 格式
-    /// </summary>
-    private string ListToJson(List<DataEntry> dataList)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.Append("{");
-        bool first = true;
-        foreach (var entry in dataList)
-        {
-            if (!first)
-                sb.Append(",");
-            sb.Append("\"").Append(entry.key).Append("\":");
-            sb.Append("\"").Append(entry.value).Append("\"");
-            first = false;
-        }
-        sb.Append("}");
-        return sb.ToString();
-    }
-
-    /// <summary>
     /// 在游戏退出时进行一次最终上传，不保证上传成功
     /// </summary>
     private void OnApplicationQuit()
     {
         ForceUploadData();
+    }
+
+    /// <summary>
+    /// JS 回调此方法传回 GPU 信息
+    /// </summary>
+    public void OnBrowserInfoReceived(string info)
+    {
+        browserInfo = info;
     }
 }

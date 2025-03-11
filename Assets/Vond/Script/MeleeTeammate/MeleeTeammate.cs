@@ -33,18 +33,22 @@ public class MeleeTeammate : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         // 如果没有外部注入，则使用默认实现
+        targetFinder = GetComponent<ITargetFinder>();
         if (targetFinder == null) 
         {
             targetFinder = new NearestEnemyFinder();
         }
+        mover = GetComponent<IMover>();
         if (mover == null) 
         {
             mover = new SimpleMover();
         }
+        attacker = GetComponent<ITeammateMelee>();
         if (attacker == null) 
         {
             attacker = new TeammateMeleeAttacker();
         }
+
     }
 
     void Start() 
@@ -56,7 +60,9 @@ public class MeleeTeammate : MonoBehaviour
     {
         if (currentTarget == null) 
         {
-            rb.linearVelocity = Vector2.zero;
+            //rb.linearVelocity = Vector2.zero;
+            // 无目标时向玩家移动
+            mover.Move(transform, rb, GameObject.FindGameObjectWithTag("Player").transform, moveSpeed);
             return;
         }
 

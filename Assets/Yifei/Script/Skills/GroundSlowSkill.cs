@@ -24,8 +24,9 @@ public class GroundSlowSkill : Skill
     private CircleCollider2D circleCollider;
     // 保存技能特效实例引用
     private GameObject currentEffect;
-    // 保存点击位置（技能prefab是Player的子对象，默认使用相对位置）
-    private Vector2 castDestination;
+    // 保存父对象引用
+    private Transform parentTransform;
+
 
 
     /// <summary>
@@ -34,8 +35,8 @@ public class GroundSlowSkill : Skill
     /// <param name="direction">技能中心位置</param>
     protected override void OnSkillEffect(Vector2 direction)
     {
-        castDestination = direction;
-        transform.position = castDestination;
+        transform.SetParent(null);
+        transform.position = direction;
         // 将技能预制体移到点击位置
         //Debug.Log("GroundSlowSkill activated at position: " + direction);
         // 播放特效
@@ -55,8 +56,8 @@ public class GroundSlowSkill : Skill
     /// <param name="target">技能目标对象</param>
     protected override void OnSkillEffect(GameObject target)
     {
-        castDestination = target.transform.position;
-        transform.position = castDestination;
+        transform.SetParent(null);
+        transform.position = target.transform.position;
         //Debug.Log("GroundSlowSkill activated at target position: " + transform.position);
         InstantiateSkillEffect();
         circleCollider = GetComponent<CircleCollider2D>();
@@ -66,11 +67,6 @@ public class GroundSlowSkill : Skill
         }
         circleCollider.isTrigger = true;
         circleCollider.radius = radius;
-    }
-
-    private void LateUpdate()
-    {
-        transform.position = castDestination;
     }
 
     /// <summary>
@@ -142,6 +138,7 @@ public class GroundSlowSkill : Skill
         originalSpeeds.Clear();
         // 销毁碰撞体
         Destroy(circleCollider);
+        transform.SetParent(parentTransform);
         // 销毁技能特效（注意，此时特效不再是子对象）
         if (currentEffect != null)
         {
