@@ -36,13 +36,15 @@ public class FirebaseDataUploader : MonoBehaviour
     // 分辨率
     private string resolution = "Unknown";
 
-    [Header("预设追踪的数据（键值对）")]
-    [SerializeField]
+    //[Header("预设追踪的数据（键值对）")]
+    //[SerializeField]
     private List<DataEntry> presetData = new List<DataEntry>()
     {
          new DataEntry() { key = "PlayTime", value = 0 },
          new DataEntry() { key = "EnemyKilled", value = 0 },
          new DataEntry() { key = "CoinCollected", value = 0 },
+         new DataEntry() { key = "DifficultyLevelReached", value = 0 },
+         new DataEntry() { key = "ExplorationRate", value = 0 },
     };
 
 #if UNITY_WEBGL 
