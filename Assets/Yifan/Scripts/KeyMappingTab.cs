@@ -16,11 +16,11 @@ public class KeyMappingTab : MonoBehaviour
         // Show key mapping panel while holding Tab
         if (Input.GetKey(KeyCode.Tab))
         {
-            keyMappingUI.SetActive(true);
+            if (keyMappingUI != null) keyMappingUI.SetActive(true);
         }
         else
         {
-            keyMappingUI.SetActive(false);
+            if (keyMappingUI != null) keyMappingUI.SetActive(false);
         }
     }
 }
