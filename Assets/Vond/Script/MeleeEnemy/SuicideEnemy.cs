@@ -95,7 +95,15 @@ public class SuicideEnemy : BaseEnemy
         }
 
         // 此处可播放爆炸特效、音效等，之后销毁自身
-        Destroy(gameObject);
+        //Destroy(gameObject); 
+        //不能直接摧毁自己，否则无法解锁房间
+        // 获取自己的 Health 组件，调用 Die 方法
+        Health health = GetComponent<Health>();
+        if (health != null)
+        {
+            health.Die();
+        }
+
     }
 
     // 在 Scene 视图中可视化警戒范围和爆炸半径

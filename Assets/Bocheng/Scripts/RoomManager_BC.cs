@@ -579,6 +579,11 @@ public class RoomManager_BC : MonoBehaviour
                 {
                     prefabIndex = 4; // 最高难度
                 }
+                FirebaseDataUploader firebaseDataUploader = GetComponent<FirebaseDataUploader>();
+                if (firebaseDataUploader != null)
+                {
+                    firebaseDataUploader.UpdateData("DifficultyLevelReached", prefabIndex + 1);
+                }
                 roomPrefab = normalRoomPrefabs[prefabIndex];
             }
             //VonD添加功能

@@ -51,7 +51,7 @@ public class FourDirectionWanderingEnemy : BaseEnemy
     // 碰撞触发时，对玩家或队友造成伤害
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Ally")) && canAttack)
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Teammate")) && canAttack)
         {
             Health targetHealth = collision.gameObject.GetComponent<Health>();
             if (targetHealth != null)
