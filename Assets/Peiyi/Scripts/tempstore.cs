@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using TMPro;
 public class tempstore : MonoBehaviour
 {
     public GameObject slotPrefab;
@@ -8,9 +8,9 @@ public class tempstore : MonoBehaviour
     public Transform storePanel;
     private int slotSize = 40;
     private int slotPadding = 5;
-    private int x_start=-70;
+    private int x_start=-150;
     private int y_start=90;
-    private int gridWidth = 4; 
+    private int gridWidth = 10; 
     private int gridHeight = 6; 
     private bool[,] grid;
 
@@ -85,7 +85,8 @@ public class tempstore : MonoBehaviour
                 grid[row, col] = true;
             }
         }
-        float x = x_start+ position.x * (slotSize + slotPadding);
+        
+        float x = x_start+ position.x * (slotSize + slotPadding) + 30 * position.x;//gap between items
         float y = y_start-position.y * (slotSize + slotPadding);
 
         CreateItem(item, new Vector2(x, y));
@@ -132,5 +133,45 @@ public class tempstore : MonoBehaviour
                 }
             }
         }
+
+
+        //ITEM INFO
+        GameObject nameTextObj = new GameObject("ItemName");
+        nameTextObj.transform.SetParent(itemContainer.transform);
+        TextMeshProUGUI nameText = nameTextObj.AddComponent<TextMeshProUGUI>();
+        nameText.text = itemData.itemName;
+        nameText.fontSize = 16;
+        nameText.alignment = TextAlignmentOptions.Center;
+        nameText.color = Color.white;
+
+        RectTransform nameTextRect = nameTextObj.GetComponent<RectTransform>();
+        nameTextRect.sizeDelta = new Vector2(80, 16);
+        nameTextRect.anchoredPosition = new Vector2(containerRect.sizeDelta.x / 2, -containerRect.sizeDelta.y - 5);
+
+        // 🔹 **新增 Price UI**
+        GameObject priceTextObj = new GameObject("PriceText");
+        priceTextObj.transform.SetParent(itemContainer.transform);
+        TextMeshProUGUI priceText = priceTextObj.AddComponent<TextMeshProUGUI>();
+        priceText.text = "$" + itemData.price.ToString();
+        priceText.fontSize = 16;
+        priceText.alignment = TextAlignmentOptions.Center;
+        priceText.color = Color.yellow;
+
+        RectTransform priceTextRect = priceTextObj.GetComponent<RectTransform>();
+        priceTextRect.sizeDelta = new Vector2(20, 16);
+        priceTextRect.anchoredPosition = new Vector2(containerRect.sizeDelta.x / 2, -containerRect.sizeDelta.y - 25);
+
+        // 🔹 **新增 Attribute UI**
+        GameObject attributeTextObj = new GameObject("AttributeText");
+        attributeTextObj.transform.SetParent(itemContainer.transform);
+        TextMeshProUGUI attributeText = attributeTextObj.AddComponent<TextMeshProUGUI>();
+        attributeText.text = itemData.attributeText;
+        attributeText.fontSize = 16;
+        attributeText.alignment = TextAlignmentOptions.Center;
+        attributeText.color = Color.cyan;
+
+        RectTransform attributeTextRect = attributeTextObj.GetComponent<RectTransform>();
+        attributeTextRect.sizeDelta = new Vector2(80, 16);
+        attributeTextRect.anchoredPosition = new Vector2(containerRect.sizeDelta.x / 2, -containerRect.sizeDelta.y - 45);
     }
 }
