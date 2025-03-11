@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 利用依赖注入调用各个行为接口，实现解耦的近战队友逻辑
 /// </summary>
-public class MeleeTeammate : MonoBehaviour
+public class MeleeTeammate : MonoBehaviour, IDieAble
 {
     [Header("Movement Settings")]
     public float moveSpeed = 3f;            // 移动速度
@@ -119,9 +119,11 @@ public class MeleeTeammate : MonoBehaviour
         }
     }
 
+    
     // 队友销毁时从管理器中移除
     void OnDestroy() 
     {
+        /*
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) 
         {
@@ -130,7 +132,22 @@ public class MeleeTeammate : MonoBehaviour
             {
                 teammateManager.RemoveTeammate(gameObject);
             }
+        }*/
+    }
+
+    public void Die()
+    {
+        Debug.Log("队友死亡");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            TeammateManager teammateManager = player.GetComponent<TeammateManager>();
+            if (teammateManager != null)
+            {
+                teammateManager.RemoveTeammate(gameObject);
+            }
         }
+        Destroy(gameObject);
     }
 }
 
