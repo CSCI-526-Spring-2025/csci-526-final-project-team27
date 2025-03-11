@@ -51,10 +51,10 @@ public class FirebaseDataUploader : MonoBehaviour
          new DataEntry() { key = "EnemyDPS", value = 0 },
     };
 
-#if UNITY_WEBGL 
-    [DllImport("__Internal")]
-    private static extern void GetBrowserInfo(string gameObjectName);
-#endif
+//#if UNITY_WEBGL 
+//    [DllImport("__Internal")]
+//    private static extern void GetBrowserInfo(string gameObjectName);
+//#endif
 
     private void Start()
     {
@@ -65,18 +65,18 @@ public class FirebaseDataUploader : MonoBehaviour
         osInfo = SystemInfo.operatingSystem;
         resolution = Screen.width + "x" + Screen.height;
 
-#if UNITY_WEBGL 
-        // 尝试获取浏览器信息
-        try
-        {
-            GetBrowserInfo(gameObject.name);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("获取浏览器信息时出错: " + ex.Message);
-            browserInfo = "Unavailable";
-        }
-#endif
+//#if UNITY_WEBGL 
+//        // 尝试获取浏览器信息
+//        try
+//        {
+//            GetBrowserInfo(gameObject.name);
+//        }
+//        catch (System.Exception ex)
+//        {
+//            Debug.LogError("获取浏览器信息时出错: " + ex.Message);
+//            browserInfo = "Unavailable";
+//        }
+//#endif
         StartCoroutine(AutoUploadData());
     }
 
