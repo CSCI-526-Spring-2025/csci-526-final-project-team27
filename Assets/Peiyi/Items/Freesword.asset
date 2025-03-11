@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: freesword
   price: 0
+  attributeText: Attack+5
   size: {x: 1, y: 3}
   icon: {fileID: 3625043607559282579, guid: d67dccb4caa7b384db2707d652fa1b70, type: 3}
   itemColor: {r: 0.20185119, g: 0.5604425, b: 0.6792453, a: 1}

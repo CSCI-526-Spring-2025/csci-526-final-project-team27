@@ -51,6 +51,9 @@ public class BagManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        if (store == null) store = GameObject.Find("tempstore");
+        if (realbag == null) realbag = GameObject.Find("RealBag");
+        if (coin == null) coin = GameObject.Find("CoinText");
         realRect = realbag.GetComponent<RectTransform>();
         storeRect = store.GetComponent<RectTransform>();
         panelRect = inventoryPanel.GetComponent<RectTransform>();
