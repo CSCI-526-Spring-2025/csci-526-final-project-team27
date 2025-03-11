@@ -519,7 +519,13 @@ public class RoomManager_BC : MonoBehaviour
             {
                 cameraFollow.UpdateRoomBounds(worldPos, new Vector2(roomSizeX, roomSizeY));
             }
-
+            if (roomInstances.ContainsKey(newRoom))
+            {
+                GameObject existroomInstance = roomInstances[newRoom];
+                string existprefabName = existroomInstance.name.Replace("(Clone)", "").Trim();
+                Debug.Log("Cleaned Room Prefab (Existing): " + existprefabName);
+                BagManager.Instance.UpdateBagDisplay(existprefabName);
+            }
             return;
         }
 
@@ -587,6 +593,11 @@ public class RoomManager_BC : MonoBehaviour
         // 记录房间已创建
         CreatedRooms[newRoom.x, newRoom.y] = true;
         roomInstances[newRoom] = newRoomInstance;
+        GameObject roomInstance=roomInstances[newRoom];
+        Debug.Log("Current Room Prefab: " + roomInstance.name);
+        string prefabName = roomInstance.name.Replace("(Clone)", "").Trim();
+        Debug.Log("Cleaned Room Prefab: " + prefabName);
+        BagManager.Instance.UpdateBagDisplay(prefabName);
         DeleteDoor(newRoomInstance, newRoom);
 
         if (cameraFollow != null)

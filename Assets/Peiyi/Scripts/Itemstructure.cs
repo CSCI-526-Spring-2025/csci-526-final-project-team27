@@ -6,6 +6,7 @@ public class Item : ScriptableObject
 {
     public string itemName;
     public int price;
+    public string attributeText;
     public Vector2Int size; //item width*hieght
     public Sprite icon; // it is for the shop
     public Color itemColor=Color.white;
@@ -36,5 +37,3 @@ public class Item : ScriptableObject
         return matrix;
     }
 }
-
-
