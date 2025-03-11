@@ -166,7 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02896bce7ea32544919dffef61c19c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
+  maxHealth: 20
+  currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 1254284907342112680, guid: 18ed9d638017f406faec4cb5d646538d, type: 3}
   OnDeath:
