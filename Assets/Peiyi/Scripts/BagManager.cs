@@ -55,21 +55,33 @@ public class BagManager : MonoBehaviour
         if (realbag == null) realbag = GameObject.Find("RealBag");
         if (coin == null) coin = GameObject.Find("CoinText");
         realRect = realbag.GetComponent<RectTransform>();
-        storeRect = store.GetComponent<RectTransform>();
+        if(store != null)
+        {
+            storeRect = store.GetComponent<RectTransform>();
+        }
+
         panelRect = inventoryPanel.GetComponent<RectTransform>();
         coinRect = coin.GetComponent<RectTransform>();
     }
 
 
     void Start()
-    {   
-        
-        storeRect.anchoredPosition = new Vector2(-100, storeRect.anchoredPosition.y);
+    {
+        if (store != null)
+        {
+            storeRect.anchoredPosition = new Vector2(-100, storeRect.anchoredPosition.y);
+        }
+
         panelRect.anchoredPosition = new Vector2(0, panelRect.anchoredPosition.y);
         panelRect.sizeDelta = new Vector2(230, panelRect.sizeDelta.y);
         realRect.anchoredPosition = new Vector2(0, realRect.anchoredPosition.y);
         coinRect.anchoredPosition = new Vector2(-70, coinRect.anchoredPosition.y);
-        store.SetActive(false);
+
+        if (store != null)
+        {
+            store.SetActive(false);
+        }
+
         realbag.SetActive(true);
         
         inventoryPanel.SetActive(false);
@@ -96,19 +108,25 @@ public class BagManager : MonoBehaviour
         
         
         
-        if (prefabName == "RoomPrefab_Shop")//enter shop
+        if (prefabName == "RoomPrefab_Shop" || prefabName == "RoomPrefab_Shop_T1")//enter shop
         {
-            store.SetActive(true);
+            if(store != null)
+            {
+                store.SetActive(true);
+            }
             realbag.SetActive(true);
             panelRect.sizeDelta = new Vector2(600, panelRect.sizeDelta.y);
-            storeRect.sizeDelta = new Vector2(380, storeRect.sizeDelta.y);
+            //storeRect.sizeDelta = new Vector2(380, storeRect.sizeDelta.y);
             realRect.anchoredPosition = new Vector2(190, realRect.anchoredPosition.y);
             coinRect.anchoredPosition = new Vector2(120, coinRect.anchoredPosition.y);
             
         }
         else
         {
-            store.SetActive(false);
+            if(store != null)
+            {
+                store.SetActive(false);
+            }
             realbag.SetActive(true);
             panelRect.sizeDelta = new Vector2(230, panelRect.sizeDelta.y);
             realRect.anchoredPosition = new Vector2(0, realRect.anchoredPosition.y);
