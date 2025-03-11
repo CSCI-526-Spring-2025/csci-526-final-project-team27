@@ -90,7 +90,8 @@ public class TutorialStatic : MonoBehaviour
 
         Debug.Log("OpenNextScene");
         //SceneManager.LoadScene(NextSceneName, LoadSceneMode.Single);
-        StartCoroutine(LoadNewScene());
+        //StartCoroutine(LoadNewScene());
+        AsyncOperation op = SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
         //find player and set teammates,destroy this gameobject
     }
 
