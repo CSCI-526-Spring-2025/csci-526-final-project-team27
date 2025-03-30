@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class CameraFollow : MonoBehaviour
     public Camera followCamera; // 手动指定的相机
     public Vector2 roomPosition; // 当前房间的世界坐标
     public Vector2 roomSize; // 当前房间的大小
+    public bool staticCamera = false; // 是否固定相机位置
 
     public enum FollowMode { Instant, Smooth }
     public FollowMode followMode = FollowMode.Smooth;
@@ -30,7 +32,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        if (follow == null || followCamera == null) return;
+        if (follow == null || followCamera == null || staticCamera) return;
 
         Vector3 targetPos = follow.position;
         targetPos.z = transform.position.z; // 保持 Z 轴不变
@@ -102,5 +104,29 @@ public class CameraFollow : MonoBehaviour
         roomPosition = newRoomPosition;
         roomSize = newRoomSize;
         CalculateCameraBounds();
+        if (staticCamera)
+        {
+            transform.position = new Vector3(newRoomPosition.x, newRoomPosition.y, transform.position.z);
+            //MoveToPosition(newRoomPosition, 0.1f);
+        }
+    }
+
+    // 一个协程，平滑移动相机到指定位置
+    public void MoveToPosition(Vector3 targetPos, float duration)
+    {
+        StartCoroutine(MoveToPositionCoroutine(targetPos, duration));
+    }
+
+    private IEnumerator MoveToPositionCoroutine(Vector3 targetPos, float duration)
+    {
+        float t = 0;
+        Vector3 startPos = transform.position;
+
+        while (t < 1)
+        {
+            t += Time.deltaTime / duration;
+            transform.position = SmoothMove(startPos, targetPos);
+            yield return null;
+        }
     }
 }
