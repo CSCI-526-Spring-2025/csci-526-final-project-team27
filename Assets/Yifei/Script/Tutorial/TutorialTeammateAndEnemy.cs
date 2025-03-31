@@ -62,8 +62,9 @@ public class RoomTutorial : MonoBehaviour
         }
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
-        // 禁用技能面板
         player.GetComponent<ShootingController>().enabled = false;
+        // 禁用技能面板
+        player.GetComponent<SkillController>().enabled = false;
         
         // 获取 UI Text 组件（假设 Canvas 下有 Text 子对象）
         tutorialText = transform.Find("Canvas/Text").GetComponent<TextMeshProUGUI>();
