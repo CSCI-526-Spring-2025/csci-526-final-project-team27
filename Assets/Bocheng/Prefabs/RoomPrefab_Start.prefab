@@ -179,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: -1, y: 0}
+  bActive: 1
 --- !u!1 &2324098834950985829
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: -1}
+  bActive: 1
 --- !u!1 &2861065535889526986
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,9 +537,8 @@ MonoBehaviour:
     M
     for map
 
-    B for bag
-
     Heal allies. Avoid enemies.
+
 
 '
   m_isRightToLeft: 0
@@ -758,6 +759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 1}
+  bActive: 1
 --- !u!1 &4076533052321158648
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,6 +1087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 1, y: 0}
+  bActive: 1
 --- !u!1 &5845927608456172928
 GameObject:
   m_ObjectHideFlags: 0

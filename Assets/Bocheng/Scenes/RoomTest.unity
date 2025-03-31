@@ -1151,6 +1151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7706b45a71c599d4eb35734c90b24828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BagPanel: {fileID: 0}
 --- !u!4 &804877442
 Transform:
   m_ObjectHideFlags: 0
@@ -2940,6 +2941,7 @@ MonoBehaviour:
   followCamera: {fileID: 1716088206}
   roomPosition: {x: 0, y: 0}
   roomSize: {x: 30, y: 15}
+  staticCamera: 0
   followMode: 1
   easeType: 0
   smoothSpeed: 5
@@ -2961,7 +2963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1717193078
 RectTransform:
   m_ObjectHideFlags: 0
