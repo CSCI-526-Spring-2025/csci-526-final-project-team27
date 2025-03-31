@@ -58,6 +58,9 @@ public class RoomTutorial : MonoBehaviour
         }
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
+
+        // 禁用技能面板
+        player.GetComponent<SkillController>().enabled = false;
         
         // player.GetComponent<TeammateManager>().teammates.AddRange(teammates);
         // player.GetComponent<TeammateManager>().RecordRelativePositions();
@@ -94,7 +97,7 @@ public class RoomTutorial : MonoBehaviour
     // 显示“战斗”提示
     void ShowFight()
     {
-        tutorialText.text = "Your teammates are the only way to defeat the enemy...\n since you are a healer";
+        tutorialText.text = "Teammates will attack the enemy";
     }
     
     // 显示“治疗你的队友”提示
