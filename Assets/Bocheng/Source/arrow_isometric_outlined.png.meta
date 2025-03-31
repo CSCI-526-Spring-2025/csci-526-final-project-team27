@@ -722,7 +722,31 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      arrow_isometric_outlined_0: 634826815620112587
+      arrow_isometric_outlined_1: -1862775691427870489
+      arrow_isometric_outlined_10: 1900939559492375852
+      arrow_isometric_outlined_11: -1048893456535713267
+      arrow_isometric_outlined_12: -7138220567675720696
+      arrow_isometric_outlined_13: -8146404765537142687
+      arrow_isometric_outlined_14: -5540584950111149574
+      arrow_isometric_outlined_15: 3778724380950228552
+      arrow_isometric_outlined_16: 2282898873480137312
+      arrow_isometric_outlined_17: 8991307616823806201
+      arrow_isometric_outlined_18: -4443719853992022992
+      arrow_isometric_outlined_19: 5463932434462471934
+      arrow_isometric_outlined_2: -7675805830639885782
+      arrow_isometric_outlined_20: -3732989090766294951
+      arrow_isometric_outlined_21: 1524080753291094006
+      arrow_isometric_outlined_22: 7717392080735359160
+      arrow_isometric_outlined_23: -1175648473676783257
+      arrow_isometric_outlined_3: 7728493609803699199
+      arrow_isometric_outlined_4: -6251766992206454327
+      arrow_isometric_outlined_5: 6086244973660730468
+      arrow_isometric_outlined_6: 6491815770658429780
+      arrow_isometric_outlined_7: -3443938161004126731
+      arrow_isometric_outlined_8: -518915408533587731
+      arrow_isometric_outlined_9: 2051084709127911951
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

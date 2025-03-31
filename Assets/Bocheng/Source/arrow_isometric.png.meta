@@ -722,7 +722,31 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      arrow_isometric_0: 571131851648227480
+      arrow_isometric_1: 6369651233666759343
+      arrow_isometric_10: 1310659543385454373
+      arrow_isometric_11: -5305652369084950465
+      arrow_isometric_12: -3416563922492499191
+      arrow_isometric_13: 8200099292830515794
+      arrow_isometric_14: 8214041940832438857
+      arrow_isometric_15: -3726620917728853837
+      arrow_isometric_16: 5818200755379607040
+      arrow_isometric_17: 6993964475581709675
+      arrow_isometric_18: 2738520896425235367
+      arrow_isometric_19: -1742333585305397537
+      arrow_isometric_2: 793051784228883847
+      arrow_isometric_20: -8708211125248744476
+      arrow_isometric_21: 8750968999987613111
+      arrow_isometric_22: 6887169486256776446
+      arrow_isometric_23: -7010553120410847909
+      arrow_isometric_3: -6638206832554501220
+      arrow_isometric_4: 5742070782018523866
+      arrow_isometric_5: -3021984781474598777
+      arrow_isometric_6: 7650787764945899565
+      arrow_isometric_7: -3492096625352049764
+      arrow_isometric_8: 1838193772172200013
+      arrow_isometric_9: 447272195102617760
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

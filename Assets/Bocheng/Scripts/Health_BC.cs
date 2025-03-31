@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using System;
 
 
 
@@ -13,6 +13,16 @@ public class Health_BC : Health
     private float lastHurtingTime = 0;
     private float lastHelpingTime = 0;
     private string[] helps = { "Help!", "I'm dying!", "Save me!" };
+    private System.Random rnd;
+    private static int globalSeed = System.Environment.TickCount; // 初始种子
+    private float nextHelpTime = 0;
+
+    void Awake()
+    {
+        // 每次实例化种子都会递增，确保唯一
+        rnd = new System.Random(globalSeed);
+        globalSeed += 571;
+    }
 
     void Start()
     {
@@ -24,6 +34,8 @@ public class Health_BC : Health
         {
             healthBar.SetHealth(currentHealth, maxHealth);
         }
+        lastHelpingTime = Time.time;
+        nextHelpTime = (float)(rnd.NextDouble() * 2 + 1);
     }
 
     void Update()
@@ -34,11 +46,12 @@ public class Health_BC : Health
             if (currentHealth < maxHealth * 0.5f)
             {
                 // 随机时间间隔呼救
-                if (Time.time - lastHelpingTime > Random.Range(5, 10))
+                if (Time.time - lastHelpingTime > nextHelpTime)
                 {
                     lastHelpingTime = Time.time;
+                    nextHelpTime = (float)(rnd.NextDouble() * 3 + 3);
                     // 随机生成呼救特效
-                    ShowFloatingText(helps[Random.Range(0, helps.Length)], Color.yellow, new Vector3(0, 1f, 0));
+                    ShowFloatingText(helps[rnd.Next(0, helps.Length)], Color.yellow, new Vector3(0, 1f, 0));
                 }
 
             }

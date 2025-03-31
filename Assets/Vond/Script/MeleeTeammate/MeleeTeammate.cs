@@ -23,6 +23,8 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     private bool isAttacking = false;
     private bool canAttack = true;
 
+    public bool shouldFollowPlayer = true;
+
     // 行为接口（可通过外部注入自定义实现）
     public ITargetFinder targetFinder;
     public IMover mover;
@@ -60,10 +62,17 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     {
         if (currentTarget == null) 
         {
-            //rb.linearVelocity = Vector2.zero;
-            // 无目标时向玩家移动
-            mover.Move(transform, rb, GameObject.FindGameObjectWithTag("Player").transform, moveSpeed);
-            return;
+            if(shouldFollowPlayer)
+            {
+                //rb.linearVelocity = Vector2.zero;
+                // 无目标时向玩家移动
+                mover.Move(transform, rb, GameObject.FindGameObjectWithTag("Player").transform, moveSpeed);
+                return;
+            }
+            else
+            {
+                return;
+            }
         }
 
         float distance = Vector2.Distance(transform.position, currentTarget.position);

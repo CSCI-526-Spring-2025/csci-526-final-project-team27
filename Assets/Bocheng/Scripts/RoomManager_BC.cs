@@ -13,7 +13,7 @@ public class RoomManager_BC : MonoBehaviour
 
     [Header("场景类型")]
     public SceneType sceneType = SceneType.Normal;
-    public int tutorialRoomCount = 6;
+    public int tutorialRoomCount = 5;
     private int roomCount = 0;
 
 
@@ -133,14 +133,15 @@ public class RoomManager_BC : MonoBehaviour
         map[endRoom.x, endRoom.y] = new Room(endRoom, Room.RoomType.End);
         roomPositions.Add(endRoom);
 
-        for(int i = 1; i < tutorialRoomCount - 2; i++)
+        for(int i = 1; i < tutorialRoomCount - 1; i++)
         {
             map[i, 0] = new Room(new Vector2Int(i, 0), Room.RoomType.Normal);
             roomPositions.Add(new Vector2Int(i, 0));
         }
 
+        /*
         map[tutorialRoomCount - 2, 0] = new Room(new Vector2Int(3, 0), Room.RoomType.Shop);
-        roomPositions.Add(new Vector2Int(tutorialRoomCount - 2, 0));
+        roomPositions.Add(new Vector2Int(tutorialRoomCount - 2, 0));*/
         Debug.Log($"开始房间: {startRoom}");
         Debug.Log($"结束房间: {endRoom}");
     }
@@ -524,7 +525,11 @@ public class RoomManager_BC : MonoBehaviour
                 GameObject existroomInstance = roomInstances[newRoom];
                 string existprefabName = existroomInstance.name.Replace("(Clone)", "").Trim();
                 Debug.Log("Cleaned Room Prefab (Existing): " + existprefabName);
-                BagManager.Instance.UpdateBagDisplay(existprefabName);
+                if(BagManager.Instance != null)
+                {
+                    BagManager.Instance.UpdateBagDisplay(existprefabName);
+                }
+                //BagManager.Instance.UpdateBagDisplay(existprefabName);
             }
             return;
         }
@@ -602,7 +607,11 @@ public class RoomManager_BC : MonoBehaviour
         Debug.Log("Current Room Prefab: " + roomInstance.name);
         string prefabName = roomInstance.name.Replace("(Clone)", "").Trim();
         Debug.Log("Cleaned Room Prefab: " + prefabName);
-        BagManager.Instance.UpdateBagDisplay(prefabName);
+        if(BagManager.Instance != null)
+        {
+            BagManager.Instance.UpdateBagDisplay(prefabName);
+        }
+        //BagManager.Instance.UpdateBagDisplay(prefabName);
         DeleteDoor(newRoomInstance, newRoom);
 
         if (cameraFollow != null)
@@ -782,22 +791,7 @@ public class RoomManager_BC : MonoBehaviour
         // 打开/关闭小地图
         if (Input.GetKeyDown(KeyCode.M))
         {
-            if(!MinimapOpen)
-            {
-                panel.transform.parent.gameObject.SetActive(true);
-                MinimapOpen = true;
-                AdjustRoomUIPosition();
-                if (playerMovement != null)
-                    playerMovement.LockMove(true);
-            }
-            else
-            {
-                panel.transform.parent.gameObject.SetActive(false);
-                MinimapOpen = false;
-                AdjustRoomUIPosition();
-                if (playerMovement != null)
-                    playerMovement.LockMove(false);
-            }
+            OpenMiniMap();
         }
 
         if(MinimapOpen)
@@ -810,6 +804,26 @@ public class RoomManager_BC : MonoBehaviour
             if (Input.GetKey(KeyCode.D)) moveDir.x -= 1; // 向右 = Panel 向左移动
 
             panel.anchoredPosition += moveDir * UImoveSpeed * Time.deltaTime;
+        }
+    }
+
+    public void OpenMiniMap()
+    {
+        if (!MinimapOpen)
+        {
+            panel.transform.parent.gameObject.SetActive(true);
+            MinimapOpen = true;
+            AdjustRoomUIPosition();
+            if (playerMovement != null)
+                playerMovement.LockMove(true);
+        }
+        else
+        {
+            panel.transform.parent.gameObject.SetActive(false);
+            MinimapOpen = false;
+            AdjustRoomUIPosition();
+            if (playerMovement != null)
+                playerMovement.LockMove(false);
         }
     }
 
@@ -924,12 +938,13 @@ public class RoomManager_BC : MonoBehaviour
     {
         if (roomCleared)
         {
+            /*
             if(sceneType == SceneType.Tutorial)
             {
                 TutorialStatic.Instance.EnemyClear();
-            }
+            }*/
             // 禁用玩家的 ShootingController 和 SkillController
-            DisablePlayerControllers();
+            //DisablePlayerControllers();
             DoorControl(true);
             //ShowRewardSelection();
         }
