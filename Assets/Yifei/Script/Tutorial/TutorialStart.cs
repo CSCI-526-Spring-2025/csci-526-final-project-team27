@@ -6,6 +6,8 @@ public class TutorialStart : MonoBehaviour
     private GameObject door;
     private GameObject arrow;
     private GameObject keys;
+    private GameObject player;
+    private GameObject skillPanel;
 
     private bool unlocked = false;
 
@@ -21,6 +23,12 @@ public class TutorialStart : MonoBehaviour
         
         if (arrow != null)
             arrow.SetActive(false);
+        
+        // 禁用玩家射击
+        player = GameObject.FindGameObjectWithTag("Player");
+        player.GetComponent<ShootingController>().enabled = false;
+        // 禁用技能面板
+        player.GetComponent<SkillController>().enabled = false;
     }
 
     void Update()
