@@ -10,6 +10,8 @@ public class RoomTutorial : MonoBehaviour
   
     private GameObject meetEnemyArrow;
 
+    private GameObject doorArrow;
+
     private GameObject[] teammates;
 
     private GameObject[] doors;
@@ -36,6 +38,8 @@ public class RoomTutorial : MonoBehaviour
     {
         meetTeammateArrow = transform.Find("MeetTeammate").gameObject;
         meetEnemyArrow = transform.Find("MeetEnemy").gameObject;
+        doorArrow = transform.Find("DoorArrowIndicator").gameObject;
+        doorArrow.SetActive(false);
 
         doors = new GameObject[2];
         doors[0] = transform.Find("Door_Left").gameObject;
@@ -58,9 +62,6 @@ public class RoomTutorial : MonoBehaviour
         }
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
-        
-        // player.GetComponent<TeammateManager>().teammates.AddRange(teammates);
-        // player.GetComponent<TeammateManager>().RecordRelativePositions();
 
         player.GetComponent<ShootingController>().enabled = false;
         
@@ -75,7 +76,6 @@ public class RoomTutorial : MonoBehaviour
         //冷却后禁用移动
         StartCoroutine(ProcessCoolDown(0.5f));  
         player.GetComponent<PlayerMovement>().enabled = false;
-        player.tag = "Untagged";
         ShowMeetTeammates();
     }
     
@@ -146,7 +146,6 @@ public class RoomTutorial : MonoBehaviour
                     ShowHealTeammate();
                     player.GetComponent<ShootingController>().enabled = true;
                     player.GetComponent<PlayerMovement>().enabled = true;
-                    player.tag = "Player";
                 }
                 break;
                 
@@ -181,6 +180,7 @@ public class RoomTutorial : MonoBehaviour
     // 解锁房间（这里通过调试信息和清空提示文本表示）
     private void UnlockRoom()
     {
+        doorArrow.SetActive(true);
         doors[1].SetActive(true);
         tutorialText.text = "";
         
