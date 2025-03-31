@@ -726,7 +726,7 @@ GameObject:
   - component: {fileID: 8710332660937281861}
   m_Layer: 0
   m_Name: RoomPrefab_TutorialStart_yf
-  m_TagString: Untagged
+  m_TagString: NoSkillUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

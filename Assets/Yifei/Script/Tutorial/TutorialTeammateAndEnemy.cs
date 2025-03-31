@@ -62,7 +62,7 @@ public class RoomTutorial : MonoBehaviour
         }
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<ShootingController>().enabled = false;
+        player.GetComponent<ShootingController>().enabled = true;
         // 禁用技能面板
         player.GetComponent<SkillController>().enabled = false;
         
@@ -76,7 +76,7 @@ public class RoomTutorial : MonoBehaviour
         currentState = TutorialState.MeetTeammates;
         //冷却后禁用移动
         StartCoroutine(ProcessCoolDown(0.5f));  
-        player.GetComponent<PlayerMovement>().enabled = false;
+        player.GetComponent<PlayerMovement>().enabled = true;
         ShowMeetTeammates();
     }
     

@@ -8,7 +8,7 @@ public class TutorialStart : MonoBehaviour
     private GameObject keys;
     private GameObject player;
     private GameObject skillPanel;
-
+   
     private bool unlocked = false;
 
     void Start()
@@ -29,6 +29,9 @@ public class TutorialStart : MonoBehaviour
         player.GetComponent<ShootingController>().enabled = false;
         // 禁用技能面板
         player.GetComponent<SkillController>().enabled = false;
+        SkillcontrollerUI.Instance.HideSkillUI();
+        
+
     }
 
     void Update()

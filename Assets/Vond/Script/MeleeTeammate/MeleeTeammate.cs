@@ -17,7 +17,8 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     public float attackCooldown = 1.0f;       // 攻击冷却时间
 
     public float damage = 10.0f;            // 攻击伤害
-
+    [Header("Follow Settings")]
+    private float followdistance=2.0f;
     private Transform currentTarget;
     private Rigidbody2D rb;
     private bool isAttacking = false;
@@ -60,19 +61,23 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
 
     void Update() 
     {
+        AvoidOtherTeammates();
         if (currentTarget == null) 
         {
             if(shouldFollowPlayer)
             {
-                //rb.linearVelocity = Vector2.zero;
-                // 无目标时向玩家移动
-                mover.Move(transform, rb, GameObject.FindGameObjectWithTag("Player").transform, moveSpeed);
-                return;
+                Transform playerTransfrom=GameObject.FindGameObjectWithTag("Player").transform;
+                float distoplayer=Vector2.Distance(transform.position,playerTransfrom.position);
+                if(distoplayer>followdistance){
+                    mover.Move(transform, rb, playerTransfrom, moveSpeed);
+                }
+                else{
+                    rb.linearVelocity=Vector2.zero;
+                }
+                
             }
-            else
-            {
-                return;
-            }
+            
+            return;
         }
 
         float distance = Vector2.Distance(transform.position, currentTarget.position);
@@ -157,6 +162,30 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
             }
         }
         Destroy(gameObject);
+    }
+    void AvoidOtherTeammates()
+    {
+        Vector2 pushDir = Vector2.zero;
+        int nearbyCount = 0;
+
+        foreach (var other in FindObjectsOfType<MeleeTeammate>())
+        {
+            if (other == this) continue;
+
+            float dist = Vector2.Distance(transform.position, other.transform.position);
+            if (dist < followdistance) // 根據體型調整這個距離
+            {
+                Vector2 away = (transform.position - other.transform.position).normalized / dist;
+                pushDir += away;
+                nearbyCount++;
+            }
+        }
+
+        if (nearbyCount > 0)
+        {
+            Vector2 avgPush = pushDir / nearbyCount;
+            transform.position += (Vector3)(avgPush * 0.05f);  
+        }
     }
 }
 

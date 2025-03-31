@@ -12,11 +12,12 @@ public class ShootingController : MonoBehaviour
     private GameObject cursorInstance;
     private bool isActive = false;
     private bool isLocked = false;
-
+    private Camera cam;
     void Start()
     {
         // 初始化
         cursorInstance = null;
+        
         ToggleActive(true);
     }
 
