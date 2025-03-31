@@ -40,13 +40,20 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quitting Game...");
-        FirebaseDataUploader firebaseDataUploader = FindFirstObjectByType<FirebaseDataUploader>();
-        if (firebaseDataUploader != null)
-        {
-            firebaseDataUploader.ForceUploadData();
-        }
-        Application.Quit(); // Quit the game (only works in a build)
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
+        Debug.Log("Unlock Movement");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
+        Time.timeScale = 1f; // Resume game time
+        PauseController.isPaused = false;
+        // Debug.Log("Quitting Game...");
+        // FirebaseDataUploader firebaseDataUploader = FindFirstObjectByType<FirebaseDataUploader>();
+        // if (firebaseDataUploader != null)
+        // {
+        //     firebaseDataUploader.ForceUploadData();
+        // }
+        // Application.Quit(); // Quit the game (only works in a build)
     }
 
     public void ShowKeyMapping()
