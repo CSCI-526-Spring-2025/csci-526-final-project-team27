@@ -1,18 +1,14 @@
 using UnityEngine;
 using System.Collections;
+
 public class TutorialStart : MonoBehaviour
 {
     private GameObject door;
     private GameObject arrow;
     private GameObject keys;
 
-    private bool pressedW = false;
-    private bool pressedA = false;
-    private bool pressedS = false;
-    private bool pressedD = false;
-    private bool allKeysPressed = false;
+    private bool unlocked = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // 获取子对象
@@ -27,60 +23,27 @@ public class TutorialStart : MonoBehaviour
             arrow.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // 如果已经按下所有按键，不需要再检测
-        if (allKeysPressed)
+        // 如果已经解锁，则不再检测按键
+        if (unlocked)
             return;
-            
-        // 检测W键
-        if (Input.GetKeyDown(KeyCode.W) && !pressedW)
+
+        // 按下W、A、S、D任意一个就触发解锁
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+            Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
         {
-            pressedW = true;
-            Debug.Log("按下W键");
-        }
-        
-        // 检测A键
-        if (Input.GetKeyDown(KeyCode.A) && !pressedA)
-        {
-            pressedA = true;
-            Debug.Log("按下A键");
-        }
-        
-        // 检测S键
-        if (Input.GetKeyDown(KeyCode.S) && !pressedS)
-        {
-            pressedS = true;
-            Debug.Log("按下S键");
-        }
-        
-        // 检测D键
-        if (Input.GetKeyDown(KeyCode.D) && !pressedD)
-        {
-            pressedD = true;
-            Debug.Log("按下D键");
-        }
-        
-        // 检查是否所有按键都已按下
-        CheckAllKeysPressed();
-    }
-    
-    private void CheckAllKeysPressed()
-    {
-        if (pressedW && pressedA && pressedS && pressedD && !allKeysPressed)
-        {
-            allKeysPressed = true;
+            unlocked = true;
+            Debug.Log("按下任意一个 WASD 键，解锁门和箭头");
             StartCoroutine(ShowDoorAndArrow());
-            Debug.Log("所有按键已按下，显示门和箭头");
         }
     }
     
     // 显示门和箭头
     private IEnumerator ShowDoorAndArrow()
     {
-        // 等待1秒
-        yield return new WaitForSeconds(1f);
+        
+        yield return new WaitForSeconds(2f);
         // 显示门和箭头
         if (door != null)
             door.SetActive(true);
