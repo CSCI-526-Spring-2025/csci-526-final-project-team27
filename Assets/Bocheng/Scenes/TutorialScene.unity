@@ -4115,7 +4115,7 @@ MonoBehaviour:
   minPathLength: 4
   normalRoomPrefabs:
   - {fileID: 4076533052321158648, guid: 1c65b2bdce6984546b46ee000b79fc9e, type: 3}
-  - {fileID: 7752736070594661851, guid: 4376f0c341190ba4287f6231eeb3ef8d, type: 3}
+  - {fileID: 4076533052321158648, guid: 9a5b6987d31f4ae4ca61f775e43e4373, type: 3}
   eliteRoomPrefabs: []
   shopRoomPrefabs: []
   startRoomPrefab: {fileID: 4076533052321158648, guid: 8147d884815278c47b5c9d416259ee00, type: 3}
