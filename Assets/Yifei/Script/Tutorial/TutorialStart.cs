@@ -26,13 +26,13 @@ public class TutorialStart : MonoBehaviour
         
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<ShootingController>().enabled = true;
-        player.GetComponent<ShootingController>().ToggleActive(false);
+        if (CtrlCtrl.Instance != null)
+        {
+            CtrlCtrl.Instance.ToggleShootCtrler(false);
+        }
         // 禁用技能面板
         player.GetComponent<SkillController>().enabled = false;
         SkillcontrollerUI.Instance.HideSkillUI();
-        
-
     }
 
     void Update()

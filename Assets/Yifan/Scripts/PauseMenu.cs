@@ -5,7 +5,17 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI; // Reference to Pause Menu UI
     public GameObject keyMappingPanel; // Reference to Key Mapping Panel
-    // private bool isPaused = false;
+    private PauseController pauseController;
+    
+    void Start()
+    {
+        // 获取场景中的PauseController
+        pauseController = FindObjectOfType<PauseController>();
+        if (pauseController == null)
+        {
+            Debug.LogWarning("PauseController not found in scene!");
+        }
+    }
 
     void Update()
     {
@@ -22,11 +32,18 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        // 使用PauseController来恢复游戏
+        if (pauseController != null)
+        {
+            pauseController.ResumeGame();
+            return;
+        }
+        
+        // 如果找不到PauseController，则使用备用逻辑
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
-        Debug.Log("Unlock Movement");
-        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
-        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
+        
+        Debug.Log("使用备用恢复逻辑 - 保持当前状态");
         Time.timeScale = 1f; // Resume game time
         PauseController.isPaused = false;
     }

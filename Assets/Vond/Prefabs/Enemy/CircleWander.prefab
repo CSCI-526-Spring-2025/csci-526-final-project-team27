@@ -189,7 +189,7 @@ MonoBehaviour:
   baseHealth: 100
   baseDamage: 2
   attackCooldown: 1
-  moveSpeed: 3
+  moveSpeed: 1
   difficultyThreshold: 1
   spawnWeight: 1
   allowInNormal: 1
@@ -197,5 +197,7 @@ MonoBehaviour:
   allowInBoss: 0
   attackPattern: 0
   skills: []
-  wanderRange: 5
+  wanderRange: 3
   damage: 5
+  stuckThreshold: 1
+  minMoveDistance: 0.1

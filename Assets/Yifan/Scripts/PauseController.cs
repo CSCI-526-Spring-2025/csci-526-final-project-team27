@@ -6,6 +6,10 @@ public class PauseController : MonoBehaviour
     public GameObject keyMappingPanel;
     public static bool isPaused = false; // Shared variable
 
+    // 记录暂停前的状态
+    private bool wasMovingEnabled = true;
+    private bool wasShootingEnabled = true;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -28,9 +32,9 @@ public class PauseController : MonoBehaviour
     {
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
-        Debug.Log("Unlock Movement");
-        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(false);
-        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(true);
+        Debug.Log("Restore Previous Movement State");
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(!wasMovingEnabled);
+        if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(wasShootingEnabled);
         Time.timeScale = 1f;
         isPaused = false; // Update the shared variable
     }
@@ -39,6 +43,13 @@ public class PauseController : MonoBehaviour
     {
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
         Debug.Log("Lock Movement");
+        // 记录当前状态
+        if (CtrlCtrl.Instance != null)
+        {
+            wasMovingEnabled = !CtrlCtrl.Instance.IsMoveLocked();
+            wasShootingEnabled = CtrlCtrl.Instance.IsShootingEnabled();
+        }
+        // 暂停时锁定移动和射击
         if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(true);
         if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(false);
         Time.timeScale = 0f;

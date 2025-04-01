@@ -10,6 +10,8 @@ public class CtrlCtrl : MonoBehaviour
     private PlayerMovement playerMovement;
     private ShootingController shootingController;
 
+    private bool isMoveLocked = false;
+    private bool isShootingEnabled = true;
 
     private void Awake()
     {
@@ -56,6 +58,7 @@ public class CtrlCtrl : MonoBehaviour
         if (playerMovement != null)
         {
             playerMovement.LockMove(bLock);
+            isMoveLocked = bLock;
         }
     }
 
@@ -72,7 +75,18 @@ public class CtrlCtrl : MonoBehaviour
         if (shootingController != null)
         {
             shootingController.ToggleActive(bToggle);
+            isShootingEnabled = bToggle;
         }
+    }
+
+    public bool IsMoveLocked()
+    {
+        return isMoveLocked;
+    }
+
+    public bool IsShootingEnabled()
+    {
+        return isShootingEnabled;
     }
 
     public GameObject GetBagPanel()
