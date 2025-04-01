@@ -756,9 +756,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4840226400624763445}
-  - component: {fileID: 9130787753077354253}
+  - component: {fileID: -4500784256721205292}
   m_Layer: 0
-  m_Name: RoomPrefab_Teammate_yf
+  m_Name: RoomPrefab_Skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -804,7 +804,7 @@ Transform:
   - {fileID: 5307797684703608822}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9130787753077354253
+--- !u!114 &-4500784256721205292
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -813,7 +813,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4076533052321158648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fbe9b6c7263d1f43b1fa6e6be922d64, type: 3}
+  m_Script: {fileID: 11500000, guid: 19c5cdd0665b84fa08193e55479ea4f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4512887401930351777
@@ -1265,8 +1265,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38139020c2782334bbcebb32be67bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerOnEnter: 1
-  triggerOnExit: 1
+  triggerOnEnter: 0
+  triggerOnExit: 0
   triggerOnKeyPress: 0
   triggerKey: 101
   triggerOnce: 1

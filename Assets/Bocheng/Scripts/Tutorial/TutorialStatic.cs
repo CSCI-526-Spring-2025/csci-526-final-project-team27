@@ -9,6 +9,7 @@ public class TutorialStatic : MonoBehaviour
     public static TutorialStatic Instance { get; private set; } // 单例实例
     public GameObject FirstFightUI; // 第一次战斗UI
     public GameObject LeaveFFUI;    // 离开第一次战斗场景的UI
+
     public string NextSceneName;    // 下一个场景的名称
 
 
