@@ -2739,6 +2739,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5036019150031487738, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
+      propertyPath: shouldFollowPlayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9209415671401208482, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: maxHealth
       value: 60
