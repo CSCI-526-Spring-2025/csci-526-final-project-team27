@@ -89,6 +89,13 @@ public class WanderingEnemy : BaseEnemy
                 StartCoroutine(DealDamageRoutine(collision.gameObject.transform));
             }
         }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            if (targetFinder is RandomWanderFinder wanderFinder)
+            {
+                wanderFinder.ForceUpdateTarget(transform.position);
+            }
+        }
     }
 
     IEnumerator DealDamageRoutine(Transform target)

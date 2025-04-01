@@ -34,6 +34,12 @@ public class RandomWanderFinder : ITargetFinder
         wanderTarget.position = origin + (Vector3)(randomDir * wanderRange);
     }
 
+    public void ForceUpdateTarget(Vector3 currentPos)
+    {
+        UpdateWanderTarget(currentPos);
+    }
+
+
     // 修改：新增 GetWanderTarget 方法，以便获取当前目标
     public Transform GetWanderTarget()
     {

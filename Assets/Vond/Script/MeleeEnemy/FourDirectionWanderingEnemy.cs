@@ -59,6 +59,14 @@ public class FourDirectionWanderingEnemy : BaseEnemy
                 StartCoroutine(DealDamageRoutine(collision.gameObject.transform));
             }
         }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            if (targetFinder is FourDirectionWanderFinder fourDirFinder)
+            {
+                fourDirFinder.ReverseDirection();
+                fourDirFinder.ForceUpdateTarget(transform.position);
+            }
+        }
     }
 
     IEnumerator DealDamageRoutine(Transform target)
