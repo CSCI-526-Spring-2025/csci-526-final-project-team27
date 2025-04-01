@@ -66,7 +66,7 @@ public class EnemyHealth : Health
         // 1. Spawn coin (if you have assigned coinPrefab)
         if (coinPrefab != null)
         {
-            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            // Instantiate(coinPrefab, transform.position, Quaternion.identity); // 暂时移除金币
         }
         else
         {

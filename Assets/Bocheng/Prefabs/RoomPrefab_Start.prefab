@@ -497,7 +497,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.88, y: -14.71}
+  m_AnchoredPosition: {x: -43.14, y: -15.08}
   m_SizeDelta: {x: 30, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6239455299286678801
@@ -528,16 +528,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'WASD to move
+  m_text: 'Heal allies. Avoid enemies.
 
-    Left click to heal
-
-    Use number keys for skills
-
-    M
-    for map
-
-    Heal allies. Avoid enemies.
+    Start Your Adventure!
 
 
 '
