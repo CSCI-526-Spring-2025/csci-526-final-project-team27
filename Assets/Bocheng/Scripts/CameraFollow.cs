@@ -20,14 +20,19 @@ public class CameraFollow : MonoBehaviour
     private float camHalfWidth;
     private float camHalfHeight;
 
+    float requiredOrthographicSize;
+
     void Start()
     {
+
         if (followCamera == null)
         {
             Debug.LogError("CameraFollow: followCamera is not assigned!");
             return;
         }
-        CalculateCameraBounds();
+        // CalculateCameraBounds();
+        requiredOrthographicSize = Mathf.Max(roomSize.y / 2, roomSize.x / (2 * followCamera.aspect));
+        followCamera.orthographicSize = requiredOrthographicSize;
     }
 
     void LateUpdate()
@@ -101,9 +106,14 @@ public class CameraFollow : MonoBehaviour
     // 更新当前房间信息
     public void UpdateRoomBounds(Vector2 newRoomPosition, Vector2 newRoomSize)
     {
-        roomPosition = newRoomPosition;
-        roomSize = newRoomSize;
+        requiredOrthographicSize = Mathf.Max(roomSize.y / 2, roomSize.x / (2 * followCamera.aspect));
+        followCamera.orthographicSize = requiredOrthographicSize;
+
+        // roomPosition = newRoomPosition;
+        // roomSize = newRoomSize;
+
         CalculateCameraBounds();
+
         if (staticCamera)
         {
             transform.position = new Vector3(newRoomPosition.x, newRoomPosition.y, transform.position.z);
