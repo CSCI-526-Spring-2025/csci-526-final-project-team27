@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 30
+  currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 1254284907342112680, guid: 18ed9d638017f406faec4cb5d646538d, type: 3}
   OnDeath:
@@ -200,4 +201,4 @@ MonoBehaviour:
   rushSpeed: 7.5
   explosionDelay: 1
   explosionRadius: 1.5
-  explosionDamage: 20
+  explosionDamage: 30

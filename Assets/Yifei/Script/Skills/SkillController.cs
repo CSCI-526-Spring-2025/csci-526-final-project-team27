@@ -124,6 +124,25 @@ public class SkillController : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 查询指定技能槽是否在冷却
+    /// </summary>
+    /// <param name="slotIndex">技能槽索引（0～2）</param>
+    /// <returns>如果在冷却返回 true，否则返回 false</returns>
+    public bool IsSkillOnCooldown(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= skillSlots.Length)
+            return false; // 无效索引，返回 false
+
+        Skill skill = skillInstances[slotIndex].GetComponent<Skill>();
+        if (skill != null)
+        {
+            return skill.IsOnCooldown(); // 调用 IsOnCooldown 方法
+        }
+        return false; // 如果没有技能，返回 false
+    }
+
     /// <summary>
     /// 处理技能键输入，根据技能槽的释放模式选择处理方式
     /// </summary>

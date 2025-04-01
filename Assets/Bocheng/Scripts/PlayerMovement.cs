@@ -58,5 +58,6 @@ public class PlayerMovement : MonoBehaviour, IDieAble
         //Time.timeScale = 0;
         if (gameOverUI != null)
             gameOverUI = Instantiate(gameOverUI);
+        Destroy(gameObject);
     }
 }

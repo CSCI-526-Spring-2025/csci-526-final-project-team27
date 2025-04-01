@@ -47,6 +47,8 @@ MonoBehaviour:
   skillDuration: 3
   cooldownTime: 5
   releaseType: 1
+  skillName: 
   radius: 4
   slowFactor: 0
   groundSlowSkillX: {fileID: 7768626194062726448, guid: 492a3b36e9f296e4d8b51b5ede970abd, type: 3}
+  releasePreviewPrefab: {fileID: 7768626194062726448, guid: 0df73569e5395cc47a3bb4d79ee2d38e, type: 3}

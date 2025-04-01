@@ -62,8 +62,10 @@ public class RoomTutorial : MonoBehaviour
         }
         // 禁用玩家射击
         player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<ShootingController>().enabled = true;
-        player.GetComponent<ShootingController>().ToggleActive(true);
+        if (CtrlCtrl.Instance != null)
+        {
+            CtrlCtrl.Instance.ToggleShootCtrler(false);
+        }
         // 禁用技能面板
         player.GetComponent<SkillController>().enabled = false;
         
@@ -77,7 +79,7 @@ public class RoomTutorial : MonoBehaviour
         currentState = TutorialState.MeetTeammates;
         //冷却后禁用移动
         StartCoroutine(ProcessCoolDown(0.5f));  
-        player.GetComponent<PlayerMovement>().enabled = true;
+        player.GetComponent<PlayerMovement>().enabled = false;
         ShowMeetTeammates();
     }
     
@@ -96,7 +98,7 @@ public class RoomTutorial : MonoBehaviour
     // 显示“战斗”提示
     void ShowFight()
     {
-        tutorialText.text = "Teammates attack the enemy";
+        tutorialText.text = "Support your teammates to fight the enemy";
     }
     
     // 显示“治疗你的队友”提示
@@ -141,7 +143,8 @@ public class RoomTutorial : MonoBehaviour
                 break;
                 
             case TutorialState.Fight:
-                
+                player.GetComponent<PlayerMovement>().enabled = true;
+                CtrlCtrl.Instance.ToggleShootCtrler(true);
                 if (enemy == null){
                     currentState = TutorialState.HealTeammate;
                     StartCoroutine(ProcessCoolDown(0.5f));

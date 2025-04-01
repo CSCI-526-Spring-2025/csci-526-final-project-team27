@@ -48,7 +48,7 @@ public abstract class Skill : MonoBehaviour
     /// <summary>
     /// 检查当前技能是否处于冷却状态
     /// </summary>
-    protected bool IsOnCooldown()
+    public bool IsOnCooldown()
     {
         string key = GetType().Name;
         if (lastUsedTimeBySkill.ContainsKey(key))
