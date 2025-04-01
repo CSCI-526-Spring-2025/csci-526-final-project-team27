@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class SmartMeleeMover : MonoBehaviour, IMover
 {
-    // ·ÖÀë¼ì²â°ë¾¶
+    // åˆ†ç¦»åŠå¾„
     public float separationRadius = 1.0f;
-    // ·ÖÀëÁ¦È¨ÖØ
+    // åˆ†ç¦»åŠ›æƒé‡
     public float separationForce = 1.0f;
-    // µ±ÓëÄ¿±ê£¨Íæ¼Ò£©¾àÀëĞ¡ÓÚ´ËÖµÊ±Í£Ö¹ÒÆ¶¯£¬·ÀÖ¹¶¶¶¯
+    // è·ç¦»ç›®æ ‡ï¼ˆç©å®¶ï¼‰å°äºæ­¤å€¼æ—¶åœæ­¢ç§»åŠ¨ï¼Œé˜²æ­¢å µå¡
     public float stopDistance = 2f;
 
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
 
-        // Èç¹ûÄ¿±êÊÇÍæ¼ÒÇÒÒÑ¾­×ã¹»¿¿½ü£¬ÔòÍ£Ö¹ÒÆ¶¯
+        // å¦‚æœç›®æ ‡æ˜¯ç©å®¶ä¸”å·²ç»è¶³å¤Ÿè¿‘ï¼Œåˆ™åœæ­¢ç§»åŠ¨
         if (target.CompareTag("Player"))
         {
             float distanceToPlayer = Vector2.Distance(self.position, target.position);
@@ -24,21 +24,21 @@ public class SmartMeleeMover : MonoBehaviour, IMover
             }
         }
 
-        // ¼ÆËãÖ¸ÏòÄ¿±êµÄÆÚÍû·½Ïò
+        // è®¡ç®—æŒ‡å‘ç›®æ ‡çš„æ–¹å‘å‘é‡
         Vector2 desiredDirection = ((Vector2)target.position - (Vector2)self.position).normalized;
 
-        // ¼ì²â¸½½üµÄ¶ÓÓÑºÍÖ÷½ÇÒÔ¼ÆËã·ÖÀëÁ¦
+        // æ£€æµ‹é™„è¿‘çš„é˜Ÿå‹å’Œç©å®¶ä»¥é¿å…ç›¸äº’æ‹¥æŒ¤
         Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(self.position, separationRadius);
         Vector2 separation = Vector2.zero;
         foreach (Collider2D col in nearbyColliders)
         {
             if (col.transform == self) continue;
 
-            // µ±Ä¿±êÊÇÍæ¼ÒÊ±£¬ºöÂÔÍæ¼Ò²úÉúµÄÅÅ³âÁ¦
+            // å½“ç›®æ ‡æ˜¯ç©å®¶æ—¶ï¼Œç©å®¶ä¹Ÿä¸éœ€è¦æ’æ–¥åŠ›
             if (target.CompareTag("Player") && col.CompareTag("Player"))
                 continue;
 
-            // ¶ÔÓÚ¶ÓÓÑ»òÆäËûÖ÷½Ç£¬¸ù¾İ¾àÀë¼ÆËãÅÅ³âÏòÁ¿
+            // å¯¹äºé˜Ÿå‹æˆ–ç©å®¶ï¼Œæ ¹æ®è·ç¦»ç”Ÿæˆæ’æ–¥åŠ›
             if (col.CompareTag("Teammate") || col.CompareTag("Player"))
             {
                 Vector2 diff = (Vector2)self.position - (Vector2)col.transform.position;
@@ -50,10 +50,10 @@ public class SmartMeleeMover : MonoBehaviour, IMover
             }
         }
 
-        // ½«Ä¿±ê×·×ÙÓë·ÖÀëÁ¦µş¼Ó£¬²¢¹éÒ»»¯µÃµ½×îÖÕÒÆ¶¯·½Ïò
+        // å°†ç›®æ ‡è¿½è¸ªæ–¹å‘å’Œæ’æ–¥åŠ›ç»“åˆï¼Œå¾—åˆ°ä¸€ä¸ªè¾ƒå¥½çš„ç§»åŠ¨æ–¹å‘
         Vector2 finalDirection = (desiredDirection + separationForce * separation).normalized;
 
-        // ÉèÖÃ¸ÕÌåµÄËÙ¶È
+        // è®¾ç½®åˆšä½“é€Ÿåº¦
         rb.linearVelocity = finalDirection * moveSpeed;
     }
 }
