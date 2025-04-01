@@ -1040,7 +1040,7 @@ PrefabInstance:
     - target: {fileID: 4248173527552837582, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1716088206}
+      objectReference: {fileID: 0}
     - target: {fileID: 4248173527552837582, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
       propertyPath: m_PlaneDistance
       value: 5
@@ -1444,7 +1444,7 @@ PrefabInstance:
     - target: {fileID: 3452993446651344690, guid: 51bb6bdba8a3fd540a6d5040e226498c, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1716088206}
+      objectReference: {fileID: 0}
     - target: {fileID: 3452993446651344690, guid: 51bb6bdba8a3fd540a6d5040e226498c, type: 3}
       propertyPath: m_PlaneDistance
       value: 5
@@ -1638,7 +1638,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 1716088206}
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -3244,8 +3244,8 @@ Camera:
   m_GameObject: {fileID: 1716088204}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.16981131, g: 0.10512649, b: 0.06968672, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -3270,7 +3270,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3361,7 +3361,7 @@ MonoBehaviour:
   followCamera: {fileID: 1716088206}
   roomPosition: {x: 0, y: 0}
   roomSize: {x: 30, y: 15}
-  staticCamera: 0
+  staticCamera: 1
   followMode: 1
   easeType: 0
   smoothSpeed: 5

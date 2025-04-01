@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class RangedTeammate : MonoBehaviour
+public class RangedTeammate : MonoBehaviour, IDieAble
 {
     [Header("Movement Settings")]
     public float moveSpeed = 3f;           // 追踪敌人的移动速度
@@ -151,10 +151,9 @@ public class RangedTeammate : MonoBehaviour
             transform.position += (Vector3)(avgPush * 0.05f);  
         }
     }
-
-    // 队友销毁时从管理器中移除
-    void OnDestroy()
+    public void Die()
     {
+        Debug.Log("队友死亡");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -164,6 +163,7 @@ public class RangedTeammate : MonoBehaviour
                 teammateManager.RemoveTeammate(gameObject);
             }
         }
+        Destroy(gameObject);
     }
 }
 
