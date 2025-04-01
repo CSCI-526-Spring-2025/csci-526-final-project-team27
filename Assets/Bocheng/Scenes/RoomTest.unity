@@ -763,7 +763,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1029285719}
         m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
         m_MethodName: PauseGame
         m_Mode: 1
@@ -2797,7 +2797,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 175668371}
         m_TargetAssemblyTypeName: RoomManager_BC, Assembly-CSharp
         m_MethodName: OpenMiniMap
         m_Mode: 1
