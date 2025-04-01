@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class TrackRangedEnemy : MonoBehaviour
+public class TrackRangedEnemy : BaseEnemy
 {
     [Header("Movement Settings")]
     public float moveSpeed = 3f;          // 追踪玩家的移动速度

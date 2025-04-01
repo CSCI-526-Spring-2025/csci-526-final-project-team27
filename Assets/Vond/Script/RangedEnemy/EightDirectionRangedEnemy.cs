@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class EightDirectionRangedEnemy : MonoBehaviour
+public class EightDirectionRangedEnemy : BaseEnemy
 {
     [Header("Movement Settings")]
     public float moveSpeed = 3f;          // 移动速度
