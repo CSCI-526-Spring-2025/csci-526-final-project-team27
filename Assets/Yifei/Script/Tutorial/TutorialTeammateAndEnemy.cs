@@ -96,13 +96,13 @@ public class RoomTutorial : MonoBehaviour
     // 显示“战斗”提示
     void ShowFight()
     {
-        tutorialText.text = "Teammates will attack the enemy";
+        tutorialText.text = "Teammates attack the enemy";
     }
     
     // 显示“治疗你的队友”提示
     void ShowHealTeammate()
     {
-        tutorialText.text = "Heal your teammate";
+        tutorialText.text = "Shoot teammates to heal your teammate";
     }
     
     void Update()
