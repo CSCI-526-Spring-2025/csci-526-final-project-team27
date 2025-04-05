@@ -13,7 +13,7 @@ public class TutorialSkill : MonoBehaviour
     
     private GameObject SkillTwoArrow;
     private GameObject SkillThreeArrow;
-
+    private GameObject SecondSkillHint;
     private GameObject doorArrow;
     private GameObject firstAttackGroup;
     private GameObject TwoAttackGroup;
@@ -40,7 +40,7 @@ public class TutorialSkill : MonoBehaviour
         EnterRoomState,
         SkillOneState,
         SkillTwoState,
-        SkillThreeState,
+        
         Completed
     }
     private TutorialState currentState;
@@ -54,7 +54,8 @@ public class TutorialSkill : MonoBehaviour
         SkillOneArrow = transform.Find("1Arrow").gameObject;
         SkillTwoArrow = transform.Find("2Arrow").gameObject;
         SkillThreeArrow = transform.Find("3Arrow").gameObject;
-        
+        SecondSkillHint = transform.Find("Image_canva").gameObject;
+        SecondSkillHint.SetActive(false);
         SkillcontrollerUI.Instance.HideSkillUI();
         SkillOneArrow.SetActive(false);
         SkillTwoArrow.SetActive(false);
@@ -111,14 +112,15 @@ public class TutorialSkill : MonoBehaviour
     // 显示"认识你的敌人"提示
     void LearnSkillTwo()
     {
-        tutorialText.text = "Press 2 to Defense UPPPPP";
+        tutorialText.text = "Press 2 and left-click to freeze the enemy.";
+        SecondSkillHint.SetActive(true);
     }
 
-    // 显示"战斗"提示
-    void LearnSkillThree()
-    {
-        tutorialText.text = "Press 3 and left-click to freeze the enemy.";
-    }
+    // // 显示"战斗"提示
+    // void LearnSkillThree()
+    // {
+    //     tutorialText.text = "Press 3 and left-click to freeze the enemy.";
+    // }
     
 
     
@@ -140,7 +142,7 @@ public class TutorialSkill : MonoBehaviour
             }
             else if (waveIndex == 2)
             {
-                UnlockRoom();
+                
                 waveIndex = 3; // 避免重複觸發
             }
         }
@@ -182,47 +184,47 @@ public class TutorialSkill : MonoBehaviour
                 }
                 break;
 
-            case TutorialState.SkillTwoState:
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    Destroy(SkillTwoArrow);
-                    StopBlinking(alert2);
-                    // SkillThreeArrow.SetActive(true);
-                    currentState = TutorialState.SkillThreeState;
-                    StartCoroutine(ProcessCoolDown(0.5f));
-                    LearnSkillThree();
-                    StartBlinking(alert3);
-                }
-                break;
+            
 
-            case TutorialState.SkillThreeState:
+            case TutorialState.SkillTwoState:
                 bool isCalled = false;
-                if (Input.GetKeyDown(KeyCode.Alpha3) && !isCalled)
+                if (Input.GetKeyDown(KeyCode.Alpha2) )
                 {
-                    StopBlinking(alert3);
-                    isCalled = true;
-                    Destroy(SkillThreeArrow);
                     tutorialText.text = "Left-click to set a trap zone";
-                }
-                if (player.GetComponent<SkillController>().IsSkillOnCooldown(2) && isCalled){
-                    tutorialText.text = "Clear the room";
+                    StartCoroutine(ClearTutorialTextAfterDelay(3));
                     currentState = TutorialState.Completed;
                     StartCoroutine(ProcessCoolDown(0.5f));
-                    break;
+                    SecondSkillHint.SetActive(false);
                 }
+                // if (Input.GetKeyDown(KeyCode.Alpha2) && !isCalled)
+                // {
+                //     StopBlinking(alert2);
+                //     isCalled = true;
+                //     Destroy(SkillThreeArrow);
+                //     tutorialText.text = "Left-click to set a trap zone";
+                // }
+                // if (player.GetComponent<SkillController>().IsSkillOnCooldown(1) && isCalled){
+                //     tutorialText.text = "Clear the room";
+                //     currentState = TutorialState.Completed;
+                //     StartCoroutine(ProcessCoolDown(0.5f));
+                //     break;
+                // }
                 break;
 
             case TutorialState.Completed:
                 // 检查是否所有敌人都被击败
                 if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
                 {
-                    tutorialText.text = "";
+                    //tutorialText.text = "";
+                    Debug.Log("enter completed");
+                    UnlockRoom();
                 }
+                
                 break;
         }
     }
 
-    
+   
     
     // 解锁房间（这里通过调试信息和清空提示文本表示）
     private void UnlockRoom()
