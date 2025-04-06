@@ -166,6 +166,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9182573ff91b094abe0c4898246d855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: New Enemy
+  baseHealth: 10
+  baseDamage: 2
+  attackCooldown: 1
+  moveSpeed: 2
+  difficultyThreshold: 1
+  spawnWeight: 1
+  allowInNormal: 1
+  allowInElite: 1
+  allowInBoss: 0
+  attackPattern: 0
+  skills: []
   moveSpeed: 2
   detectionInterval: 1
   attackRange: 7
@@ -190,6 +202,7 @@ MonoBehaviour:
   currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 1254284907342112680, guid: 18ed9d638017f406faec4cb5d646538d, type: 3}
+  expOrbPrefab: {fileID: 2423993770966018964, guid: 1c9ed7b78157bd74cb60d611274da791, type: 3}
   OnDeath:
     m_PersistentCalls:
       m_Calls: []

@@ -5,7 +5,6 @@ using System.Collections;
 public class TrackRangedEnemy : BaseEnemy
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f;          // 追踪玩家的移动速度
     public float detectionInterval = 0.5f; // 目标检测间隔
 
     [Header("Attack Settings")]
