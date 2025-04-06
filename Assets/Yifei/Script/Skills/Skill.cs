@@ -24,6 +24,9 @@ public abstract class Skill : MonoBehaviour
 
     [Tooltip("技能冷却时间，在此时间内相同类型的技能无法再次释放")]
     public float cooldownTime = 1f;
+    
+    [Tooltip("技能影响范围半径，用于显示指示器")]
+    public float skillRadius = 1f;
 
     [Header("Skill Metadata")]
     [Tooltip("技能释放模式（直接释放、点地释放或点击单位释放）")]
@@ -36,7 +39,7 @@ public abstract class Skill : MonoBehaviour
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
 
 
-    private void Awake()
+    public void Awake()
     {
         string key = GetType().Name;
         if (!lastUsedTimeBySkill.ContainsKey(key))
