@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour, IDieAble
     public void Die()
     {
         Debug.Log("游戏结束");
-        //Time.timeScale = 0;
+        Time.timeScale = 0;
         if (gameOverUI != null)
             gameOverUI = Instantiate(gameOverUI);
         Destroy(gameObject);

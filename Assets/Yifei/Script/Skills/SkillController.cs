@@ -15,7 +15,7 @@ public class SkillSlot
 
 /// <summary>
 /// 技能释放控制器（挂载到主控角色）：
-/// - 支持2个技能槽，可通过数字键（1~2）绑定；
+/// - 支持3个技能槽，可通过数字键（1~3）绑定；
 /// - 不同技能槽支持直接释放、点地释放、点击单位释放三种模式；
 /// - 点地和点击单位模式使用一个跟随鼠标的准星（cursorPrefab）
 /// - 提供接口 ReplaceSkill 替换技能
@@ -41,7 +41,7 @@ public class SkillController : MonoBehaviour
     private int currentSkillSlotIndex = -1;      // 当前正在等待目标/方向选择的技能槽索引
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
 
-    private GameObject[] skillInstances = new GameObject[2];        // 实例化的技能对象
+    private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
 
     private ShootingController shootingController;
 
@@ -70,8 +70,8 @@ public class SkillController : MonoBehaviour
                 ProcessSkillKey(0);
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 ProcessSkillKey(1);
-            // else if (Input.GetKeyDown(KeyCode.Alpha3))
-            //     ProcessSkillKey(2);
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+                ProcessSkillKey(2);
         }
 
         // 如果当前处于目标/方向选择状态，则更新准星位置
@@ -110,7 +110,7 @@ public class SkillController : MonoBehaviour
                 EndTargetingMode();
             }
             // 点击其他技能时切换到新技能
-            else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) )
+            else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
             {
                 EndTargetingMode();
                 if (shootingController != null)
@@ -121,8 +121,8 @@ public class SkillController : MonoBehaviour
                     ProcessSkillKey(0);
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                     ProcessSkillKey(1);
-                // else if (Input.GetKeyDown(KeyCode.Alpha3))
-                //     ProcessSkillKey(2);
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    ProcessSkillKey(2);
             }
         }
     }

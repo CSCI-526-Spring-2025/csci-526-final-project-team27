@@ -27,7 +27,7 @@ public class RadiusIndicator : MonoBehaviour
         fillRenderer = fillObj.AddComponent<SpriteRenderer>();
         fillRenderer.sprite = CreateCircleSprite();
         fillRenderer.color = fillColor;
-        fillRenderer.sortingOrder = 97;
+        fillRenderer.sortingOrder = 1;
 
         // 创建边框圆形
         GameObject borderObj = new GameObject("Border");
