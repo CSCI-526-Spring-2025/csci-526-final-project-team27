@@ -10,7 +10,7 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         // 获取场景中的PauseController
-        pauseController = FindObjectOfType<PauseController>();
+        pauseController = Object.FindFirstObjectByType<PauseController>();
         if (pauseController == null)
         {
             Debug.LogWarning("PauseController not found in scene!");
