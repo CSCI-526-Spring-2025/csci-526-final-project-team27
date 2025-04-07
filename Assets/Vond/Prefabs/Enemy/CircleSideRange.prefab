@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 741b096d63ea514409f2216d6512a5ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: New Enemy
+  displayName: CircleSideRange
   baseHealth: 10
   baseDamage: 2
   attackCooldown: 1
@@ -178,7 +178,6 @@ MonoBehaviour:
   allowInBoss: 0
   attackPattern: 0
   skills: []
-  moveSpeed: 1
   detectionInterval: 1
   attackRange: 5
   attackInterval: 1.5
