@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 
 using System.Collections;
 using UnityEngine.UI;
@@ -17,6 +17,7 @@ public class TutorialSkill : MonoBehaviour
     private GameObject TwoAttackGroup;
     private GameObject ThirdAttackGroup;
     private GameObject[] teammates;
+    private bool allowFirstWaveRespawn = false;
 
     private GameObject[] doors;
 
@@ -226,7 +227,7 @@ public class TutorialSkill : MonoBehaviour
     void Update()
     {
         // 在教程未完成前，处理敌人刷新逻辑
-        if (currentState >= TutorialState.SkillOneState && currentState < TutorialState.ClearRoomState)
+        if (allowFirstWaveRespawn && currentState >= TutorialState.SkillOneState && currentState < TutorialState.ClearRoomState)
         {
             HandleEnemyRespawn();
         }
@@ -317,6 +318,8 @@ public class TutorialSkill : MonoBehaviour
             case TutorialState.SkillOneState:
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
+                    
+                    allowFirstWaveRespawn = true;
                     StopBlinking(alert1);
                     if (SkillOneArrow != null)
                     {
@@ -328,7 +331,7 @@ public class TutorialSkill : MonoBehaviour
                     
                     // 更新UI
                     LearnSkillTwo();
-                    
+                    ActivateFirstWaveEnemies();
                     // 开始闪烁技能2提示
                     StartBlinking(alert2);
                 }
