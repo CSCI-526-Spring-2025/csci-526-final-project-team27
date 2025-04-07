@@ -20,10 +20,13 @@ public class LevelUpRewardSystem : MonoBehaviour
 
     private List<Buff> currentChoices = new List<Buff>();
 
+    public static bool isLevelUp = false;
+
     public GameObject player;
 
     public void ShowRewardSelection()
     {
+        isLevelUp = true;
         Time.timeScale = 0f;
         if (CtrlCtrl.Instance != null)
         {
@@ -135,6 +138,7 @@ public class LevelUpRewardSystem : MonoBehaviour
         rewardPanel.SetActive(false);
         CtrlCtrl.Instance.ToggleShootCtrler(true);
         Time.timeScale = 1f;
+        isLevelUp = false;
     }
 
 }
