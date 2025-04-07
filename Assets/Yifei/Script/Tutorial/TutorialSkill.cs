@@ -283,7 +283,8 @@ public class TutorialSkill : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     // 激活第一波怪物
-                    ActivateFirstWaveEnemies();
+                    //ActivateFirstWaveEnemies();
+                    SetTeammatesToMissingHealth();
                     
                     // 转换状态
                     currentState = TutorialState.SkillOneState;
@@ -435,6 +436,24 @@ public class TutorialSkill : MonoBehaviour
         }
         
         Debug.Log($"此次共生成了 {spawnedCount} 个敌人");
+    }
+
+    // 设置队友的血量为缺失状态
+    void SetTeammatesToMissingHealth()
+    {
+        //debug print
+        Debug.Log("SetTeammatesToMissingHealth");
+        GameObject[] allTeammates = GameObject.FindGameObjectsWithTag("Teammate");
+        foreach (GameObject mate in allTeammates)
+        {
+            Health health = mate.GetComponent<Health_BC>();
+            if (health != null)
+            {
+                //Debug.Log("SetTeammatesToMissingHealth: " + mate.name);
+                health.TakeDamage(20);
+                //Debug.Log("SetTeammatesToMissingHealth: " + health.currentHealth);
+            }
+        }
     }
     
     // 在场景关闭时清理资源
