@@ -127,7 +127,7 @@ public class SkillUiExchanger : MonoBehaviour
         {
             Debug.LogWarning("update failed");
             changestatusCanva.SetActive(true);
-            changestatusCanva.GetComponentInChildren<TextMeshProUGUI>().text = "Update failed!, no same skill";
+            changestatusCanva.GetComponentInChildren<TextMeshProUGUI>().text = "Update failed!, Skills must be different.";
             StartCoroutine(ResetAfterDelay());
         }
         else
