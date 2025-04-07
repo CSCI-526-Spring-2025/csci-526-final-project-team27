@@ -25,6 +25,10 @@ public class LevelUpRewardSystem : MonoBehaviour
     public void ShowRewardSelection()
     {
         Time.timeScale = 0f;
+        if (CtrlCtrl.Instance != null)
+        {
+            CtrlCtrl.Instance.ToggleShootCtrler(false);
+        }
         Debug.Log("函数已开始");
         // 清空旧的 slot 内容
         foreach (Transform slot in buffSlots)
@@ -129,6 +133,7 @@ public class LevelUpRewardSystem : MonoBehaviour
         }
 
         rewardPanel.SetActive(false);
+        CtrlCtrl.Instance.ToggleShootCtrler(true);
         Time.timeScale = 1f;
     }
 

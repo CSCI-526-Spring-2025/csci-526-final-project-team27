@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9182573ff91b094abe0c4898246d855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: New Enemy
+  displayName: Circle8Range
   baseHealth: 10
   baseDamage: 2
   attackCooldown: 1
@@ -178,7 +178,6 @@ MonoBehaviour:
   allowInBoss: 0
   attackPattern: 0
   skills: []
-  moveSpeed: 2
   detectionInterval: 1
   attackRange: 7
   attackInterval: 2.5

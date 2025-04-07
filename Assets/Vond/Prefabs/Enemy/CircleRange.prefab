@@ -166,7 +166,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c940997d4732e6346be24d58068a3971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: CircleRange
+  baseHealth: 10
+  baseDamage: 2
+  attackCooldown: 1
   moveSpeed: 1
+  difficultyThreshold: 1
+  spawnWeight: 1
+  allowInNormal: 1
+  allowInElite: 1
+  allowInBoss: 0
+  attackPattern: 0
+  skills: []
   detectionInterval: 1
   attackRange: 5
   attackInterval: 1.5

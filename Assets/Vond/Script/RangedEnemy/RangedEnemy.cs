@@ -2,10 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class RangedEnemy : MonoBehaviour
+public class RangedEnemy : BaseEnemy
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f;          // 追踪玩家的移动速度
     public float detectionInterval = 0.5f; // 目标检测间隔
 
     [Header("Attack Settings")]
