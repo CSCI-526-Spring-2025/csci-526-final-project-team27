@@ -326,14 +326,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 120
+  currentHealth: 120
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 0}
+  expOrbPrefab: {fileID: 0}
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
   slimePrefab: {fileID: 2027857850954515486}
   splitThreshold: 0.5
-  splitCounter: 8
+  splitCounter: 4
 --- !u!114 &8180063506914729136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,7 +361,6 @@ MonoBehaviour:
   attackPattern: 0
   skills: []
   moveMode: 0
-  moveSpeed: 8
   searchInterval: 1
   attackRange: 1
   attackInterval: 2
@@ -378,7 +379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e202a405982134e9032eedce61c59d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpDistance: 3
   jumpDuration: 0.7
   maxJumpHeight: 1
   jumpInterval: 1.5

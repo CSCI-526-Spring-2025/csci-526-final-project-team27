@@ -51,7 +51,7 @@ public class SlimeHealth : EnemyHealth
             if (newSlimeHealth != null)
             {
                 newSlimeHealth.maxHealth = maxHealth / 2; // New slime has half of parent's health
-                newSlimeHealth.currentHealth = maxHealth / 2;
+                newSlimeHealth.currentHealth = currentHealth / 2;
                 newSlimeHealth.splitCounter = splitCounter / 2; // New slime gets half the split counter
             }
         }
