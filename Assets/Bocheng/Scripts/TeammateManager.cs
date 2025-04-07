@@ -47,6 +47,8 @@ public class TeammateManager : MonoBehaviour
             // 显示UI
             Debug.Log("游戏结束");
             gameOverUI = Instantiate(gameOverUI);
+            PlayerMovement.isEnd = true;
+            Debug.Log("isEnd is true");
 
         }
     }
@@ -95,5 +97,21 @@ public class TeammateManager : MonoBehaviour
     {
         teammates.Add(newTeammate);
         relativePositions[newTeammate] = newRelaPos;
+    }
+
+    public void SetTeammatesFollow(bool b)
+    {
+        //if teammater is null, return
+        if (teammates == null) return;
+        //for each teammate,get component melee teammate and set shouldfollowplayer to b
+        foreach (GameObject teammate in teammates)
+        {
+            if (teammate == null) continue;
+            MeleeTeammate meleeTeammate = teammate.GetComponent<MeleeTeammate>();
+            if (meleeTeammate != null)
+            {
+                meleeTeammate.shouldFollowPlayer = b;
+            }
+        }
     }
 }

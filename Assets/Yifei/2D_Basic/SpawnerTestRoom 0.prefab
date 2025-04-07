@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 5339933636709720296}
   m_Layer: 0
   m_Name: Door_Top
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 8536156527080195995}
   m_Layer: 0
   m_Name: Door_Bottom
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 8563511504605090716}
   m_Layer: 0
   m_Name: Door_Right
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 7164326117892256770}
   m_Layer: 0
   m_Name: Door_Left
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -702,7 +702,7 @@ GameObject:
   - component: {fileID: 4945240780084357227}
   m_Layer: 0
   m_Name: Wall_Bottom
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 299824110446030349}
   m_Layer: 0
   m_Name: Wall_Top
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 734916721131721926}
   m_Layer: 0
   m_Name: Wall_Right
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1135,7 +1135,7 @@ GameObject:
   - component: {fileID: 8221729981029571579}
   m_Layer: 0
   m_Name: Wall_Left
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1359,7 +1359,7 @@ MonoBehaviour:
   dynamicSpawnPosition: 0
   waveGroups:
   - waveName: 0
-    preDelay: 0
+    preDelay: 1
     units:
     - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
       count: 2
@@ -1373,14 +1373,14 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 3627106912230831940, guid: c0471c0c5726fae429414d62c986d190, type: 3}
       count: 2
       interval: 0
-      positionType: 2
+      positionType: 1
       spawnPositions:
-      - {x: 10, y: 5}
-      - {x: -10, y: -5}
-      - {x: 10, y: -5}
-      - {x: -10, y: 5}
+      - {x: 6, y: 3}
+      - {x: -6, y: -3}
+      - {x: 6, y: -3}
+      - {x: -6, y: 3}
   - waveName: 1
-    preDelay: 3
+    preDelay: 1
     units:
     - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
       count: 2
@@ -1391,8 +1391,8 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
-      count: 3
+    - enemyPrefab: {fileID: 719380913716239421, guid: a425b81c88748d14cbd36db71894fb6e, type: 3}
+      count: 2
       interval: 1
       positionType: 1
       spawnPositions:

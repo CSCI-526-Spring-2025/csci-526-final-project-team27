@@ -2,10 +2,16 @@
 
 public class CtrlCtrl : MonoBehaviour
 {
+    [Header("玩家背包面板")]
+    public GameObject BagPanel;
+
     public static CtrlCtrl Instance { get; private set; } // 单例实例
     
     private PlayerMovement playerMovement;
     private ShootingController shootingController;
+
+    private bool isMoveLocked = false;
+    private bool isShootingEnabled = true;
 
     private void Awake()
     {
@@ -52,6 +58,7 @@ public class CtrlCtrl : MonoBehaviour
         if (playerMovement != null)
         {
             playerMovement.LockMove(bLock);
+            isMoveLocked = bLock;
         }
     }
 
@@ -68,6 +75,30 @@ public class CtrlCtrl : MonoBehaviour
         if (shootingController != null)
         {
             shootingController.ToggleActive(bToggle);
+            isShootingEnabled = bToggle;
+        }
+    }
+
+    public bool IsMoveLocked()
+    {
+        return isMoveLocked;
+    }
+
+    public bool IsShootingEnabled()
+    {
+        return isShootingEnabled;
+    }
+
+    public GameObject GetBagPanel()
+    {
+        if(BagPanel != null)
+        {
+            return BagPanel;
+        }
+        else
+        {
+            Debug.LogWarning("BagPanel is not assigned in CtrlCtrl.");
+            return null;
         }
     }
 }

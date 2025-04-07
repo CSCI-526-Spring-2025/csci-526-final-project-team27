@@ -19,7 +19,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         originalParent = transform.parent;
         originalPosition = rectTransform.anchoredPosition;
-        transform.SetParent(originalParent.root);
+        if(CtrlCtrl.Instance != null)
+        {
+            transform.SetParent(CtrlCtrl.Instance.GetBagPanel().transform);
+        }
+        else
+        {
+            transform.SetParent(originalParent.root);
+        }
+        
         canvasGroup.blocksRaycasts = false;
     }
 

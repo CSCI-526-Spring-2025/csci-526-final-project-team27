@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class RoomDebug : MonoBehaviour
 {
+    void Start(){
+        SkillcontrollerUI.Instance.ShowSkillUI();
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

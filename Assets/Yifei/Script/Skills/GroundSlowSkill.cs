@@ -10,7 +10,7 @@ using UnityEngine;
 public class GroundSlowSkill : Skill
 {
     [Header("Ground Slow Skill Settings")]
-    [Tooltip("技能影响区域的半径")]
+    [Tooltip("技能影响区域的半径 - 注意：此值会自动与基类的skillRadius同步")]
     public float radius = 5f;
     [Tooltip("减速因子，1 表示原速，0.5 表示减速50%")]
     public float slowFactor = 0f;
@@ -27,7 +27,26 @@ public class GroundSlowSkill : Skill
     // 保存父对象引用
     private Transform parentTransform;
 
+    private void Awake()
+    {
+        // 确保基类的Awake方法被调用
+        base.Awake();
+        
+        // 将本技能的radius同步到基类的skillRadius
+        // 这确保了技能范围指示器的大小与实际效果区域一致
+        skillRadius = radius;
+        
+        // 保存父对象引用
+        parentTransform = transform.parent;
+    }
 
+    // 当在Unity编辑器中修改组件值时调用
+    private void OnValidate()
+    {
+        // 在编辑器中修改radius值时，同步到skillRadius
+        // 这确保了当开发者调整半径时，指示器能够正确显示
+        skillRadius = radius;
+    }
 
     /// <summary>
     /// 通过点击地面释放技能，传入的方向参数实际为释放位置
@@ -35,6 +54,10 @@ public class GroundSlowSkill : Skill
     /// <param name="direction">技能中心位置</param>
     protected override void OnSkillEffect(Vector2 direction)
     {
+        // 双向同步radius和skillRadius，确保它们值相同
+        // 在运行时，有可能是通过修改skillRadius来改变范围
+        radius = skillRadius;
+        
         transform.SetParent(null);
         transform.position = direction;
         // 将技能预制体移到点击位置
@@ -56,6 +79,10 @@ public class GroundSlowSkill : Skill
     /// <param name="target">技能目标对象</param>
     protected override void OnSkillEffect(GameObject target)
     {
+        // 双向同步radius和skillRadius，确保它们值相同
+        // 在运行时，有可能是通过修改skillRadius来改变范围
+        radius = skillRadius;
+        
         transform.SetParent(null);
         transform.position = target.transform.position;
         //Debug.Log("GroundSlowSkill activated at target position: " + transform.position);
@@ -86,6 +113,19 @@ public class GroundSlowSkill : Skill
                 // 保存原始速度并应用减速
                 originalSpeeds[collision.gameObject] = enemyController.moveSpeed;
                 enemyController.moveSpeed *= slowFactor;
+                //Debug.Log("Enemy slowed: " + collision.gameObject.name);
+            }
+        }
+        RangedEnemy rangedEnemy = collision.GetComponent<RangedEnemy>(); // 临时代码，处理 RangedEnemy 的减速
+        if (rangedEnemy != null)
+        {
+            // 避免重复记录
+            if (!affectedEnemies.Contains(collision.gameObject))
+            {
+                affectedEnemies.Add(collision.gameObject);
+                // 保存原始速度并应用减速
+                originalSpeeds[collision.gameObject] = rangedEnemy.moveSpeed;
+                rangedEnemy.moveSpeed *= slowFactor;
                 //Debug.Log("Enemy slowed: " + collision.gameObject.name);
             }
         }
@@ -162,7 +202,9 @@ public class GroundSlowSkill : Skill
             // 实例化特效，不指定父对象，使其保持在世界空间中固定位置
             currentEffect = Instantiate(groundSlowSkillX, transform.position, Quaternion.identity);
 
-            currentEffect.transform.localScale = new Vector3(radius * 1, radius * 1, 1);
+            // 确保特效大小与技能的实际影响半径一致
+            // 这样视觉效果和实际影响范围能够匹配
+            currentEffect.transform.localScale = new Vector3(radius, radius, 1);
         }
     }
 }

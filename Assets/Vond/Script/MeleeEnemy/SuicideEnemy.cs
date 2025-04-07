@@ -6,8 +6,8 @@ public class SuicideEnemy : BaseEnemy
     [Header("警戒设置")]
     [Tooltip("当玩家或队友进入该范围时触发警戒状态")]
     public float alertRange = 5f;
-    [Tooltip("冲刺速度（自爆前的高速移动）")]
-    public float rushSpeed = 10f;
+    [Tooltip("冲刺倍率（自爆前的高速移动）")]
+    public float rushSpeed = 3f;
     [Tooltip("触发爆炸前的延时")]
     public float explosionDelay = 1f;
 
@@ -58,7 +58,7 @@ public class SuicideEnemy : BaseEnemy
         // 处于警戒状态且目标存在时以高速冲刺，否则静止
         if (isAlerted && currentTarget != null && !hasExploded)
         {
-            mover.Move(transform, rb, currentTarget, rushSpeed);
+            mover.Move(transform, rb, currentTarget, rushSpeed * moveSpeed);
         }
         else
         {
@@ -95,7 +95,15 @@ public class SuicideEnemy : BaseEnemy
         }
 
         // 此处可播放爆炸特效、音效等，之后销毁自身
-        Destroy(gameObject);
+        //Destroy(gameObject); 
+        //不能直接摧毁自己，否则无法解锁房间
+        // 获取自己的 Health 组件，调用 Die 方法
+        Health health = GetComponent<Health>();
+        if (health != null)
+        {
+            health.Die();
+        }
+
     }
 
     // 在 Scene 视图中可视化警戒范围和爆炸半径

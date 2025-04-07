@@ -88,4 +88,14 @@ public class TutorialManager : MonoBehaviour
     {
         TutorialStatic.Instance.OpenFirstLevel();
     }
+
+    public void SetTeammateFollow()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        TeammateManager teammateManager = player.GetComponent<TeammateManager>();
+        if (teammateManager != null)
+        {
+            teammateManager.SetTeammatesFollow(true);
+        }
+    }
 }

@@ -6,6 +6,10 @@ public class EnemyHealth : Health
     [Header("Coin Drop")]
     [SerializeField] private GameObject coinPrefab;
 
+    [Header("EXP Drop")]
+    [SerializeField] private GameObject expOrbPrefab;
+
+
     private SimpleSpawner enemySpawner;
     private FirebaseDataUploader dataUploader;
 
@@ -66,11 +70,21 @@ public class EnemyHealth : Health
         // 1. Spawn coin (if you have assigned coinPrefab)
         if (coinPrefab != null)
         {
-            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            // Instantiate(coinPrefab, transform.position, Quaternion.identity); // 暂时移除金币
         }
         else
         {
             Debug.LogWarning("coinPrefab not set on " + gameObject.name);
+        }
+
+        // 生成经验球
+        if(expOrbPrefab != null)
+        {
+            Instantiate(expOrbPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("expOrbPrefab not set on " + gameObject.name);
         }
 
         // 2. Call base.Die to handle anything else from the parent Health

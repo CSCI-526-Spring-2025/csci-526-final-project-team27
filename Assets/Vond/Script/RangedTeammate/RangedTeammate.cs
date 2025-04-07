@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class RangedTeammate : MonoBehaviour
+public class RangedTeammate : MonoBehaviour, IDieAble
 {
     [Header("Movement Settings")]
     public float moveSpeed = 3f;           // 追踪敌人的移动速度
@@ -15,6 +15,12 @@ public class RangedTeammate : MonoBehaviour
     public Transform firePoint;            // 子弹发射点
     public float bulletSpeed = 10f;        // 子弹飞行速度
     public float bulletLifetime = 2f;      // 子弹最大存在时间
+
+    // -------添加跟随设置 - 新增部分---------
+    [Header("Follow Settings")]
+    private float followDistance = 2.0f;   // 跟随玩家的距离
+    public bool shouldFollowPlayer = true; // 是否应该跟随玩家
+    //---------------------
 
     private Transform currentTarget;       // 当前锁定的目标
     private Rigidbody2D rb;
@@ -31,14 +37,19 @@ public class RangedTeammate : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         // 如果外部未注入，则使用默认实现
+        targetFinder = GetComponent<ITargetFinder>();
         if (targetFinder == null)
         {
             targetFinder = new NearestEnemyFinder();
         }
+        
+        mover = GetComponent<IMover>();
         if (mover == null)
         {
             mover = new SimpleMover();
         }
+        
+        rangedAttacker = GetComponent<IRangedAttacker>();
         if (rangedAttacker == null)
         {
             rangedAttacker = new RangedAttacker();
@@ -52,9 +63,28 @@ public class RangedTeammate : MonoBehaviour
 
     void Update()
     {
+        // 添加避免其他队友的逻辑 - 新增部分
+        AvoidOtherTeammates();
+        
         if (currentTarget == null)
         {
-            rb.linearVelocity = Vector2.zero;
+            if (shouldFollowPlayer)
+            {
+                Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+                float distToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+                if (distToPlayer > followDistance)
+                {
+                    mover.Move(transform, rb, playerTransform, moveSpeed);
+                }
+                else
+                {
+                    rb.linearVelocity = Vector2.zero;
+                }
+            }
+            else
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
             return;
         }
 
@@ -97,9 +127,33 @@ public class RangedTeammate : MonoBehaviour
         }
     }
 
-    // 队友销毁时从管理器中移除
-    void OnDestroy()
+    void AvoidOtherTeammates()
     {
+        Vector2 pushDir = Vector2.zero;
+        int nearbyCount = 0;
+
+        foreach (var other in FindObjectsOfType<RangedTeammate>())
+        {
+            if (other == this) continue;
+
+            float dist = Vector2.Distance(transform.position, other.transform.position);
+            if (dist < followDistance) // 根据体型调整这个距离
+            {
+                Vector2 away = (transform.position - other.transform.position).normalized / dist;
+                pushDir += away;
+                nearbyCount++;
+            }
+        }
+
+        if (nearbyCount > 0)
+        {
+            Vector2 avgPush = pushDir / nearbyCount;
+            transform.position += (Vector3)(avgPush * 0.05f);  
+        }
+    }
+    public void Die()
+    {
+        Debug.Log("队友死亡");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -109,6 +163,7 @@ public class RangedTeammate : MonoBehaviour
                 teammateManager.RemoveTeammate(gameObject);
             }
         }
+        Destroy(gameObject);
     }
 }
 

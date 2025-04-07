@@ -9,6 +9,10 @@ TagManager:
   - Obstacle
   - Skill
   - Wall
+  - Friendly
+  - NoSkillUI
+  - Door
+  - EXP
   layers:
   - Default
   - TransparentFX

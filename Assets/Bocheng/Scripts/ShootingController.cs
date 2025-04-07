@@ -8,15 +8,22 @@ public class ShootingController : MonoBehaviour
     public Transform firePoint;       // 子弹生成点（通常是玩家位置）
     public float bulletSpeed = 10f;   // 子弹速度
     public float bulletLifetime = 2f; // 子弹最大存在时间
+    public float manaCost = 5.0f; // 每次发射消耗的魔法值
     public GameObject inventoryPanel; 
     private GameObject cursorInstance;
     private bool isActive = false;
     private bool isLocked = false;
+    private Camera cam;
+    
+    private Mana mana; // 魔法值组件引用
 
     void Start()
     {
         // 初始化
         cursorInstance = null;
+        
+        mana = GetComponent<Mana>(); // 获取魔法值组件
+
         ToggleActive(true);
     }
 
@@ -71,12 +78,22 @@ public class ShootingController : MonoBehaviour
     {
         if(isLocked)
             return;
+
         if(inventoryPanel != null)
         {
             if (inventoryPanel.activeSelf && EventSystem.current.IsPointerOverGameObject())
             {//when bag is open and cursor on bagpanel it won't shoot
                 Debug.Log("click on the panel");
                 return;
+            }
+        }
+
+        if (mana != null)
+        {
+            if (!(mana.UseMana(manaCost)))
+            {
+                Debug.Log("Not enough mana!"); // 魔法值不足
+                return; // 如果魔法值不足，直接返回
             }
         }
 
@@ -90,6 +107,7 @@ public class ShootingController : MonoBehaviour
                 Vector2 shootDirection = (cursorInstance.transform.position - firePoint.position).normalized;
                 rb.linearVelocity = shootDirection * bulletSpeed;
             }
+
 
             // 设定子弹销毁时间
             Destroy(bullet, bulletLifetime);

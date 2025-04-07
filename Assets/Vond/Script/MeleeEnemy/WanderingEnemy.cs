@@ -19,6 +19,13 @@ public class WanderingEnemy : BaseEnemy
     private Rigidbody2D rb;
     private bool canAttack = true;
 
+    // ===== 新增变量：用于检测敌人是否卡住 =====
+    private Vector3 lastPosition;
+    private float stuckTimer = 0f;
+    public float stuckThreshold = 1.0f;    // 1秒内几乎没移动，就认为卡住
+    public float minMoveDistance = 0.1f;   // 两帧之间移动距离小于此值认为没移动
+    // ============================================
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,6 +55,27 @@ public class WanderingEnemy : BaseEnemy
         // 获取当前随机目标，并向其移动
         Transform wanderTarget = targetFinder.FindTarget(transform);
         mover.Move(transform, rb, wanderTarget, moveSpeed);
+
+        // ===== 新增：检测敌人是否卡住 =====
+        if (Vector3.Distance(transform.position, lastPosition) < minMoveDistance)
+        {
+            stuckTimer += Time.fixedDeltaTime;
+            if (stuckTimer >= stuckThreshold)
+            {
+                // 如果卡住，则更新游荡目标
+                if (targetFinder is RandomWanderFinder wanderFinder)
+                {
+                    wanderFinder.UpdateWanderTarget(transform.position);
+                }
+                stuckTimer = 0f;  // 重置计时器
+            }
+        }
+        else
+        {
+            stuckTimer = 0f;  // 如果移动正常则重置计时器
+        }
+        lastPosition = transform.position;
+        // ==================================
     }
 
     // 碰撞触发时，如果碰到玩家或队友则造成伤害
@@ -59,6 +87,13 @@ public class WanderingEnemy : BaseEnemy
             if (targetHealth != null)
             {
                 StartCoroutine(DealDamageRoutine(collision.gameObject.transform));
+            }
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            if (targetFinder is RandomWanderFinder wanderFinder)
+            {
+                wanderFinder.ForceUpdateTarget(transform.position);
             }
         }
     }

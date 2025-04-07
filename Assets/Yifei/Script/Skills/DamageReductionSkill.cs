@@ -1,36 +1,39 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DamageReductionSkill : Skill
 {
     public GameObject damageReductionSkillX;
     GameObject[] allies;
+    
+    // å­˜å‚¨æ¯ä¸ªé˜Ÿå‹å¯¹åº”çš„ç‰¹æ•ˆå¯¹è±¡
+    private Dictionary<GameObject, GameObject> allyEffects = new Dictionary<GameObject, GameObject>();
 
     [Header("Reduction rate")]
-    [Tooltip("¼õÉËÂÊ")]
+    [Tooltip("å‡ä¼¤æ¯”ç‡")]
     public float reductionRate = 0.5f;
 
-    [Tooltip("ÓÃÓÚ±êÊ¶ÓÑ·½µ¥Î»µÄ±êÇ©Êı×é")]
+    [Tooltip("ç”¨äºæ ‡è¯†å‹æ–¹å•ä½çš„æ ‡ç­¾åˆ—è¡¨")]
     public string[] friendlyTags = new string[] { "Teammate", "Player" };
 
     /// <summary>
-    /// ÊµÏÖ¼¼ÄÜĞ§¹û£º¶ÔËùÓĞ¾ßÓĞ friendlyTags ÖĞÈÎÒ»±êÇ©µÄµ¥Î»¼õÉË
+    /// å®æ–½å‡ä¼¤æ•ˆæœï¼Œå¯¹æ‰€æœ‰å…·æœ‰ friendlyTags ä¸­ä»»ä¸€æ ‡ç­¾çš„å•ä½ç”Ÿæ•ˆ
     /// </summary>
     protected override void OnSkillEffect(Vector2 direction)
     {
         DamageDeductionAllAllies();
-        //ShowHealEffect();
+        ShowHealEffect();
     }
 
     protected override void OnSkillEffect(GameObject target)
     {
         DamageDeductionAllAllies();
-        //ShowHealEffect();
+        ShowHealEffect();
     }
 
-
     /// <summary>
-    /// ¶Ô³¡ÉÏËùÓĞ·ûºÏÌõ¼şµÄÓÑ·½µ¥Î»¼õÉË
+    /// å¯¹åœºæ™¯ä¸­æ‰€æœ‰æ‹¥æœ‰ç›¸å…³å‹æ–¹å•ä½æ ‡ç­¾çš„å•ä½åº”ç”¨å‡ä¼¤æ•ˆæœ
     /// </summary>
     private void DamageDeductionAllAllies()
     {
@@ -43,13 +46,14 @@ public class DamageReductionSkill : Skill
                 if (health != null)
                 {
                     health.defenseBuff = reductionRate;
-                    Debug.Log($"¶Ô {ally.name} Ê¹ÓÃÁË¼õÉË¼¼ÄÜ£¬¼õÉËÂÊ£º{health.defenseBuff}");
+                    Debug.Log($"å¯¹ {ally.name} ä½¿ç”¨äº†å‡ä¼¤æŠ€èƒ½ï¼Œå‡ä¼¤ç‡ï¼š{health.defenseBuff}");
                 }
             }
         }
     }
+    
     /// <summary>
-    /// È¡Ïû¼õÉËĞ§¹û
+    /// å–æ¶ˆå‡ä¼¤æ•ˆæœ
     /// </summary>
     private void CancelDamageDeduction()
     {
@@ -67,51 +71,102 @@ public class DamageReductionSkill : Skill
         }
     }
 
-
     /// <summary>
-    /// ¼¼ÄÜÌØĞ§£¬½«prefabµÄĞÎ×´ÊµÀı»¯µ½Ã¿¸öÓÑ·½µ¥Î»µÄ½ÅÏÂ
+    /// å¤„ç†ç‰¹æ•ˆï¼šé¢„åˆ¶ä½“ç¯çŠ¶å®ä¾‹åŒ–äºæ¯ä¸ªå‹æ–¹å•ä½çš„è„šä¸‹
     /// </summary>
     private void ShowHealEffect()
     {
         GameObject prefab = damageReductionSkillX;
         if (prefab == null)
         {
-            Debug.LogError("Prefab 'DamageReductionSkillX' Î´ÕÒµ½£¡");
+            Debug.LogError("Prefab 'DamageReductionSkillX' æœªæ‰¾åˆ°ï¼");
             return;
         }
-        int i = 0;
+        
+        // æ¸…ç©ºä¹‹å‰çš„ç‰¹æ•ˆå­—å…¸
+        allyEffects.Clear();
+        
         foreach (string tag in friendlyTags)
         {
             GameObject[] allies = GameObject.FindGameObjectsWithTag(tag);
             foreach (GameObject ally in allies)
             {
-                i++;
-                // ½«ÊµÀı»¯µÄĞ§¹û×÷Îªµ±Ç°½Å±¾ËùÔÚÎïÌåµÄ×Ó¶ÔÏó£¬²¢ÏÔÊ¾ÔÚÓÑ·½µ¥Î»½ÅÏÂ
+                // ä¸ºæ¯ä¸ªå‹æ–¹å•ä½åˆ›å»ºç‰¹æ•ˆ
                 Collider2D col = ally.GetComponent<Collider2D>();
+                Vector3 offset = new Vector3(0, -0.5f, 0);
+                
                 if (col != null)
                 {
-                    // bounds.min.y Îª collider µÄµ×²¿Î»ÖÃ
+                    // ä½¿ç”¨collideråº•éƒ¨ä½ç½®
                     float yOffset = col.bounds.min.y - ally.transform.position.y;
-                    Vector3 offset = new Vector3(0, yOffset, 0);
-                    Instantiate(prefab, ally.transform.position + offset, Quaternion.identity, transform);
+                    offset = new Vector3(0, yOffset, 0);
                 }
-                else
-                {
-                    Instantiate(prefab, ally.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity, transform);
-                }
-                Debug.Log($"¶Ô {ally.name} Ê¹ÓÃÁË¼õÉËÌØĞ§");
+                
+                GameObject effect = Instantiate(prefab, ally.transform.position + offset, Quaternion.identity, transform);
+                
+                // å­˜å‚¨ç‰¹æ•ˆå¼•ç”¨ï¼Œä»¥ä¾¿åç»­æ›´æ–°ä½ç½®
+                allyEffects[ally] = effect;
+                
+                Debug.Log($"å¯¹ {ally.name} ä½¿ç”¨äº†å‡ä¼¤ç‰¹æ•ˆ");
             }
         }
     }
-    //ÖØĞ´Skill routine,Ïú»Ù¼¼ÄÜÌØĞ§
+    
+    void Update()
+    {
+        // æ›´æ–°æ‰€æœ‰ç‰¹æ•ˆçš„ä½ç½®ï¼Œè®©å®ƒä»¬è·Ÿéšé˜Ÿå‹
+        List<GameObject> destroyList = new List<GameObject>();
+        
+        foreach (var pair in allyEffects)
+        {
+            GameObject ally = pair.Key;
+            GameObject effect = pair.Value;
+            
+            if (ally == null || effect == null)
+            {
+                // å¦‚æœé˜Ÿå‹æˆ–ç‰¹æ•ˆå·²è¢«é”€æ¯ï¼ŒåŠ å…¥å¾…åˆ é™¤åˆ—è¡¨
+                destroyList.Add(ally);
+                continue;
+            }
+            
+            // æ›´æ–°ç‰¹æ•ˆä½ç½®
+            Collider2D col = ally.GetComponent<Collider2D>();
+            Vector3 offset = new Vector3(0, -0.5f, 0);
+            
+            if (col != null)
+            {
+                float yOffset = col.bounds.min.y - ally.transform.position.y;
+                offset = new Vector3(0, yOffset, 0);
+            }
+            
+            effect.transform.position = ally.transform.position + offset;
+        }
+        
+        // æ¸…ç†æ— æ•ˆå¼•ç”¨
+        foreach (GameObject key in destroyList)
+        {
+            if (allyEffects.ContainsKey(key) && allyEffects[key] != null)
+            {
+                Destroy(allyEffects[key]);
+            }
+            allyEffects.Remove(key);
+        }
+    }
+    
+    //é‡å†™Skill routineï¼Œç»“æŸæ—¶å–æ¶ˆæ•ˆæœ
     protected override IEnumerator SkillRoutine()
     {
         yield return new WaitForSeconds(skillDuration);
         CancelDamageDeduction();
-        while (transform.childCount > 0)
+        
+        // é”€æ¯æ‰€æœ‰ç‰¹æ•ˆ
+        foreach (var pair in allyEffects)
         {
-            Destroy(transform.GetChild(0).gameObject);
-            yield return null;
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value);
+            }
         }
+        allyEffects.Clear();
     }
 }
