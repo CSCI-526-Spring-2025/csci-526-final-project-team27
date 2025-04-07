@@ -588,6 +588,7 @@ public class RoomManager_BC : MonoBehaviour
                 if (firebaseDataUploader != null)
                 {
                     firebaseDataUploader.UpdateData("DifficultyLevelReached", prefabIndex + 1);
+                    firebaseDataUploader.UpdateData("ExplorationRate", ratio);
                 }
                 roomPrefab = normalRoomPrefabs[prefabIndex];
             }

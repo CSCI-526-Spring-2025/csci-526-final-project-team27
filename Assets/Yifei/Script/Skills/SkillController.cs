@@ -15,7 +15,7 @@ public class SkillSlot
 
 /// <summary>
 /// 技能释放控制器（挂载到主控角色）：
-/// - 支持2个技能槽，可通过数字键（1~2）绑定；
+/// - 支持3个技能槽，可通过数字键（1~3）绑定；
 /// - 不同技能槽支持直接释放、点地释放、点击单位释放三种模式；
 /// - 点地和点击单位模式使用一个跟随鼠标的准星（cursorPrefab）
 /// - 提供接口 ReplaceSkill 替换技能
@@ -28,6 +28,7 @@ public class SkillController : MonoBehaviour
 
     [Header("Cursor Settings")]
     public GameObject cursorPrefab;          // 用于目标/方向选择的准星预制体
+    public GameObject radiusIndicatorPrefab; // 圆形范围指示器预制体
 
     [Header("Skill Slots")]
     [Tooltip("三个技能槽位，可分别指定技能预制体和释放模式")]
@@ -36,6 +37,7 @@ public class SkillController : MonoBehaviour
     public GameObject panel;//ui of skill shown to player
     // 内部变量
     private GameObject cursorInstance;
+    private GameObject radiusIndicatorInstance; // 圆形指示器实例
     private int currentSkillSlotIndex = -1;      // 当前正在等待目标/方向选择的技能槽索引
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
     private TextMeshProUGUI skill1Text;
@@ -83,8 +85,8 @@ public class SkillController : MonoBehaviour
                 ProcessSkillKey(0);
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 ProcessSkillKey(1);
-            // else if (Input.GetKeyDown(KeyCode.Alpha3))
-            //     ProcessSkillKey(2);
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+                ProcessSkillKey(2);
         }
 
         // 如果当前处于目标/方向选择状态，则更新准星位置
@@ -123,7 +125,7 @@ public class SkillController : MonoBehaviour
                 EndTargetingMode();
             }
             // 点击其他技能时切换到新技能
-            else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) )
+            else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
             {
                 EndTargetingMode();
                 if (shootingController != null)
@@ -134,8 +136,8 @@ public class SkillController : MonoBehaviour
                     ProcessSkillKey(0);
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                     ProcessSkillKey(1);
-                // else if (Input.GetKeyDown(KeyCode.Alpha3))
-                //     ProcessSkillKey(2);
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    ProcessSkillKey(2);
             }
         }
     }
@@ -169,6 +171,14 @@ public class SkillController : MonoBehaviour
         SkillSlot slot = skillSlots[slotIndex];
         if (slot.skillPrefab == null)
             return; // 该槽位未配置技能
+            
+        // 检查技能是否在冷却中
+        if (IsSkillOnCooldown(slotIndex))
+        {
+            // 如果技能在冷却中，显示提示并返回
+            Debug.Log("技能冷却中，无法使用");
+            return;
+        }
 
         // 根据释放模式分流
         if (slot.releaseType == SkillReleaseType.Direct)
@@ -258,6 +268,21 @@ public class SkillController : MonoBehaviour
         {
             cursorInstance = Instantiate(cursorPrefab);
         }
+
+        // 创建圆形技能范围指示器
+        if (radiusIndicatorInstance == null && radiusIndicatorPrefab != null && currentSkillSlotIndex >= 0)
+        {
+            radiusIndicatorInstance = Instantiate(radiusIndicatorPrefab);
+            
+            // 获取当前技能的半径
+            Skill skill = skillInstances[currentSkillSlotIndex].GetComponent<Skill>();
+            if (skill != null)
+            {
+                // 设置指示器大小与技能半径一致
+                float radius = skill.skillRadius;
+                radiusIndicatorInstance.transform.localScale = new Vector3(radius, radius, 1f);
+            }
+        }
     }
 
     /// <summary>
@@ -265,10 +290,16 @@ public class SkillController : MonoBehaviour
     /// </summary>
     private void UpdateCursorPosition()
     {
+        Vector2 pos = GetMouseWorldPosition();
+        
         if (cursorInstance != null)
         {
-            Vector2 pos = GetMouseWorldPosition();
             cursorInstance.transform.position = pos;
+        }
+        
+        if (radiusIndicatorInstance != null)
+        {
+            radiusIndicatorInstance.transform.position = pos;
         }
     }
 
@@ -279,10 +310,17 @@ public class SkillController : MonoBehaviour
     {
         isTargetingMode = false;
         currentSkillSlotIndex = -1;
+        
         if (cursorInstance != null)
         {
             Destroy(cursorInstance);
             cursorInstance = null;
+        }
+        
+        if (radiusIndicatorInstance != null)
+        {
+            Destroy(radiusIndicatorInstance);
+            radiusIndicatorInstance = null;
         }
     }
 

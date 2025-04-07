@@ -4752,6 +4752,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1585228802}
     - target: {fileID: 7343235906585196754, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
+      propertyPath: radiusIndicatorPrefab
+      value: 
+      objectReference: {fileID: 3451879357979402611, guid: 2ade87b7ea52e7c43a904986bbe03b7c, type: 3}
+    - target: {fileID: 7343235906585196754, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: skillSlots.Array.size
       value: 2
       objectReference: {fileID: 0}

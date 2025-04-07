@@ -12,6 +12,7 @@ TagManager:
   - Friendly
   - NoSkillUI
   - Door
+  - EXP
   layers:
   - Default
   - TransparentFX

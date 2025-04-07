@@ -24,6 +24,9 @@ public abstract class Skill : MonoBehaviour
 
     [Tooltip("技能冷却时间，在此时间内相同类型的技能无法再次释放")]
     public float cooldownTime = 1f;
+    
+    [Tooltip("技能影响范围半径，用于显示指示器")]
+    public float skillRadius = 1f;
 
     [Header("Skill Metadata")]
     [Tooltip("技能释放模式（直接释放、点地释放或点击单位释放）")]
@@ -34,14 +37,104 @@ public abstract class Skill : MonoBehaviour
 
     // 静态字典记录每种技能类型上次使用的时间（按类型名区分）
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
+    
+    // 静态字典记录每种技能类型的冷却结束时间（按类型名区分）
+    private static Dictionary<string, float> cooldownEndTimeBySkill = new Dictionary<string, float>();
+    
+    // 静态字典记录每种技能类型的闲置时间（可用但未使用的时间）
+    private static Dictionary<string, float> idleTimeBySkill = new Dictionary<string, float>();
+    
+    // 静态字典记录每种技能第一次可用的时间
+    private static Dictionary<string, float> firstAvailableTimeBySkill = new Dictionary<string, float>();
+    
+    // 游戏开始时间
+    private static float gameStartTime = 0f;
 
+    // 记录上一次更新闲置时间的时刻
+    private static float lastIdleTimeUpdateTime = 0f;
+    
+    // 更新闲置时间的间隔（秒）
+    private static float idleTimeUpdateInterval = 0.5f;
 
-    private void Awake()
+    public void Awake()
     {
         string key = GetType().Name;
         if (!lastUsedTimeBySkill.ContainsKey(key))
         {
             lastUsedTimeBySkill[key] = -100;
+        }
+        
+        if (!cooldownEndTimeBySkill.ContainsKey(key))
+        {
+            cooldownEndTimeBySkill[key] = 0f;
+        }
+        
+        if (!idleTimeBySkill.ContainsKey(key))
+        {
+            idleTimeBySkill[key] = 0f;
+        }
+        
+        if (!firstAvailableTimeBySkill.ContainsKey(key))
+        {
+            firstAvailableTimeBySkill[key] = Time.time;
+        }
+        
+        // 只在第一次调用时初始化游戏开始时间
+        if (gameStartTime == 0f)
+        {
+            gameStartTime = Time.time;
+            lastIdleTimeUpdateTime = gameStartTime;
+            
+            // 启动定期更新闲置时间的协程
+            StartCoroutine(UpdateAllSkillsIdleTime());
+        }
+    }
+
+    /// <summary>
+    /// 定期更新所有技能的闲置时间
+    /// </summary>
+    private IEnumerator UpdateAllSkillsIdleTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(idleTimeUpdateInterval);
+            float currentTime = Time.time;
+            float deltaTime = currentTime - lastIdleTimeUpdateTime;
+            
+            foreach (var key in cooldownEndTimeBySkill.Keys)
+            {
+                if (currentTime >= cooldownEndTimeBySkill[key])
+                {
+                    // 技能当前可用，增加闲置时间
+                    if (!idleTimeBySkill.ContainsKey(key))
+                    {
+                        idleTimeBySkill[key] = 0f;
+                    }
+                    idleTimeBySkill[key] += deltaTime;
+                    
+                    // 更新数据追踪器
+                    UpdateSkillIdleDurationInTracker(key);
+                }
+            }
+            
+            lastIdleTimeUpdateTime = currentTime;
+        }
+    }
+
+    /// <summary>
+    /// 更新技能闲置时间比例到数据追踪器
+    /// </summary>
+    private void UpdateSkillIdleDurationInTracker(string skillKey)
+    {
+        FirebaseDataUploader dataUploader = FindObjectOfType<FirebaseDataUploader>();
+        if (dataUploader != null)
+        {
+            float totalTime = Time.time - firstAvailableTimeBySkill[skillKey];
+            if (totalTime > 0)
+            {
+                float idleRatio = idleTimeBySkill[skillKey] / totalTime;
+                dataUploader.TrackSkillIdleDuration(skillKey, idleRatio);
+            }
         }
     }
 
@@ -59,6 +152,11 @@ public abstract class Skill : MonoBehaviour
                 Debug.Log($"技能 {key} 处于冷却中，剩余时间：{remaining} 秒");
                 return true;
             }
+            else
+            {
+                // 确保冷却结束时间已更新
+                cooldownEndTimeBySkill[key] = lastUsedTimeBySkill[key] + cooldownTime;
+            }
         }
         return false;
     }
@@ -69,8 +167,34 @@ public abstract class Skill : MonoBehaviour
     protected void SetCooldown()
     {
         string key = GetType().Name;
-        lastUsedTimeBySkill[key] = Time.time;
-        //Debug.Log($"重置技能 {key} 的冷却时间，持续 {cooldownTime} 秒");
+        float currentTime = Time.time;
+        
+        // 更新冷却结束时间
+        cooldownEndTimeBySkill[key] = currentTime + cooldownTime;
+        lastUsedTimeBySkill[key] = currentTime;
+        
+        // 更新技能使用次数
+        FirebaseDataUploader dataUploader = FindObjectOfType<FirebaseDataUploader>();
+        if (dataUploader != null)
+        {
+            dataUploader.TrackSkillUsage(key);
+        }
+    }
+
+    /// <summary>
+    /// 获取技能闲置时间比例
+    /// </summary>
+    public static float GetSkillIdleRatio(string skillKey)
+    {
+        if (firstAvailableTimeBySkill.ContainsKey(skillKey))
+        {
+            float totalTime = Time.time - firstAvailableTimeBySkill[skillKey];
+            if (totalTime > 0 && idleTimeBySkill.ContainsKey(skillKey))
+            {
+                return idleTimeBySkill[skillKey] / totalTime;
+            }
+        }
+        return 0f;
     }
 
     /// <summary>
@@ -121,4 +245,6 @@ public abstract class Skill : MonoBehaviour
         yield return new WaitForSeconds(skillDuration);
         //Destroy(gameObject);
     }
+
+
 }
