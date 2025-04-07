@@ -15,6 +15,11 @@ public class OpenSceneBtn : MonoBehaviour
 
     }
 
+    public void ResetEndState()
+    {
+        PlayerMovement.isEnd = false;
+    }
+
     public void LoadSceneByName(string sceneName)
     {
         SceneManager.LoadScene(sceneName);

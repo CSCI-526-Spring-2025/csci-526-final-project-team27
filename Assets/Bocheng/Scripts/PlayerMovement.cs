@@ -7,15 +7,17 @@ public class PlayerMovement : MonoBehaviour, IDieAble
     private Vector2 movement;
     private bool bCanMove = true;
     public GameObject gameOverUI;
+    public static bool isEnd = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        isEnd = false;
     }
 
     void Update()
     {
-        if(bCanMove)
+        if (bCanMove)
         {
             // 获取输入
             movement.x = Input.GetAxisRaw("Horizontal"); // A/D 或 左/右箭头
@@ -56,6 +58,8 @@ public class PlayerMovement : MonoBehaviour, IDieAble
     {
         Debug.Log("游戏结束");
         Time.timeScale = 0;
+        isEnd = true;
+        Debug.Log("isEnd is true");
         if (gameOverUI != null)
             gameOverUI = Instantiate(gameOverUI);
         Destroy(gameObject);
