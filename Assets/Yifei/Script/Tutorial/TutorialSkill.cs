@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 
 using System.Collections;
 using UnityEngine.UI;
@@ -17,6 +17,7 @@ public class TutorialSkill : MonoBehaviour
     private GameObject TwoAttackGroup;
     private GameObject ThirdAttackGroup;
     private GameObject[] teammates;
+    private bool allowFirstWaveRespawn = false;
 
     private GameObject[] doors;
 
@@ -226,7 +227,7 @@ public class TutorialSkill : MonoBehaviour
     void Update()
     {
         // 在教程未完成前，处理敌人刷新逻辑
-        if (currentState >= TutorialState.SkillOneState && currentState < TutorialState.ClearRoomState)
+        if (allowFirstWaveRespawn && currentState >= TutorialState.SkillOneState && currentState < TutorialState.ClearRoomState)
         {
             HandleEnemyRespawn();
         }
@@ -283,7 +284,8 @@ public class TutorialSkill : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     // 激活第一波怪物
-                    ActivateFirstWaveEnemies();
+                    //ActivateFirstWaveEnemies();
+                    SetTeammatesToMissingHealth();
                     
                     // 转换状态
                     currentState = TutorialState.SkillOneState;
@@ -316,6 +318,8 @@ public class TutorialSkill : MonoBehaviour
             case TutorialState.SkillOneState:
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
+                    
+                    allowFirstWaveRespawn = true;
                     StopBlinking(alert1);
                     if (SkillOneArrow != null)
                     {
@@ -327,7 +331,7 @@ public class TutorialSkill : MonoBehaviour
                     
                     // 更新UI
                     LearnSkillTwo();
-                    
+                    ActivateFirstWaveEnemies();
                     // 开始闪烁技能2提示
                     StartBlinking(alert2);
                 }
@@ -435,6 +439,24 @@ public class TutorialSkill : MonoBehaviour
         }
         
         Debug.Log($"此次共生成了 {spawnedCount} 个敌人");
+    }
+
+    // 设置队友的血量为缺失状态
+    void SetTeammatesToMissingHealth()
+    {
+        //debug print
+        Debug.Log("SetTeammatesToMissingHealth");
+        GameObject[] allTeammates = GameObject.FindGameObjectsWithTag("Teammate");
+        foreach (GameObject mate in allTeammates)
+        {
+            Health health = mate.GetComponent<Health_BC>();
+            if (health != null)
+            {
+                //Debug.Log("SetTeammatesToMissingHealth: " + mate.name);
+                health.TakeDamage(20);
+                //Debug.Log("SetTeammatesToMissingHealth: " + health.currentHealth);
+            }
+        }
     }
     
     // 在场景关闭时清理资源

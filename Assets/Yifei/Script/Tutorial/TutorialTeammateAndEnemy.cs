@@ -15,6 +15,7 @@ public class RoomTutorial : MonoBehaviour
     private GameObject[] teammates;
 
     private GameObject[] doors;
+    private GameObject expArrow;
 
     private GameObject player;
 
@@ -29,6 +30,7 @@ public class RoomTutorial : MonoBehaviour
         MeetTeammates,
         MeetEnemy,
         Fight,
+        EXP,
         HealTeammate,
         Completed
     }
@@ -36,6 +38,8 @@ public class RoomTutorial : MonoBehaviour
 
     void Start()
     {
+        if (UIManager.ExpUI != null)
+            UIManager.ExpUI.SetActive(true);
         meetTeammateArrow = transform.Find("MeetTeammate").gameObject;
         meetEnemyArrow = transform.Find("MeetEnemy").gameObject;
         doorArrow = transform.Find("DoorArrowIndicator").gameObject;
@@ -48,6 +52,9 @@ public class RoomTutorial : MonoBehaviour
         {
             door.SetActive(false);
         }
+
+        expArrow = transform.Find("ExpArrow").gameObject;
+        expArrow.SetActive(false);
         //避免索敌
         enemy = transform.Find("Enemy").gameObject;
         enemy.tag = "Untagged";
@@ -101,6 +108,11 @@ public class RoomTutorial : MonoBehaviour
         tutorialText.text = "Support your teammates to fight the enemy";
     }
     
+    void ShowExpTutorial()
+    {
+        tutorialText.text = "Collect the experience nearby to continue";
+    }
+
     // 显示“治疗你的队友”提示
     void ShowHealTeammate()
     {
@@ -142,18 +154,49 @@ public class RoomTutorial : MonoBehaviour
                 }
                 break;
                 
+            // case TutorialState.Fight:
+            //     player.GetComponent<PlayerMovement>().enabled = true;
+            //     CtrlCtrl.Instance.ToggleShootCtrler(true);
+            //     if (enemy == null){
+            //         currentState = TutorialState.HealTeammate;
+            //         StartCoroutine(ProcessCoolDown(0.5f));
+            //         ShowHealTeammate();
+            //         player.GetComponent<ShootingController>().enabled = true;
+            //         player.GetComponent<PlayerMovement>().enabled = true;
+            //     }
+            //     break;
             case TutorialState.Fight:
                 player.GetComponent<PlayerMovement>().enabled = true;
                 CtrlCtrl.Instance.ToggleShootCtrler(true);
-                if (enemy == null){
+                if (enemy == null)
+                {
+                    // 进入 EXP 教学阶段前的准备
+                    GameObject expOrbInFight  = GameObject.FindWithTag("EXP");
+                    if (expOrbInFight != null)
+                    {
+                        expArrow.transform.position = expOrbInFight.transform.position + new Vector3(0, 0.3f, 0); // 上方偏移
+                        expArrow.SetActive(true);
+                    }
+
+                    currentState = TutorialState.EXP;
+                    StartCoroutine(ProcessCoolDown(0.5f));
+                    ShowExpTutorial();
+                }
+                break;
+            
+
+            case TutorialState.EXP:
+                GameObject expOrbInExp  = GameObject.FindWithTag("EXP"); 
+                if (expOrbInExp  == null)
+                {
                     currentState = TutorialState.HealTeammate;
                     StartCoroutine(ProcessCoolDown(0.5f));
                     ShowHealTeammate();
+                    expArrow.SetActive(false);
                     player.GetComponent<ShootingController>().enabled = true;
-                    player.GetComponent<PlayerMovement>().enabled = true;
                 }
                 break;
-                
+
                 
             case TutorialState.HealTeammate:
                 

@@ -7,6 +7,8 @@ public class Temp_Boss : BaseEnemy
 {
     [Header("Movement Settings")]
     public float searchInterval = 1.0f;
+    public float teleportPercent = 0.5f; // 50% 概率传送
+    public float teleportDistance = 3.0f; // 传送距离
 
 
     [Header("Rect Attack Settings")]
@@ -32,10 +34,24 @@ public class Temp_Boss : BaseEnemy
     public float bulletSpeed = 10f;       // 子弹移动速度
     public float bulletLifetime = 2f;     // 子弹存在时间
 
+    [Header("Spray Attack Settings")]
+    public float sprayAttackRange = 3.0f;      // 当距离小于此值时触发攻击
+    public float sprayAttackInterval = 2.0f;   // 攻击间隔
+    public float sprayDamage = 15.0f;
+    public float sprayAngle = 90.0f;      // 喷雾攻击扇形角度（例如 90 度）
+    public float sprayRange = 5.0f;       // 喷雾攻击半径
+
+    [Header("Spray Visual Effect Settings")]
+    public GameObject fanAttackPrefab;    // 预制体，用于显示扇形攻击的范围
+    public float fanEffectDuration = 0.5f;  // 预制体显示时长
+
+
     [Header("Attackers Settings")]
-    public int AttackerCount = 2;
+    public int AttackerCount = 3;
     public EnemyRectAttackAttacker enemyRectAttackAttacker;
     public EightDirectionRangedAttacker eightDirectionRangedAttacker;
+    public EnemyFanSprayAttacker enemyFanSprayAttacker;
+
 
     public ITargetFinder targetFinder;
     public IMover mover;
@@ -43,7 +59,7 @@ public class Temp_Boss : BaseEnemy
     public Transform currentTarget; // 当前锁定目标
     private Rigidbody2D rb;
 
-    private int attackIndex = 0; // 攻击方式索引
+    private int attackIndex = 2; // 攻击方式索引
 
     private bool canAttack = true;        // 攻击冷却标志
     private bool isAttacking = false;     // 攻击状态标志
@@ -73,6 +89,12 @@ public class Temp_Boss : BaseEnemy
         if (eightDirectionRangedAttacker == null)
         {
             eightDirectionRangedAttacker = new EightDirectionRangedAttacker();
+        }
+
+        // 使用默认扇形喷雾攻击实现（若未注入）
+        if (enemyFanSprayAttacker == null)
+        {
+            enemyFanSprayAttacker = new EnemyFanSprayAttacker();
         }
     }
 
@@ -159,15 +181,36 @@ public class Temp_Boss : BaseEnemy
 
                 isAttacking = false;
                 canAttack = true;
-                attackIndex = Random.Range(0, 2); // 随机选择下一个攻击方式
+                AttackEnd(); // 攻击结束，随机选择下一个攻击方式
                 break;
 
 
             case 1:
                 // 执行八方向远程攻击
                 canAttack = false;
+                isAttacking = true;
                 yield return StartCoroutine(eightDirectionRangedAttacker.Attack(this, transform, currentTarget, rangedAttackInterval, bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
+                isAttacking = false;
                 canAttack = true;
+                AttackEnd();
+                break;
+
+            case 2:
+                canAttack = false;
+                isAttacking = true;
+
+                // 在攻击前实例化预制体显示扇形范围（注意：预制体需要设置好合适的视觉表现）
+                if (fanAttackPrefab != null)
+                {
+                    GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
+                    Destroy(effect, fanEffectDuration);
+                }
+                // 执行扇形喷雾攻击
+                yield return StartCoroutine(enemyFanSprayAttacker.Attack(this, transform, currentTarget, sprayDamage, sprayAttackInterval, sprayAngle, sprayRange));
+
+                isAttacking = false;
+                canAttack = true;
+                AttackEnd();
                 break;
 
             default:
@@ -184,6 +227,9 @@ public class Temp_Boss : BaseEnemy
 
             case 1:
                 return EightDirectionRangedCheck();
+
+            case 2:
+                return SprayAttackCheck();
 
             default:
                 break;
@@ -207,7 +253,20 @@ public class Temp_Boss : BaseEnemy
     bool EightDirectionRangedCheck()
     {
         float distance = Vector2.Distance(transform.position, currentTarget.position);
-        if (distance <= attackRange)
+        if (distance <= rangedAttackRange)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool SprayAttackCheck()
+    {
+        float distance = Vector2.Distance(transform.position, currentTarget.position);
+        if (distance <= sprayAttackRange)
         {
             return true;
         }
@@ -223,5 +282,10 @@ public class Temp_Boss : BaseEnemy
         Vector3 direction = (targetPosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    void AttackEnd()
+    {
+        attackIndex = Random.Range(0, AttackerCount); // 随机选择下一个攻击方式
     }
 }
