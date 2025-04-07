@@ -12,7 +12,13 @@ public class TutorialStart : MonoBehaviour
     private bool unlocked = false;
 
     void Start()
-    {
+    {   
+        GameObject expUI = GameObject.FindGameObjectWithTag("EXPUI");
+        if (expUI != null)
+        {
+            UIManager.ExpUI = expUI;  // 缓存引用
+            expUI.SetActive(false);
+        }
         // 获取子对象
         door = transform.Find("Door_Right").gameObject;
         arrow = transform.Find("ArrowIndicator").gameObject;

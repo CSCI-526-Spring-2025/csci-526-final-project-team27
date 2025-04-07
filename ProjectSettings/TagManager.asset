@@ -13,6 +13,7 @@ TagManager:
   - NoSkillUI
   - Door
   - EXP
+  - EXPUI
   layers:
   - Default
   - TransparentFX
