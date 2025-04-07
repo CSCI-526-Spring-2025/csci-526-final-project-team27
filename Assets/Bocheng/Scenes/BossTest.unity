@@ -1154,7 +1154,7 @@ MonoBehaviour:
   teleportDistance: 3
   attackRange: 5
   attackInterval: 2
-  damage: 15
+  damage: 20
   chargeDuration: 1.25
   attackWidth: 2
   attackLength: 7
@@ -1164,7 +1164,7 @@ MonoBehaviour:
   rectAttackEffectDuration: 1
   rangedAttackRange: 10
   rangedAttackInterval: 2
-  bulletPrefab: {fileID: 4773240290590505226, guid: 7b5549442beeb284f8d083b753932d74, type: 3}
+  bulletPrefab: {fileID: 4773240290590505226, guid: 9e1e8aefa71f72e4585839b812c7a776, type: 3}
   firePoint: {fileID: 670353254}
   bulletSpeed: 4
   bulletLifetime: 2
@@ -1172,9 +1172,9 @@ MonoBehaviour:
   sprayAttackInterval: 2
   sprayDamage: 15
   sprayAngle: 60
-  sprayRange: 7
-  fanAttackPrefab: {fileID: 74271679300433622, guid: 75e0acf13c9d13c40a558600dca6465f, type: 3}
-  fanEffectDuration: 3
+  sprayRange: 5
+  fanAttackPrefab: {fileID: 74271679300433622, guid: aad17c7f6b979ba46addaf0aaabc348a, type: 3}
+  fanEffectDuration: 0.5
   AttackerCount: 3
   currentTarget: {fileID: 0}
 --- !u!212 &670353253
