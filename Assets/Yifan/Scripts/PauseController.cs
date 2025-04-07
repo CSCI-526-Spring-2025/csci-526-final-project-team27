@@ -33,7 +33,7 @@ public class PauseController : MonoBehaviour
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
 
-        if (!PlayerMovement.isEnd)
+        if (!PlayerMovement.isEnd || !LevelUpRewardSystem.isLevelUp)
         {
             Debug.Log("Restore Previous Movement State");
             if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(!wasMovingEnabled);
@@ -49,7 +49,7 @@ public class PauseController : MonoBehaviour
     {
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
 
-        if (!PlayerMovement.isEnd)
+        if (!PlayerMovement.isEnd || !LevelUpRewardSystem.isLevelUp)
         {
             Debug.Log("Lock Movement");
             // 记录当前状态

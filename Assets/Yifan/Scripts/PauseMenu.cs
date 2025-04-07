@@ -36,7 +36,7 @@ public class PauseMenu : MonoBehaviour
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         if (keyMappingPanel != null) keyMappingPanel.SetActive(false); // Hide key mapping if open
 
-        if (!PlayerMovement.isEnd)
+        if (!PlayerMovement.isEnd || !LevelUpRewardSystem.isLevelUp)
         {
             // 使用PauseController来恢复游戏
             if (pauseController != null)
