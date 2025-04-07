@@ -5,7 +5,7 @@ public class SlimeHealth : EnemyHealth
 {
     public GameObject slimePrefab;  // Prefab for spawning new slimes
     public float splitThreshold = 0.5f; // Slime splits when health is below 50%
-    public int splitCounter = 8; // Starts at 8 and halves after each split
+    public int splitCounter = 4; // Starts at 8 and halves after each split
 
     private bool hasSplit = false; // Prevent multiple splits at the same threshold
 
@@ -26,7 +26,7 @@ public class SlimeHealth : EnemyHealth
     {
         Debug.Log(gameObject.name + " is splitting!");
         GameObject[] newSlimes = new GameObject[2];
-        
+
         for (int i = 0; i < 2; i++)
         {
             // Spawn new slime at a slight offset from the parent position
@@ -37,14 +37,11 @@ public class SlimeHealth : EnemyHealth
             SpriteShapeRenderer sRenderer = newSlime.GetComponent<SpriteShapeRenderer>();
             switch (splitCounter)
             {
-                case 8:
+                case 4:
                     sRenderer.color = Color.blue;
                     break;
-                case 4:
-                    sRenderer.color = Color.cyan;
-                    break;
                 case 2:
-                    sRenderer.color = Color.gray;
+                    sRenderer.color = Color.cyan;
                     break;
             }
 
