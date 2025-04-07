@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71994ebc321e666429d7860d36bcbea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: New Enemy
+  displayName: CircleRect
   baseHealth: 10
   baseDamage: 2
   attackCooldown: 1

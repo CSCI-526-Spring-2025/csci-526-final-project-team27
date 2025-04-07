@@ -19,7 +19,7 @@ public class SkillcontrollerUI : MonoBehaviour
 
         panel.transform.Find("Skill1")?.gameObject.SetActive(false);
         panel.transform.Find("Skill2")?.gameObject.SetActive(false);
-        panel.transform.Find("Skill3")?.gameObject.SetActive(false);
+        //panel.transform.Find("Skill3")?.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
         player.GetComponent<SkillController>().enabled = false;
 
@@ -31,8 +31,9 @@ public class SkillcontrollerUI : MonoBehaviour
 
         panel.transform.Find("Skill1")?.gameObject.SetActive(true);
         panel.transform.Find("Skill2")?.gameObject.SetActive(true);
-        panel.transform.Find("Skill3")?.gameObject.SetActive(true);
+        //panel.transform.Find("Skill3")?.gameObject.SetActive(true);
         panel.gameObject.SetActive(true);
         player.GetComponent<SkillController>().enabled = true;
     }
+    
 }

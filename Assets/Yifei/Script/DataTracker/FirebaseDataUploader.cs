@@ -13,6 +13,18 @@ public class DataEntry
     public float value;
 }
 
+[System.Serializable]
+public class SkillUsageData
+{
+    public Dictionary<string, int> skillUsageCounts = new Dictionary<string, int>();
+}
+
+[System.Serializable]
+public class SkillIdleDurationData
+{
+    public Dictionary<string, float> skillIdleRatios = new Dictionary<string, float>();
+}
+
 public class FirebaseDataUploader : MonoBehaviour
 {
     [Header("Firebase 配置")]
@@ -35,6 +47,12 @@ public class FirebaseDataUploader : MonoBehaviour
     private string osInfo = "Unknown";
     // 分辨率
     private string resolution = "Unknown";
+    
+    // 技能使用数据
+    private SkillUsageData skillUsageData = new SkillUsageData();
+    
+    // 技能闲置时间比例数据
+    private SkillIdleDurationData skillIdleDurationData = new SkillIdleDurationData();
 
     //[Header("预设追踪的数据（键值对）")]
     //[SerializeField]
@@ -42,11 +60,9 @@ public class FirebaseDataUploader : MonoBehaviour
     {
          new DataEntry() { key = "PlayTime", value = 0 },
          new DataEntry() { key = "EnemyKilled", value = 0 },
-         new DataEntry() { key = "CoinCollected", value = 0 },
          new DataEntry() { key = "DifficultyLevelReached", value = 0 },
          new DataEntry() { key = "ExplorationRate", value = 0 },
          new DataEntry() { key = "EnemyHealed", value = 0 },
-         new DataEntry() { key = "SkillUsage", value = 0 },
          new DataEntry() { key = "TeammateDPS", value = 0 },
          new DataEntry() { key = "EnemyDPS", value = 0 },
     };
@@ -140,6 +156,76 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
+    /// 记录技能使用情况
+    /// </summary>
+    public void TrackSkillUsage(string skillName)
+    {
+        if (skillUsageData.skillUsageCounts.ContainsKey(skillName))
+        {
+            skillUsageData.skillUsageCounts[skillName]++;
+        }
+        else
+        {
+            skillUsageData.skillUsageCounts.Add(skillName, 1);
+        }
+    }
+
+    /// <summary>
+    /// 记录技能闲置时间比例
+    /// </summary>
+    public void TrackSkillIdleDuration(string skillName, float idleRatio)
+    {
+        if (skillIdleDurationData.skillIdleRatios.ContainsKey(skillName))
+        {
+            skillIdleDurationData.skillIdleRatios[skillName] = idleRatio;
+        }
+        else
+        {
+            skillIdleDurationData.skillIdleRatios.Add(skillName, idleRatio);
+        }
+    }
+
+    /// <summary>
+    /// 获取指定技能的使用次数
+    /// </summary>
+    public int GetSkillUsageCount(string skillName)
+    {
+        if (skillUsageData.skillUsageCounts.ContainsKey(skillName))
+        {
+            return skillUsageData.skillUsageCounts[skillName];
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// 获取指定技能的闲置时间比例
+    /// </summary>
+    public float GetSkillIdleRatio(string skillName)
+    {
+        if (skillIdleDurationData.skillIdleRatios.ContainsKey(skillName))
+        {
+            return skillIdleDurationData.skillIdleRatios[skillName];
+        }
+        return 0f;
+    }
+
+    /// <summary>
+    /// 获取所有技能使用情况
+    /// </summary>
+    public Dictionary<string, int> GetAllSkillUsage()
+    {
+        return new Dictionary<string, int>(skillUsageData.skillUsageCounts);
+    }
+
+    /// <summary>
+    /// 获取所有技能闲置时间比例
+    /// </summary>
+    public Dictionary<string, float> GetAllSkillIdleRatios()
+    {
+        return new Dictionary<string, float>(skillIdleDurationData.skillIdleRatios);
+    }
+
+    /// <summary>
     /// 构建最终上传的 JSON 字符串，包含预设数据和 GPU 信息
     /// </summary>
     private string BuildJson()
@@ -156,6 +242,42 @@ public class FirebaseDataUploader : MonoBehaviour
             sb.Append("\"").Append(entry.value).Append("\"");
             first = false;
         }
+        
+        // 添加技能使用数据
+        if (!first)
+            sb.Append(",");
+        sb.Append("\"SkillUsage\":{");
+        
+        bool firstSkill = true;
+        foreach (var kvp in skillUsageData.skillUsageCounts)
+        {
+            if (!firstSkill)
+                sb.Append(",");
+            sb.Append("\"").Append(kvp.Key).Append("\":");
+            sb.Append(kvp.Value);
+            firstSkill = false;
+        }
+        
+        sb.Append("}");
+        first = false;
+        
+        // 添加技能闲置时间比例数据
+        if (!first)
+            sb.Append(",");
+        sb.Append("\"SkillIdleDuration\":{");
+        
+        firstSkill = true;
+        foreach (var kvp in skillIdleDurationData.skillIdleRatios)
+        {
+            if (!firstSkill)
+                sb.Append(",");
+            sb.Append("\"").Append(kvp.Key).Append("\":");
+            sb.Append(kvp.Value);
+            firstSkill = false;
+        }
+        
+        sb.Append("}");
+        first = false;
 
         # region 系统信息部分, 请勿修改
         // 添加系统信息部分

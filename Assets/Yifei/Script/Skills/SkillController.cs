@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using TMPro;
 /// <summary>
 /// 技能槽位数据结构：每个槽位包括技能预制体与其释放模式
 /// </summary>
@@ -34,25 +34,40 @@ public class SkillController : MonoBehaviour
     [Tooltip("三个技能槽位，可分别指定技能预制体和释放模式")]
     public SkillSlot[] skillSlots = new SkillSlot[2];
     public UnityEngine.UI.Image[] hpFills;
-
+    public GameObject panel;//ui of skill shown to player
     // 内部变量
     private GameObject cursorInstance;
     private GameObject radiusIndicatorInstance; // 圆形指示器实例
     private int currentSkillSlotIndex = -1;      // 当前正在等待目标/方向选择的技能槽索引
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
+    private TextMeshProUGUI skill1Text;
+    private TextMeshProUGUI skill2Text;
 
-    private GameObject[] skillInstances = new GameObject[3];        // 实例化的技能对象
+    public GameObject[] skillInstances = new GameObject[2];        // 实例化的技能对象
 
     private ShootingController shootingController;
 
     private void Awake()
     {
+        panel = GameObject.Find("Panel");
+        if (panel != null)
+        {
+            Transform skill1 = panel.transform.Find("Skill1/Content");
+            if (skill1 != null)
+                skill1Text = skill1.GetComponent<TextMeshProUGUI>();
+
+            Transform skill2 = panel.transform.Find("Skill2/Content");
+            if (skill2 != null)
+                skill2Text = skill2.GetComponent<TextMeshProUGUI>();
+        }
         for (int i = 0; i < skillSlots.Length; i++)
         {
             if (skillSlots[i].skillPrefab != null)
             {
                 GameObject skillInstance = Instantiate(skillSlots[i].skillPrefab, skillFirePoint.position, Quaternion.identity, transform);
                 skillInstances[i] = skillInstance;
+                Skill s = skillInstance.GetComponent<Skill>();
+                Debug.Log($"Slot {i} init: {s?.skillName}");
                 Debug.Log("实例化" + skillInstances[i].name);
             }
         }
@@ -345,12 +360,35 @@ public class SkillController : MonoBehaviour
     public void ReplaceSkill(int slotIndex, GameObject newSkillPrefab, SkillReleaseType newReleaseType)
     {
         if (slotIndex < 0 || slotIndex >= skillSlots.Length)
-            return;
+        return;
+
+        // 銷毀舊的技能物件
+        if (skillInstances[slotIndex] != null)
+        {
+            Destroy(skillInstances[slotIndex]);
+        }
+
+        // 實例化新的技能物件
+        GameObject skillInstance = Instantiate(newSkillPrefab, skillFirePoint.position, Quaternion.identity, transform);
+        skillInstances[slotIndex] = skillInstance;
+
+        // 更新技能槽記錄
         skillSlots[slotIndex].skillPrefab = newSkillPrefab;
         skillSlots[slotIndex].releaseType = newReleaseType;
+        Skill skill=newSkillPrefab.GetComponent<Skill>();
+        if(skill!=null){
+             if(slotIndex==0){
+                skill1Text.text=skill.skillName;
+            }else if(slotIndex==1){
+                skill2Text.text=skill.skillName;
+            }
+        }
+        
+        Debug.Log($"成功替換 slot{slotIndex + 1} 技能為 {newSkillPrefab.name}");
+        
 
     }
-
+    
     /// <summary>
     /// 判断当前鼠标是否悬停在 UI 元素上（防止误触技能释放）
     /// </summary>
