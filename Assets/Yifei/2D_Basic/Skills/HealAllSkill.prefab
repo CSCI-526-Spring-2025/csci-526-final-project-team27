@@ -46,7 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDuration: 0.5
   cooldownTime: 10
+  skillRadius: 1
   releaseType: 0
+  skillName: Healall
   healAmount: 20
   friendlyTags:
   - Player

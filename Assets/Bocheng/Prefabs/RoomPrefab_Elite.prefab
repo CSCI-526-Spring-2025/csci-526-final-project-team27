@@ -622,6 +622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4840226400624763445}
   - component: {fileID: 2877337435021015230}
+  - component: {fileID: 1657501975617089808}
   m_Layer: 0
   m_Name: RoomPrefab_Elite
   m_TagString: Untagged
@@ -714,6 +715,18 @@ MonoBehaviour:
   currentDifficulty: 0
   spawnIntervalMin: 1
   spawnIntervalMax: 3
+--- !u!114 &1657501975617089808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076533052321158648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecaaa554b2d935e488808b48f5eb9d37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4512887401930351777
 GameObject:
   m_ObjectHideFlags: 0

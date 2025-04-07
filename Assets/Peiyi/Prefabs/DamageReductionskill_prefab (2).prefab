@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9204190564869195413
+--- !u!1 &8558044247187127818
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3332348381093198551}
-  - component: {fileID: 6027691749980503610}
+  - component: {fileID: 3341903713522989826}
+  - component: {fileID: 8230085671627053746}
   m_Layer: 0
-  m_Name: GroundSlowSkill
-  m_TagString: Skill
+  m_Name: DamageReductionskill_prefab (2)
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3332348381093198551
+--- !u!4 &3341903713522989826
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9204190564869195413}
+  m_GameObject: {fileID: 8558044247187127818}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7788545, y: 1.9317601, z: 0.10219825}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0003213663}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6027691749980503610
+--- !u!114 &8230085671627053746
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9204190564869195413}
+  m_GameObject: {fileID: 8558044247187127818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb0a0ca1973dac4cbb70e817ae1f3ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 87215d5ff811ee74c87505e885a81cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skillDuration: 3
-  cooldownTime: 5
-  skillRadius: 4
-  releaseType: 1
-  skillName: Trap Enemy
-  radius: 4
-  slowFactor: 0
-  groundSlowSkillX: {fileID: 7768626194062726448, guid: 492a3b36e9f296e4d8b51b5ede970abd, type: 3}
+  cooldownTime: 10
+  releaseType: 0
+  skillName: Less Damage
+  damageReductionSkillX: {fileID: 2540477000716077424, guid: 54d2a53c7eeb6d4408cf3dafea0f1138, type: 3}
+  reductionRate: 0.5
+  friendlyTags:
+  - Teammate
+  - Player
