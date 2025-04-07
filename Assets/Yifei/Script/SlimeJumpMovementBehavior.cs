@@ -21,6 +21,9 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     private float lastJumpTime = 0f;
     private bool isJumping = false;
     private float jumpDistance = 5f;
+    private SlimeHealth slimeHealth;
+
+    private float splitJumpInterval;
 
     /// <summary>
     /// 根据目标方向发起一次跳跃。
@@ -30,10 +33,19 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     /// <param name="rb">角色的 Rigidbody2D（本实现中未直接使用）</param>
     /// <param name="target">目标对象的 Transform</param>
     /// <param name="moveSpeed">移动速度参数，决定跳跃距离</param>
+
+    void Awake()
+    {
+        slimeHealth = GetComponent<SlimeHealth>();
+        splitJumpInterval = jumpInterval;
+        if (slimeHealth != null) splitJumpInterval /= slimeHealth.jumpCounter;
+    }
+
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
-        if (!isJumping && Time.time - lastJumpTime >= jumpInterval)
+
+        if (!isJumping && Time.time - lastJumpTime >= splitJumpInterval)
         {
             jumpDistance = moveSpeed; // 使用 moveSpeed 作为跳跃距离
             StartCoroutine(JumpTowardsTarget(self, target));
@@ -57,6 +69,8 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     {
         isJumping = true;
         lastJumpTime = Time.time;
+
+        Debug.Log(slimeHealth.name + " is jumping");
 
         // 记录跳跃起点（使用传入的 self 位置）
         Vector2 startPos = self.position;

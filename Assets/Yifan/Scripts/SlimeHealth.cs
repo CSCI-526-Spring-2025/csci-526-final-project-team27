@@ -5,11 +5,14 @@ public class SlimeHealth : EnemyHealth
 {
     public GameObject slimePrefab;  // Prefab for spawning new slimes
     public float splitThreshold = 0.5f; // Slime splits when health is below 50%
-    public int splitCounter = 8; // Starts at 8 and halves after each split
+    public int splitCounter = 4; // Starts at 8 and halves after each split
+    public float jumpCounter = 1.0f;
+
+    public string name = "Slime";
 
     private bool hasSplit = false; // Prevent multiple splits at the same threshold
 
-    const float fac = 0.03f;
+    const float fac = 0.06f;
 
     void Update()
     {
@@ -26,7 +29,7 @@ public class SlimeHealth : EnemyHealth
     {
         Debug.Log(gameObject.name + " is splitting!");
         GameObject[] newSlimes = new GameObject[2];
-        
+
         for (int i = 0; i < 2; i++)
         {
             // Spawn new slime at a slight offset from the parent position
@@ -37,25 +40,29 @@ public class SlimeHealth : EnemyHealth
             SpriteShapeRenderer sRenderer = newSlime.GetComponent<SpriteShapeRenderer>();
             switch (splitCounter)
             {
-                case 8:
+                case 4:
                     sRenderer.color = Color.blue;
                     break;
-                case 4:
-                    sRenderer.color = Color.cyan;
-                    break;
                 case 2:
-                    sRenderer.color = Color.gray;
+                    sRenderer.color = Color.cyan;
                     break;
             }
 
             // Get the health component of the new slime
             SlimeHealth newSlimeHealth = newSlime.GetComponent<SlimeHealth>();
+            MeleeEnemy slimeDamage = newSlime.GetComponent<MeleeEnemy>();
 
             if (newSlimeHealth != null)
             {
-                newSlimeHealth.maxHealth = maxHealth / 2; // New slime has half of parent's health
-                newSlimeHealth.currentHealth = maxHealth / 2;
+                newSlimeHealth.maxHealth = currentHealth / 2; // New slime has half of parent's health
                 newSlimeHealth.splitCounter = splitCounter / 2; // New slime gets half the split counter
+                newSlimeHealth.jumpCounter = jumpCounter * 2.0f;
+                newSlimeHealth.name = "Slime" + ((int)newSlimeHealth.jumpCounter + i).ToString();
+            }
+            if (slimeDamage != null)
+            {
+                int damage = (int)(slimeDamage.damage * 0.5f);
+                slimeDamage.damage = (float)damage;
             }
         }
         OnIncrease.Invoke(gameObject, newSlimes);
