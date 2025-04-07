@@ -47,6 +47,8 @@ public class TeammateManager : MonoBehaviour
             // 显示UI
             Debug.Log("游戏结束");
             gameOverUI = Instantiate(gameOverUI);
+            PlayerMovement.isEnd = true;
+            Debug.Log("isEnd is true");
 
         }
     }
