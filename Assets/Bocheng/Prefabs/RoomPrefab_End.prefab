@@ -1849,18 +1849,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 4840226400624763445}
     m_Modifications:
     - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1900,29 +1888,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
       propertyPath: m_Name
       value: CircleTempBoss
-      objectReference: {fileID: 0}
-    - target: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7163043504072040699, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_Color.b
-      value: 0.71645564
-      objectReference: {fileID: 0}
-    - target: {fileID: 7163043504072040699, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_Color.g
-      value: 0.17568529
-      objectReference: {fileID: 0}
-    - target: {fileID: 7163043504072040699, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_Color.r
-      value: 0.7924528
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
