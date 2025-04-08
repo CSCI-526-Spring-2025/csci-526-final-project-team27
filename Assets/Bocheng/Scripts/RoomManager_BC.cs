@@ -36,6 +36,7 @@ public class RoomManager_BC : MonoBehaviour
 
     [Header("房间生成比例")]
     [Range(0f, 1f)] public float eliteRoomRatio = 0.3f; // 精英房间比例
+    public int eliteRoomLimit = 2; // 精英房间数量限制
 
 
     [Header("玩家相机")]
@@ -239,6 +240,7 @@ public class RoomManager_BC : MonoBehaviour
 
     void ModifyRoomTypes()
     {
+        /*
         // Step 1: DFS 选择商人房间
         List<Vector2Int> path = DFSPathToEnd(startRoom, endRoom);
         if (path.Count > 1) // 确保路径有效
@@ -252,15 +254,49 @@ public class RoomManager_BC : MonoBehaviour
                 map[shopRoomPos.x, shopRoomPos.y] = new Room(shopRoomPos, Room.RoomType.Shop);
                 Debug.Log($"商人房间: {shopRoomPos}");
             }
-        }
+        }*/
 
         // Step 2: BFS 选择精英房间
         List<Vector2Int> eligibleEliteRooms = BFSRoomsFarFromStart(startRoom, 1);
 
         // 至少要有一个精英房间
         int eliteCount = Mathf.Max(1, Mathf.RoundToInt(eligibleEliteRooms.Count * eliteRoomRatio));
+        eliteCount = Mathf.Min(eliteCount, eliteRoomLimit); // 限制精英房间数量
+
         HashSet<Vector2Int> chosenEliteRooms = new HashSet<Vector2Int>();
 
+        // 先去掉所有roomtype不是普通的房间
+        for (int i = 0; i < eligibleEliteRooms.Count; i++)
+        {
+            Vector2Int pos = eligibleEliteRooms[i];
+            if (map[pos.x, pos.y].Type != Room.RoomType.Normal)
+            {
+                eligibleEliteRooms.RemoveAt(i);
+                i--;
+            }
+        }
+
+        // 当可选的房间不为0，或者精英房间数量不够时，继续选择，while循环
+        while(chosenEliteRooms.Count < eliteCount && eligibleEliteRooms.Count > 0)
+        {
+            int index = Random.Range(0, eligibleEliteRooms.Count);
+            Vector2Int elitePos = eligibleEliteRooms[index];
+            map[elitePos.x, elitePos.y] = new Room(elitePos, Room.RoomType.Elite);
+            chosenEliteRooms.Add(elitePos);
+            Debug.Log($"精英房间: {elitePos}");
+
+            // 查看 eligibleEliteRooms，若与刚选的房间相邻，则删除
+            List<Vector2Int> neighbors = GetValidNeighbors(elitePos);
+            foreach (Vector2Int neighbor in neighbors)
+            {
+                if (eligibleEliteRooms.Contains(neighbor))
+                {
+                    eligibleEliteRooms.Remove(neighbor);
+                }
+            }
+        }
+
+        /*
         while (chosenEliteRooms.Count < eliteCount && eligibleEliteRooms.Count > 0)
         {
             int index = Random.Range(0, eligibleEliteRooms.Count);
@@ -273,7 +309,7 @@ public class RoomManager_BC : MonoBehaviour
                 Debug.Log($"精英房间: {elitePos}");
             }
             eligibleEliteRooms.RemoveAt(index);
-        }
+        }*/
     }
 
 
