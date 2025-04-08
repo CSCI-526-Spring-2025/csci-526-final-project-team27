@@ -255,6 +255,7 @@ MonoBehaviour:
   roomSizeY: 15
   offset: 5
   eliteRoomRatio: 0.3
+  eliteRoomLimit: 2
   cameraFollow: {fileID: 1716088209}
   roomUIPrefab: {fileID: 7120024035353279927, guid: c87e9e476f77a334a92e0f8852111cfd, type: 3}
   eliteRoomUIPrefab: {fileID: 7120024035353279927, guid: 22555f66b6491fe47ade1dfe33cb7586, type: 3}
@@ -5085,6 +5086,10 @@ PrefabInstance:
     - target: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
       propertyPath: m_Name
       value: CircleTempBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -284,7 +284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6572825791101222179
 RectTransform:
   m_ObjectHideFlags: 0
@@ -362,7 +362,6 @@ GameObject:
   - component: {fileID: 7343235906585196754}
   - component: {fileID: 7431246488295713277}
   - component: {fileID: 2568118480194242408}
-  - component: {fileID: 1422736910459669310}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -588,7 +587,6 @@ MonoBehaviour:
   skillFirePoint: {fileID: 5160034352859516811}
   mainCamera: {fileID: 0}
   cursorPrefab: {fileID: 7437055006599082140, guid: 2dbf7d9487ae32a4c8a564edd4e5fed2, type: 3}
-  radiusIndicatorPrefab: {fileID: 0}
   skillSlots:
   - skillPrefab: {fileID: 2414979748907042219, guid: b60bf33667a063a4097595e7be203a10, type: 3}
     releaseType: 0
@@ -596,6 +594,10 @@ MonoBehaviour:
     releaseType: 0
   hpFills:
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  panel: {fileID: 0}
+  skillInstances:
   - {fileID: 0}
   - {fileID: 0}
 --- !u!114 &7431246488295713277
@@ -627,24 +629,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCoins: 0
   coinText: {fileID: 0}
---- !u!114 &1422736910459669310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5839148699553348479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3b756cbf759a7741ae6f8cf3c97d0c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxMana: 100
-  currentMana: 0
-  manaRegenRate: 20
-  KeepRegen: 0
-  manaRegenInterval: 2
-  manaFill: {fileID: 5158496524353413379}
 --- !u!1 &9068824905326556859
 GameObject:
   m_ObjectHideFlags: 0

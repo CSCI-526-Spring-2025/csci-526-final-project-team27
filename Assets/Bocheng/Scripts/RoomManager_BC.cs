@@ -929,7 +929,7 @@ public class RoomManager_BC : MonoBehaviour
         roomUI.gameObject.SetActive(true);
     }
 
-    void DoorControl(bool open)
+    public void DoorControl(bool open)
     {
         Debug.Log($"Door is: {open}");
 

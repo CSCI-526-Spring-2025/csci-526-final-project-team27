@@ -897,7 +897,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4840226400624763445}
   - component: {fileID: 6591443258556564804}
-  - component: {fileID: -2087293613357055138}
   m_Layer: 0
   m_Name: RoomPrefab_End
   m_TagString: Untagged
@@ -932,7 +931,6 @@ Transform:
   - {fileID: 4501000955638363828}
   - {fileID: 65515553123503191}
   - {fileID: 3479101215477287263}
-  - {fileID: 1504025619909297819}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6591443258556564804
@@ -949,63 +947,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 4083563310463261075}
   textWin: {fileID: 1597620742103975194}
---- !u!114 &-2087293613357055138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076533052321158648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c46b4309c100fa649b241fa4b7d262e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 4076533052321158648}
-  roomType: 2
-  spawnMode: 1
-  roomDifficulty: 1
-  dynamicSpawnRangeMin: 1
-  dynamicSpawnRangeMax: 10
-  difficultyCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  dynamicSpawnPosition: 0
-  waveGroups:
-  - waveName: Boss
-    preDelay: 0
-    units:
-    - enemyPrefab: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      count: 1
-      interval: 0
-      positionType: 1
-      spawnPositions:
-      - {x: 0, y: 0}
-  enemyLibrary: {fileID: 0}
-  currentDifficulty: 0
-  spawnIntervalMin: 1
-  spawnIntervalMax: 3
 --- !u!1 &4512887401930351777
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,65 +1781,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4840226400624763445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &3345939886988695247
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 4840226400624763445}
-    m_Modifications:
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5337231334529067378, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-      propertyPath: m_Name
-      value: CircleTempBoss
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
---- !u!4 &1504025619909297819 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4229009571886288980, guid: 1cb17c7f60c0b154583080b60c24b851, type: 3}
-  m_PrefabInstance: {fileID: 3345939886988695247}
-  m_PrefabAsset: {fileID: 0}

@@ -64,6 +64,10 @@ public class Temp_Boss : BaseEnemy
     private bool canAttack = true;        // 攻击冷却标志
     private bool isAttacking = false;     // 攻击状态标志
 
+    private Vector2 roomPosition; // 房间位置
+    private Vector2 roomSize;     // 房间大小
+    private float bias = 4.0f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -130,6 +134,14 @@ public class Temp_Boss : BaseEnemy
         {
             mover.Move(transform, rb, currentTarget, moveSpeed);
         }
+    }
+
+    public void SetRoomInfo(Vector2 position, Vector2 size)
+    {
+        roomPosition = position;
+        roomSize = new Vector2(size.x - bias, size.y - 0.5f * bias);
+        Debug.Log("Room Position: " + roomPosition);
+        Debug.Log("Room Size: " + roomSize);
     }
 
     // 定时更新目标
@@ -287,5 +299,20 @@ public class Temp_Boss : BaseEnemy
     void AttackEnd()
     {
         attackIndex = Random.Range(0, AttackerCount); // 随机选择下一个攻击方式
+        // 50% 概率传送
+        if (Random.value < teleportPercent)
+        {
+            Teleport();
+        }
+    }
+
+    void Teleport()
+    {
+        //choose a random position within the room
+        Vector2 randomPosition = new Vector2(
+                       Random.Range(roomPosition.x - roomSize.x / 2, roomPosition.x + roomSize.x / 2),
+                                  Random.Range(roomPosition.y - roomSize.y / 2, roomPosition.y + roomSize.y / 2)
+                                         );
+        transform.position = randomPosition;
     }
 }
