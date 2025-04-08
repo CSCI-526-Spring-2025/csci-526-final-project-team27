@@ -10,6 +10,8 @@ public class PauseController : MonoBehaviour
     private bool wasMovingEnabled = true;
     private bool wasShootingEnabled = true;
 
+    private float originalTimeScale = 1f; // 记录暂停前的timeScale
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -39,7 +41,7 @@ public class PauseController : MonoBehaviour
             if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(!wasMovingEnabled);
             if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(wasShootingEnabled);
 
-            Time.timeScale = 1f;
+            Time.timeScale = originalTimeScale; // 恢复为原始timeScale
         }
 
         isPaused = false; // Update the shared variable
@@ -61,10 +63,12 @@ public class PauseController : MonoBehaviour
             // 暂停时锁定移动和射击
             if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.LockMove(true);
             if (CtrlCtrl.Instance != null) CtrlCtrl.Instance.ToggleShootCtrler(false);
-
+            originalTimeScale = Time.timeScale;
             Time.timeScale = 0f;
-        }
+            
 
+        }
+        
         isPaused = true; // Update the shared variable
     }
 }

@@ -1228,7 +1228,7 @@ MonoBehaviour:
     preDelay: 1
     units:
     - enemyPrefab: {fileID: 3627106912230831940, guid: c0471c0c5726fae429414d62c986d190, type: 3}
-      count: 3
+      count: 2
       interval: 0.5
       positionType: 1
       spawnPositions:

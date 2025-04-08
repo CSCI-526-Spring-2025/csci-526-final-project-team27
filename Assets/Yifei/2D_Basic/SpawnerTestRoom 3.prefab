@@ -1421,7 +1421,7 @@ MonoBehaviour:
   - waveName: 2
     preDelay: 6
     units:
-    - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
+    - enemyPrefab: {fileID: 3474226149447707943, guid: c34cf515c2b350342a3db2f19d5b530c, type: 3}
       count: 3
       interval: 1
       positionType: 1

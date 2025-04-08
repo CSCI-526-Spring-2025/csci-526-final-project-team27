@@ -1287,15 +1287,6 @@ MonoBehaviour:
   - waveName: 2
     preDelay: 6
     units:
-    - enemyPrefab: {fileID: 8723224226141367536, guid: ba90d4275536468468d26aad2bcdd07e, type: 3}
-      count: 3
-      interval: 1
-      positionType: 1
-      spawnPositions:
-      - {x: 10, y: 5}
-      - {x: -10, y: -5}
-      - {x: 10, y: -5}
-      - {x: -10, y: 5}
     - enemyPrefab: {fileID: 8621166182278658443, guid: 847e56c8fbf8e2440af9fecd42313ba8, type: 3}
       count: 3
       interval: 2
