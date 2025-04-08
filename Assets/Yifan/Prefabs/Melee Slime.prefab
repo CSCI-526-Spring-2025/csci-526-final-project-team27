@@ -337,7 +337,6 @@ MonoBehaviour:
   splitThreshold: 0.5
   splitCounter: 4
   jumpCounter: 1
-  name: Slime
 --- !u!114 &8180063506914729136
 MonoBehaviour:
   m_ObjectHideFlags: 0
