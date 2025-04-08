@@ -8,11 +8,18 @@ public class SlimeHealth : EnemyHealth
     public int splitCounter = 4; // Starts at 8 and halves after each split
     public float jumpCounter = 1.0f;
 
-    public string name = "Slime";
-
     private bool hasSplit = false; // Prevent multiple splits at the same threshold
 
     const float fac = 0.06f;
+
+    private MeleeEnemy slimeEnemy;
+    private ParabolicSlimeJumpMovementBehavior2D jumpAction;
+
+    void Start()
+    {
+        slimeEnemy = slimePrefab.GetComponent<MeleeEnemy>();
+        jumpAction = slimePrefab.GetComponent<ParabolicSlimeJumpMovementBehavior2D>();
+    }
 
     void Update()
     {
@@ -23,6 +30,13 @@ public class SlimeHealth : EnemyHealth
         }
 
         if (currentHealth <= 0) DeadSlime();
+
+        // if (slimeEnemy.currentTarget != null && jumpAction != null) jumpAction.Move(slimeEnemy.transform, slimeEnemy.GetComponent<Rigidbody2D>(), slimeEnemy.currentTarget, slimeEnemy.moveSpeed);
+    }
+
+    void FixedUpdate()
+    {
+        if (slimeEnemy.currentTarget != null && jumpAction != null) jumpAction.Move(slimeEnemy.transform, slimeEnemy.GetComponent<Rigidbody2D>(), slimeEnemy.currentTarget, slimeEnemy.moveSpeed);
     }
 
     private void Split()
@@ -35,7 +49,7 @@ public class SlimeHealth : EnemyHealth
             // Spawn new slime at a slight offset from the parent position
             GameObject newSlime = Instantiate(slimePrefab, transform.position + new Vector3(Random.Range(-1.5f, 1.5f), 0, Random.Range(-1.5f, 1.5f)), Quaternion.identity);
             newSlimes[i] = newSlime;
-            float sSize = fac * (float)splitCounter;
+            float sSize = fac * (float)splitCounter + Random.Range(0, 0.09f);
             newSlime.transform.localScale = new Vector3(sSize, sSize, sSize);
             SpriteShapeRenderer sRenderer = newSlime.GetComponent<SpriteShapeRenderer>();
             switch (splitCounter)
@@ -50,19 +64,19 @@ public class SlimeHealth : EnemyHealth
 
             // Get the health component of the new slime
             SlimeHealth newSlimeHealth = newSlime.GetComponent<SlimeHealth>();
-            MeleeEnemy slimeDamage = newSlime.GetComponent<MeleeEnemy>();
+            MeleeEnemy newSlimeDamage = newSlime.GetComponent<MeleeEnemy>();
 
             if (newSlimeHealth != null)
             {
                 newSlimeHealth.maxHealth = currentHealth / 2; // New slime has half of parent's health
                 newSlimeHealth.splitCounter = splitCounter / 2; // New slime gets half the split counter
                 newSlimeHealth.jumpCounter = jumpCounter * 2.0f;
-                newSlimeHealth.name = "Slime" + ((int)newSlimeHealth.jumpCounter + i).ToString();
             }
-            if (slimeDamage != null)
+            if (newSlimeDamage != null)
             {
-                int damage = (int)(slimeDamage.damage * 0.5f);
-                slimeDamage.damage = (float)damage;
+                int damage = (int)(newSlimeDamage.damage * 0.5f);
+                newSlimeDamage.damage = (float)damage;
+                newSlimeDamage.moveSpeed = 3.0f * sSize + Random.Range(0, 0.09f);
             }
         }
         OnIncrease.Invoke(gameObject, newSlimes);

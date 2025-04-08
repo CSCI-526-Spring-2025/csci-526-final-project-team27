@@ -336,6 +336,8 @@ MonoBehaviour:
   slimePrefab: {fileID: 2027857850954515486}
   splitThreshold: 0.5
   splitCounter: 4
+  jumpCounter: 1
+  name: Slime
 --- !u!114 &8180063506914729136
 MonoBehaviour:
   m_ObjectHideFlags: 0

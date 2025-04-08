@@ -24,6 +24,7 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     private SlimeHealth slimeHealth;
 
     private float splitJumpInterval;
+    private float splitJumpHeight;
 
     /// <summary>
     /// 根据目标方向发起一次跳跃。
@@ -38,7 +39,12 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     {
         slimeHealth = GetComponent<SlimeHealth>();
         splitJumpInterval = jumpInterval;
-        if (slimeHealth != null) splitJumpInterval /= slimeHealth.jumpCounter;
+        splitJumpHeight = maxJumpHeight;
+        if (slimeHealth != null)
+        {
+            splitJumpInterval /= slimeHealth.jumpCounter;
+            splitJumpHeight /= slimeHealth.jumpCounter;
+        }
     }
 
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
@@ -70,8 +76,6 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
         isJumping = true;
         lastJumpTime = Time.time;
 
-        Debug.Log(slimeHealth.name + " is jumping");
-
         // 记录跳跃起点（使用传入的 self 位置）
         Vector2 startPos = self.position;
         // 计算目标与起点的距离
@@ -92,7 +96,7 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
             // 先用线性插值计算水平位置
             Vector2 pos = Vector2.Lerp(startPos, endPos, t);
             // 使用简单二次函数模拟抛物线：t*(1-t)在 t=0 与 t=1 时为 0，在 t=0.5 时取得最大值
-            float verticalOffset = 4 * maxJumpHeight * t * (1 - t);
+            float verticalOffset = 4 * splitJumpHeight * t * (1 - t);
             pos.y += verticalOffset;
 
             self.position = pos;
