@@ -19,10 +19,25 @@ public class LevelUpRewardSystem : MonoBehaviour
     public List<Transform> buffSlots = new List<Transform>(); // 3个空位Slot，需在 Inspector 中指定
 
     private List<Buff> currentChoices = new List<Buff>();
+    private FirebaseDataUploader dataUploader;
 
     public static bool isLevelUp = false;
 
     public GameObject player;
+
+    private void Start()
+    {
+        // 获取FirebaseDataUploader的引用
+        GameObject roomManager = GameObject.Find("RoomManager");
+        if (roomManager != null)
+        {
+            dataUploader = roomManager.GetComponent<FirebaseDataUploader>();
+        }
+        else
+        {
+            Debug.LogError("找不到RoomManager对象！");
+        }
+    }
 
     public void ShowRewardSelection()
     {
@@ -72,6 +87,13 @@ public class LevelUpRewardSystem : MonoBehaviour
     public void OnBuffSelected(Buff buff)
     {
         Debug.Log("玩家选择了 Buff: " + buff.buffName);
+        
+        // 记录buff选择
+        if (dataUploader != null)
+        {
+            dataUploader.TrackBuffSelection(buff.buffName);
+        }
+        
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");

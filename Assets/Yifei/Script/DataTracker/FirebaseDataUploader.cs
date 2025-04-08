@@ -25,6 +25,18 @@ public class SkillIdleDurationData
     public Dictionary<string, float> skillIdleRatios = new Dictionary<string, float>();
 }
 
+[System.Serializable]
+public class BuffSelectionData
+{
+    public Dictionary<string, int> buffSelectionCounts = new Dictionary<string, int>();
+}
+
+[System.Serializable]
+public class TeammateDamageData
+{
+    public Dictionary<string, float> teammateDamageTotals = new Dictionary<string, float>();
+}
+
 public class FirebaseDataUploader : MonoBehaviour
 {
     [Header("Firebase 配置")]
@@ -53,6 +65,12 @@ public class FirebaseDataUploader : MonoBehaviour
     
     // 技能闲置时间比例数据
     private SkillIdleDurationData skillIdleDurationData = new SkillIdleDurationData();
+
+    // 添加buff选择数据
+    private BuffSelectionData buffSelectionData = new BuffSelectionData();
+
+    // 添加队友伤害数据
+    private TeammateDamageData teammateDamageData = new TeammateDamageData();
 
     //[Header("预设追踪的数据（键值对）")]
     //[SerializeField]
@@ -226,6 +244,76 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
+    /// 记录buff选择情况
+    /// </summary>
+    public void TrackBuffSelection(string buffName)
+    {
+        if (buffSelectionData.buffSelectionCounts.ContainsKey(buffName))
+        {
+            buffSelectionData.buffSelectionCounts[buffName]++;
+        }
+        else
+        {
+            buffSelectionData.buffSelectionCounts.Add(buffName, 1);
+        }
+    }
+
+    /// <summary>
+    /// 获取指定buff的选择次数
+    /// </summary>
+    public int GetBuffSelectionCount(string buffName)
+    {
+        if (buffSelectionData.buffSelectionCounts.ContainsKey(buffName))
+        {
+            return buffSelectionData.buffSelectionCounts[buffName];
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// 获取所有buff选择情况
+    /// </summary>
+    public Dictionary<string, int> GetAllBuffSelections()
+    {
+        return new Dictionary<string, int>(buffSelectionData.buffSelectionCounts);
+    }
+
+    /// <summary>
+    /// 记录队友造成的伤害
+    /// </summary>
+    public void TrackTeammateDamage(string teammateName, float damage)
+    {
+        if (teammateDamageData.teammateDamageTotals.ContainsKey(teammateName))
+        {
+            teammateDamageData.teammateDamageTotals[teammateName] += damage;
+        }
+        else
+        {
+            teammateDamageData.teammateDamageTotals.Add(teammateName, damage);
+        }
+    }
+
+    /// <summary>
+    /// 获取指定队友的总伤害
+    /// </summary>
+    public float GetTeammateDamage(string teammateName)
+    {
+        if (teammateDamageData.teammateDamageTotals.ContainsKey(teammateName))
+        {
+            return teammateDamageData.teammateDamageTotals[teammateName];
+        }
+        return 0f;
+    }
+
+    /// <summary>
+    /// 获取所有队友的伤害数据
+    /// </summary>
+    public Dictionary<string, float> GetAllTeammateDamage()
+    {
+        return new Dictionary<string, float>(teammateDamageData.teammateDamageTotals);
+    }
+
+    /// <summary>
     /// 构建最终上传的 JSON 字符串，包含预设数据和 GPU 信息
     /// </summary>
     private string BuildJson()
@@ -274,6 +362,42 @@ public class FirebaseDataUploader : MonoBehaviour
             sb.Append("\"").Append(kvp.Key).Append("\":");
             sb.Append(kvp.Value);
             firstSkill = false;
+        }
+        
+        sb.Append("}");
+        first = false;
+
+        // 添加buff选择数据
+        if (!first)
+            sb.Append(",");
+        sb.Append("\"BuffSelections\":{");
+        
+        bool firstBuff = true;
+        foreach (var kvp in buffSelectionData.buffSelectionCounts)
+        {
+            if (!firstBuff)
+                sb.Append(",");
+            sb.Append("\"").Append(kvp.Key).Append("\":");
+            sb.Append(kvp.Value);
+            firstBuff = false;
+        }
+        
+        sb.Append("}");
+        first = false;
+
+        // 添加队友伤害数据
+        if (!first)
+            sb.Append(",");
+        sb.Append("\"TeammateDamage\":{");
+        
+        bool firstTeammate = true;
+        foreach (var kvp in teammateDamageData.teammateDamageTotals)
+        {
+            if (!firstTeammate)
+                sb.Append(",");
+            sb.Append("\"").Append(kvp.Key).Append("\":");
+            sb.Append(kvp.Value);
+            firstTeammate = false;
         }
         
         sb.Append("}");

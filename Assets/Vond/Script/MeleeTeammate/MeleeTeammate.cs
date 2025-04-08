@@ -31,6 +31,8 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     public IMover mover;
     public ITeammateMelee attacker;
 
+    private FirebaseDataUploader dataUploader;
+
     void Awake() 
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,6 +58,17 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
 
     void Start() 
     {
+        // 获取FirebaseDataUploader的引用
+        GameObject roomManager = GameObject.Find("RoomManager");
+        if (roomManager != null)
+        {
+            dataUploader = roomManager.GetComponent<FirebaseDataUploader>();
+        }
+        else
+        {
+            Debug.LogError("找不到RoomManager对象！");
+        }
+        
         StartCoroutine(SearchTargetRoutine());
     }
 
@@ -112,6 +125,12 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
 
         // 调用攻击接口
         yield return StartCoroutine(attacker.Attack(this, transform, currentTarget, damage, hitboxPrefab, hitboxOffset, attackCooldown));
+
+        // 记录伤害
+        if (dataUploader != null)
+        {
+            dataUploader.TrackTeammateDamage(gameObject.name, damage);
+        }
 
         isAttacking = false;
         canAttack = true;

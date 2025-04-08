@@ -1117,6 +1117,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7667481240147328291, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 9209415671401208482, guid: 602ed291abc53084bae28ea3eb3dc88a, type: 3}
       propertyPath: healthBar
       value: 
@@ -4264,6 +4268,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.33962193
       objectReference: {fileID: 0}
+    - target: {fileID: 5934930227000285179, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7041691215670166255, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: damage
       value: 20
@@ -5196,6 +5204,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.9622642
       objectReference: {fileID: 0}
+    - target: {fileID: 5934930227000285179, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7041691215670166255, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: damage
       value: 20
@@ -6067,6 +6079,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 617619055223535796, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2568118480194242408, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: m_Enabled
       value: 0
