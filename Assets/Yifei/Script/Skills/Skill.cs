@@ -79,6 +79,13 @@ public abstract class Skill : MonoBehaviour
             firstAvailableTimeBySkill[key] = Time.time;
         }
         
+        // 初始化数据追踪器中的技能记录
+        FirebaseDataUploader dataUploader = FindObjectOfType<FirebaseDataUploader>();
+        if (dataUploader != null)
+        {
+            dataUploader.InitializeSkillRecord(key);
+        }
+        
         // 只在第一次调用时初始化游戏开始时间
         if (gameStartTime == 0f)
         {

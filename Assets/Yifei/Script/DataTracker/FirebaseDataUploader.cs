@@ -189,6 +189,17 @@ public class FirebaseDataUploader : MonoBehaviour
     }
 
     /// <summary>
+    /// 初始化技能记录
+    /// </summary>
+    public void InitializeSkillRecord(string skillName)
+    {
+        if (!skillIdleDurationData.skillIdleRatios.ContainsKey(skillName))
+        {
+            skillIdleDurationData.skillIdleRatios.Add(skillName, 0f);
+        }
+    }
+
+    /// <summary>
     /// 记录技能闲置时间比例
     /// </summary>
     public void TrackSkillIdleDuration(string skillName, float idleRatio)
