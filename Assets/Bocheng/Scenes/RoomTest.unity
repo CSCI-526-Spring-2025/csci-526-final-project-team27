@@ -245,9 +245,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneType: 1
   tutorialRoomCount: 6
-  gridWidth: 5
-  gridHeight: 5
-  minPathLength: 4
+  gridWidth: 8
+  gridHeight: 8
+  minPathLength: 5
   normalRoomPrefabs:
   - {fileID: 7752736070594661851, guid: f6373496dc1fe4a87b06f76c264c7bdb, type: 3}
   - {fileID: 7752736070594661851, guid: 315f1a68f83adca44b81ae29d2f1aed8, type: 3}
