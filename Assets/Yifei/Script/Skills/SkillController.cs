@@ -28,6 +28,8 @@ public class SkillController : MonoBehaviour
 
     [Header("Cursor Settings")]
     public GameObject cursorPrefab;          // 用于目标/方向选择的准星预制体
+    public GameObject radiusIndicatorPrefab; // 圆形范围指示器预制体
+
 
     [Header("Skill Slots")]
     [Tooltip("三个技能槽位，可分别指定技能预制体和释放模式")]
@@ -40,6 +42,8 @@ public class SkillController : MonoBehaviour
     private bool isTargetingMode = false;         // 是否处于目标/方向选择状态
     private TextMeshProUGUI skill1Text;
     private TextMeshProUGUI skill2Text;
+    private GameObject radiusIndicatorInstance; // 圆形指示器实例
+
 
     public GameObject[] skillInstances = new GameObject[2];        // 实例化的技能对象
 
@@ -258,6 +262,20 @@ public class SkillController : MonoBehaviour
         {
             cursorInstance = Instantiate(cursorPrefab);
         }
+                // 创建圆形技能范围指示器
+        if (radiusIndicatorInstance == null && radiusIndicatorPrefab != null && currentSkillSlotIndex >= 0)
+        {
+            radiusIndicatorInstance = Instantiate(radiusIndicatorPrefab);
+            
+            // 获取当前技能的半径
+            Skill skill = skillInstances[currentSkillSlotIndex].GetComponent<Skill>();
+            if (skill != null)
+            {
+                // 设置指示器大小与技能半径一致
+                float radius = skill.skillRadius;
+                radiusIndicatorInstance.transform.localScale = new Vector3(radius, radius, 1f);
+            }
+        }
     }
 
     /// <summary>
@@ -265,10 +283,15 @@ public class SkillController : MonoBehaviour
     /// </summary>
     private void UpdateCursorPosition()
     {
+        Vector2 pos = GetMouseWorldPosition();  
         if (cursorInstance != null)
         {
-            Vector2 pos = GetMouseWorldPosition();
+            // Vector2 pos = GetMouseWorldPosition();
             cursorInstance.transform.position = pos;
+        }
+        if (radiusIndicatorInstance != null)
+        {
+            radiusIndicatorInstance.transform.position = pos;
         }
     }
 
@@ -283,6 +306,11 @@ public class SkillController : MonoBehaviour
         {
             Destroy(cursorInstance);
             cursorInstance = null;
+        }
+        if (radiusIndicatorInstance != null)
+        {
+            Destroy(radiusIndicatorInstance);
+            radiusIndicatorInstance = null;
         }
     }
 
