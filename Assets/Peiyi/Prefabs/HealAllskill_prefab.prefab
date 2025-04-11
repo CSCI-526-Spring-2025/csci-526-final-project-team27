@@ -46,8 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDuration: 0.5
   cooldownTime: 10
+  skillRadius: 1
+  canMoveWhileUsing: 1
+  canShootWhileUsing: 1
   releaseType: 0
   skillName: Healall
+  animator: {fileID: 0}
+  animationStateName: PlayerSkill
   healAmount: 10
   friendlyTags:
   - Teammate

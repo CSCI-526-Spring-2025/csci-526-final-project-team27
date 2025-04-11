@@ -49,6 +49,8 @@ MonoBehaviour:
   skillRadius: 4
   releaseType: 1
   skillName: Trap Enemy
+  animator: {fileID: 0}
+  animationStateName: PlayerSkill
   radius: 4
   slowFactor: 0
   groundSlowSkillX: {fileID: 7768626194062726448, guid: 492a3b36e9f296e4d8b51b5ede970abd, type: 3}

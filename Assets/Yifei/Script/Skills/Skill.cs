@@ -35,6 +35,10 @@ public abstract class Skill : MonoBehaviour
     [Header("Skill UI")]
     public string skillName;
 
+    [Header("Anim Settings")]
+    public Animator animator;
+    public string animationStateName = "Skill";
+
     // 静态字典记录每种技能类型上次使用的时间（按类型名区分）
     public static Dictionary<string, float> lastUsedTimeBySkill = new Dictionary<string, float>();
     

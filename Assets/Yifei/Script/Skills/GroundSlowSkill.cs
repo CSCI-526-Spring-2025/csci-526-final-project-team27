@@ -206,5 +206,10 @@ public class GroundSlowSkill : Skill
             // 这样视觉效果和实际影响范围能够匹配
             currentEffect.transform.localScale = new Vector3(radius, radius, 1);
         }
+
+        if (animator != null)
+        {
+            animator.Play(animationStateName);
+        }
     }
 }

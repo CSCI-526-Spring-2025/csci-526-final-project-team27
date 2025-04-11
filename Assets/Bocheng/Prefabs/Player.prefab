@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db98131a7cd2902448d888c9a16b0e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 2641565080627248078}
 --- !u!1 &2049146803844675737
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,6 +734,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   panel: {fileID: 0}
+  animator: {fileID: 2641565080627248078}
   skillInstances:
   - {fileID: 0}
   - {fileID: 0}

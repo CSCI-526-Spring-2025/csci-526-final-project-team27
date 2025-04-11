@@ -44,6 +44,8 @@ public class SkillController : MonoBehaviour
     private TextMeshProUGUI skill2Text;
     private GameObject radiusIndicatorInstance; // 圆形指示器实例
 
+    [Header("Anim")]
+    public Animator animator;
 
     public GameObject[] skillInstances = new GameObject[2];        // 实例化的技能对象
 
@@ -69,6 +71,7 @@ public class SkillController : MonoBehaviour
                 GameObject skillInstance = Instantiate(skillSlots[i].skillPrefab, skillFirePoint.position, Quaternion.identity, transform);
                 skillInstances[i] = skillInstance;
                 Skill s = skillInstance.GetComponent<Skill>();
+                s.animator = animator;
                 Debug.Log($"Slot {i} init: {s?.skillName}");
                 Debug.Log("实例化" + skillInstances[i].name);
             }

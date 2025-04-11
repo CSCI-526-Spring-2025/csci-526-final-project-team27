@@ -47,8 +47,12 @@ MonoBehaviour:
   skillDuration: 0.5
   cooldownTime: 10
   skillRadius: 1
+  canMoveWhileUsing: 1
+  canShootWhileUsing: 1
   releaseType: 0
   skillName: Healall
+  animator: {fileID: 0}
+  animationStateName: Skill
   healAmount: 20
   friendlyTags:
   - Player

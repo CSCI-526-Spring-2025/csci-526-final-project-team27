@@ -38,6 +38,11 @@ public class HealAllSkill : Skill
     /// </summary>
     private void HealAllAllies()
     {
+        if(animator != null)
+        {
+            animator.Play(animationStateName);
+        }
+
         foreach (string tag in friendlyTags)
         {
             GameObject[] allies = GameObject.FindGameObjectsWithTag(tag);
