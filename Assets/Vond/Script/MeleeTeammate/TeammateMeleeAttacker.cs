@@ -8,6 +8,7 @@ public class TeammateMeleeAttacker : ITeammateMelee
 {
     public IEnumerator Attack(MonoBehaviour owner, Transform self, Transform target, float damage, GameObject hitboxPrefab, float hitboxOffset, float attackCooldown) 
     {
+        if(target == null) yield break; // 如果目标为空，则直接返回
         // 计算攻击方向和 Hitbox 的生成位置
         Vector2 attackDirection = (target.position - self.position).normalized;
         Vector2 spawnPos = (Vector2)self.position + attackDirection * hitboxOffset;

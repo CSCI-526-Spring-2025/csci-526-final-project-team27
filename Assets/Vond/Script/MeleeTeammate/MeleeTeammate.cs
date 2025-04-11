@@ -31,6 +31,11 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     public IMover mover;
     public ITeammateMelee attacker;
 
+    [Header("Anim Settings")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    public float delayAttackTime = 0.1f; // 延迟生成攻击框
+
     private FirebaseDataUploader dataUploader;
 
     void Awake() 
@@ -48,6 +53,7 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
         {
             mover = new SimpleMover();
         }
+
         attacker = GetComponent<ITeammateMelee>();
         if (attacker == null) 
         {
@@ -87,9 +93,8 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
                 else{
                     rb.linearVelocity=Vector2.zero;
                 }
-                
+                FaceTarget(playerTransfrom.position);
             }
-            
             return;
         }
 
@@ -123,8 +128,14 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
         isAttacking = true;
         FaceTarget(currentTarget.position);
 
+        if(animator != null)
+        {
+            animator.Play("Attack"); // 播放攻击动画
+        }
+
+        yield return new WaitForSeconds(delayAttackTime);
         // 调用攻击接口
-        yield return StartCoroutine(attacker.Attack(this, transform, currentTarget, damage, hitboxPrefab, hitboxOffset, attackCooldown));
+        yield return StartCoroutine(attacker.Attack(this, transform, currentTarget, damage, hitboxPrefab, hitboxOffset, attackCooldown - delayAttackTime));
 
         // 记录伤害
         if (dataUploader != null)
@@ -140,6 +151,19 @@ public class MeleeTeammate : MonoBehaviour, IDieAble
     void FaceTarget(Vector3 targetPos) 
     {
         // TODO: 添加翻转或旋转逻辑，目前仅为占位
+        if(spriteRenderer != null)
+        {
+            Vector2 direction = (targetPos - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
+        }
+
     }
 
     // 定时搜索目标

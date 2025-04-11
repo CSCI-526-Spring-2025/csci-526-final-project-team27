@@ -9,6 +9,13 @@ public class SmartMeleeMover : MonoBehaviour, IMover
     // 距离目标（玩家）小于此值时停止移动，防止堵塞
     public float stopDistance = 2f;
 
+    public Animator animator;
+
+    void Start()
+    {
+
+    }
+
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
@@ -55,5 +62,17 @@ public class SmartMeleeMover : MonoBehaviour, IMover
 
         // 设置刚体速度
         rb.linearVelocity = finalDirection * moveSpeed;
+
+        if (animator != null)
+        {
+            if(rb.linearVelocity.magnitude > 0.1f)
+            {
+                animator.SetBool("isWalking", true);
+            }
+            else
+            {
+                animator.SetBool("isWalking", false);
+            }
+        }
     }
 }
