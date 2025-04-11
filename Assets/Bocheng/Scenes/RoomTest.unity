@@ -6088,9 +6088,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3088407847875791146, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
+      propertyPath: cooldownTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088407847875791146, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: inventoryPanel
       value: 
       objectReference: {fileID: 695316136}
+    - target: {fileID: 3453530852043067426, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
+      propertyPath: m_AngularDamping
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 3701584900275016987, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: 'teammates.Array.data[0]'
       value: 
