@@ -2466,6 +2466,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 855b0284946cd634198803004c83ffb9, type: 3}
+--- !u!1 &1085840015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2638070125589247879, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+  m_PrefabInstance: {fileID: 1835811585}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1113065107 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5765368790545764713, guid: 4ebaa20db3281ad4a960d0a30feacd30, type: 3}
@@ -4323,7 +4328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2638070125589247879, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5825243572851147960, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
       propertyPath: m_Color.b
@@ -5205,6 +5210,63 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 99464839d99493242b067e228079c8d2, type: 2}
   - {fileID: 11400000, guid: a6eb57325fbc9694bab1b964853baaa5, type: 2}
   storePanel: {fileID: 1797401336}
+--- !u!1001 &1835811585
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2425171054499181086, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2638070125589247879, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
+      propertyPath: m_Name
+      value: SwordTeammate_prefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4048710a72ffb3d4796db59f89bf3e36, type: 3}
 --- !u!1001 &1839783401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6171,7 +6233,7 @@ PrefabInstance:
     - target: {fileID: 3701584900275016987, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: 'teammates.Array.data[0]'
       value: 
-      objectReference: {fileID: 744967955}
+      objectReference: {fileID: 1085840015}
     - target: {fileID: 3701584900275016987, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: 'teammates.Array.data[1]'
       value: 
@@ -6423,3 +6485,4 @@ SceneRoots:
   - {fileID: 1376373550}
   - {fileID: 1508223255}
   - {fileID: 1368639757}
+  - {fileID: 1835811585}
