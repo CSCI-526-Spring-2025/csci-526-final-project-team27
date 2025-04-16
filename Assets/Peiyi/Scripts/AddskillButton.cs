@@ -11,9 +11,9 @@ public class AddskillButton : MonoBehaviour
     }
 
     private void OnClick()
-    {
-        // 呼叫 SkillUiExchanger 中的主流程
-        SkillUiExchanger.Instance.OnSkillButtonClicked(skillPrefab);
-        Debug.Log("點到技能按鈕：" + skillPrefab.name);
+     {
+    //     // 呼叫 SkillUiExchanger 中的主流程
+    //     SkillUiExchanger.Instance.OnSkillButtonClicked(skillPrefab);
+    //     Debug.Log("點到技能按鈕：" + skillPrefab.name);
     }
 }
