@@ -27,6 +27,7 @@ public class SkillUiExchanger : MonoBehaviour
     // private TextMeshProUGUI key2Text;
     // private TextMeshProUGUI Hint;
     // private TextMeshProUGUI keyHint;
+    private Coroutine hideStatusCoroutine; 
     public List<GameObject> allSkillPrefabs;
     public GameObject elitecanva;
     private bool isConfiguring = false;
@@ -124,9 +125,15 @@ public class SkillUiExchanger : MonoBehaviour
         selectedSkillPrefabs.Clear();
         UpdateUnlockSkillUI();
         resetarrow.gameObject.SetActive(false);
-        changestatusCanva?.SetActive(false);
+        
         ClearSkillSlot(key1Slot);
         ClearSkillSlot(key2Slot);
+        if (hideStatusCoroutine != null)
+        {
+            StopCoroutine(hideStatusCoroutine);
+            hideStatusCoroutine = null;
+        }
+        changestatusCanva?.SetActive(false);
         if (fingerHintCoroutine != null)
             StopCoroutine(fingerHintCoroutine);
         fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation());
@@ -163,17 +170,7 @@ public class SkillUiExchanger : MonoBehaviour
 
     
 
-    private IEnumerator ResetAfterDelay()
-    {
-        yield return new WaitForSeconds(2f);
-        changestatusCanva.SetActive(false);
-        selectedSkillPrefabs.Clear();
-        resetarrow.gameObject.SetActive(true);
-        // Hint.gameObject.SetActive(true);
-        // keyHint.gameObject.SetActive(false);
-        //foreach (GameObject arrow in skillarrowlist) arrow.SetActive(false);
-        isConfiguring = false;
-    }
+    
 
     private IEnumerator StartFingerHintAnimation()
 {
@@ -297,14 +294,17 @@ public void ShowChangeStatusText(string message, float duration = 1.3f)
     if (text != null)
         text.text = message;
 
-    StartCoroutine(HideChangeStatusAfterDelay(duration));
+    hideStatusCoroutine = StartCoroutine(HideChangeStatusAfterDelay(duration));
 }
 
 private IEnumerator HideChangeStatusAfterDelay(float delay)
 {
     yield return new WaitForSeconds(delay);
     changestatusCanva.SetActive(false);
-    resetarrow?.gameObject.SetActive(true);
+    if (isConfiguring == false)
+        resetarrow?.gameObject.SetActive(true);
+    
+    hideStatusCoroutine = null;
 }
 public void NotifySkillDropped(int slotIndex, GameObject prefab)
 {
@@ -323,13 +323,15 @@ public void NotifySkillDropped(int slotIndex, GameObject prefab)
                 controller.ReplaceSkill(i, skillPrefab, skill.releaseType);
             }
 
-            ShowChangeStatusText("Skills updated!", 2f);
-            resetarrow.gameObject.SetActive(true);
+            ShowChangeStatusText("Skills updated!", 1.3f);
+            isConfiguring=false;
+            //resetarrow.gameObject.SetActive(true);
         }
         else
         {
             ShowChangeStatusText("Update failed! Cannot use the same skill twice.", 2f);
             ClearSkillSlot(key2Slot);
+            ClearSkillSlot(key1Slot);
             
         }
 
