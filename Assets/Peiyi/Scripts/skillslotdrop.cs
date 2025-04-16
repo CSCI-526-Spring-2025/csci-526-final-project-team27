@@ -22,12 +22,11 @@ public class skillslotdrop : MonoBehaviour, IDropHandler
         if (dragHandler != null)
         {
             GameObject skillPrefab = dragHandler.skillPrefab;
-            Skill skill = skillPrefab.GetComponent<Skill>();
+            //Skill skill = skillPrefab.GetComponent<Skill>();
 
-            SkillController controller = SkillUiExchanger.Instance.player.GetComponent<SkillController>();
-            controller.ReplaceSkill(slotIndex, skillPrefab, skill.releaseType);
+            //SkillController controller = SkillUiExchanger.Instance.player.GetComponent<SkillController>();
+            
             SkillUiExchanger.Instance.NotifySkillDropped(slotIndex, skillPrefab);
-            //SkillUiExchanger.Instance.UpdateCurrentSkillDisplay();
             
             dropped.transform.SetParent(transform, false);  // 第二參數 false 很重要！
             RectTransform rt = dropped.GetComponent<RectTransform>();
@@ -35,7 +34,7 @@ public class skillslotdrop : MonoBehaviour, IDropHandler
             //SkillUiExchanger.Instance.NotifySkillDropped(slotIndex, skillPrefab);
 
 
-            Debug.Log($"技能槽 {slotIndex + 1} 更新為：{skill.skillName}");
+            //Debug.Log($"技能槽 {slotIndex + 1} 更新為：{skill.skillName}");
         }
     }
 }

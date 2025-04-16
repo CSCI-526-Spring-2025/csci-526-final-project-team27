@@ -41,7 +41,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private IEnumerator Cooldown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         SkillUiExchanger.Instance.elitecanva.SetActive(false);
         yield return new WaitForSeconds(0.3f);
         SkillUiExchanger.Instance.OpenSkillUI();

@@ -124,6 +124,7 @@ public class SkillUiExchanger : MonoBehaviour
         selectedSkillPrefabs.Clear();
         UpdateUnlockSkillUI();
         resetarrow.gameObject.SetActive(false);
+        changestatusCanva?.SetActive(false);
         ClearSkillSlot(key1Slot);
         ClearSkillSlot(key2Slot);
         if (fingerHintCoroutine != null)
@@ -289,25 +290,54 @@ public bool IsConfiguring()
 {
     return isConfiguring;
 }
-public void NotifySkillDropped(int slotIndex, GameObject prefab)
-    {
-        tempSlotPrefabs[slotIndex] = prefab;
+public void ShowChangeStatusText(string message, float duration = 1.3f)
+{
+    changestatusCanva.SetActive(true);
+    TextMeshProUGUI text = changestatusCanva.GetComponentInChildren<TextMeshProUGUI>();
+    if (text != null)
+        text.text = message;
 
-        // 如果兩個 slot 都填好就判斷是否相同
-        if (tempSlotPrefabs[0] != null && tempSlotPrefabs[1] != null)
-        {
-            changestatusCanva.SetActive(true);
-            StartCoroutine(changetext());
-            Debug.Log("prefab"+slotIndex+"is setted");
-           
-        }
-    }
-    private IEnumerator changetext()
+    StartCoroutine(HideChangeStatusAfterDelay(duration));
+}
+
+private IEnumerator HideChangeStatusAfterDelay(float delay)
+{
+    yield return new WaitForSeconds(delay);
+    changestatusCanva.SetActive(false);
+    resetarrow?.gameObject.SetActive(true);
+}
+public void NotifySkillDropped(int slotIndex, GameObject prefab)
+{
+    tempSlotPrefabs[slotIndex] = prefab;
+
+    if (tempSlotPrefabs[0] != null && tempSlotPrefabs[1] != null)
     {
-        yield return new WaitForSeconds(3f);
-        changestatusCanva.SetActive(false);
-        resetarrow.gameObject.SetActive(true);
+        if (tempSlotPrefabs[0] != tempSlotPrefabs[1])
+        {
+            SkillController controller = player.GetComponent<SkillController>();
+
+            for (int i = 0; i < 2; i++)
+            {
+                GameObject skillPrefab = tempSlotPrefabs[i];
+                Skill skill = skillPrefab.GetComponent<Skill>();
+                controller.ReplaceSkill(i, skillPrefab, skill.releaseType);
+            }
+
+            ShowChangeStatusText("Skills updated!", 2f);
+            resetarrow.gameObject.SetActive(true);
+        }
+        else
+        {
+            ShowChangeStatusText("Update failed! Cannot use the same skill twice.", 2f);
+            ClearSkillSlot(key2Slot);
+            
+        }
+
+        
     }
+}
+
+   
 // public void OnSkillButtonClicked(GameObject skillPrefab)
     // {
     //     if (!isConfiguring || selectedSkillPrefabs.Count >= 2) return;
