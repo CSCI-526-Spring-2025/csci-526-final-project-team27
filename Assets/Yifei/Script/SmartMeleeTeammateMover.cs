@@ -9,7 +9,7 @@ public class SmartMeleeTeammateMover : MonoBehaviour, IMover
     // 距离目标（玩家）小于此值时停止移动，防止堵塞
     public float stopDistance = 2f;
     // 碰撞体边缘距离小于此值视为接触
-    public float touchThreshold = 0.05f;
+    public float touchThreshold = 0.03f;
 
     public Animator animator;
     
