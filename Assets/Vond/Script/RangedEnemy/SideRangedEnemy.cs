@@ -17,7 +17,8 @@ public class SideRangedEnemy : BaseEnemy
 
     private Transform target;             // 玩家目标
     private Rigidbody2D rb;
-    private bool canAttack = true;        // 攻击冷却标志
+    public bool canAttack = true;        // 攻击冷却标志
+    public bool attackDisabledBySkill = false;
 
     // 复用接口：目标查找、移动和攻击
     public ITargetFinder targetFinder;
@@ -62,7 +63,7 @@ public class SideRangedEnemy : BaseEnemy
         {
             rb.linearVelocity = Vector2.zero;
             FaceTarget(target.position);
-            if (canAttack)
+            if (canAttack && !attackDisabledBySkill)
             {
                 StartCoroutine(PerformAttack());
             }

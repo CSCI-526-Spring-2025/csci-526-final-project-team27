@@ -15,7 +15,8 @@ public class FourDirectionWanderingEnemy : BaseEnemy
     public IEnemyMelee meleeAttacker;
 
     private Rigidbody2D rb;
-    private bool canAttack = true;
+    public bool canAttack = true;
+    public bool attackDisabledBySkill = false;
 
     void Start()
     {
@@ -51,7 +52,7 @@ public class FourDirectionWanderingEnemy : BaseEnemy
     // 碰撞触发时，对玩家或队友造成伤害
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Teammate")) && canAttack)
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Teammate")) && canAttack && !attackDisabledBySkill)
         {
             Health targetHealth = collision.gameObject.GetComponent<Health>();
             if (targetHealth != null)
