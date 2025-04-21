@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 /// <summary>
 /// 技能槽位数据结构：每个槽位包括技能预制体与其释放模式
 /// </summary>
@@ -50,6 +51,9 @@ public class SkillController : MonoBehaviour
     public GameObject[] skillInstances = new GameObject[2];        // 实例化的技能对象
 
     private ShootingController shootingController;
+    
+    // 字典用于追踪当前装备的技能
+    private Dictionary<string, bool> equippedSkills = new Dictionary<string, bool>();
 
     private void Awake()
     {
@@ -72,11 +76,19 @@ public class SkillController : MonoBehaviour
                 skillInstances[i] = skillInstance;
                 Skill s = skillInstance.GetComponent<Skill>();
                 s.animator = animator;
+                // 记录初始装备的技能
+                if (s != null)
+                {
+                    equippedSkills[s.GetType().Name] = true;
+                }
                 Debug.Log($"Slot {i} init: {s?.skillName}");
                 Debug.Log("实例化" + skillInstances[i].name);
             }
         }
         shootingController = GetComponentInParent<ShootingController>();
+        
+        // 启动定期更新技能使用率的协程
+        StartCoroutine(UpdateAllSkillsUsageRate());
     }
 
     void Update()
@@ -353,33 +365,125 @@ public class SkillController : MonoBehaviour
     public void ReplaceSkill(int slotIndex, GameObject newSkillPrefab, SkillReleaseType newReleaseType)
     {
         if (slotIndex < 0 || slotIndex >= skillSlots.Length)
-        return;
+            return;
 
-        // 銷毀舊的技能物件
+        // 获取旧技能的使用数据
         if (skillInstances[slotIndex] != null)
         {
+            Skill oldSkill = skillInstances[slotIndex].GetComponent<Skill>();
+            if (oldSkill != null)
+            {
+                // 从已装备技能中移除
+                string oldSkillName = oldSkill.GetType().Name;
+                equippedSkills[oldSkillName] = false;
+                
+                // 更新旧技能的使用率数据（最后一次）
+                UpdateSkillUsageRate(oldSkillName);
+            }
             Destroy(skillInstances[slotIndex]);
         }
 
-        // 實例化新的技能物件
+        // 实例化新的技能物件
         GameObject skillInstance = Instantiate(newSkillPrefab, skillFirePoint.position, Quaternion.identity, transform);
         skillInstances[slotIndex] = skillInstance;
 
-        // 更新技能槽記錄
+        // 更新技能槽记录
         skillSlots[slotIndex].skillPrefab = newSkillPrefab;
         skillSlots[slotIndex].releaseType = newReleaseType;
-        Skill skill=newSkillPrefab.GetComponent<Skill>();
-        if(skill!=null){
-             if(slotIndex==0){
-                skill1Text.text=skill.skillName;
-            }else if(slotIndex==1){
-                skill2Text.text=skill.skillName;
+        Skill skill = newSkillPrefab.GetComponent<Skill>();
+        if(skill != null){
+            if(slotIndex == 0){
+                skill1Text.text = skill.skillName;
+            }else if(slotIndex == 1){
+                skill2Text.text = skill.skillName;
             }
+            
+            // 将新技能添加到已装备技能中
+            string newSkillName = skill.GetType().Name;
+            equippedSkills[newSkillName] = true;
+            
+            // 初始化新技能的使用率数据
+            UpdateSkillUsageRate(newSkillName);
         }
         
         Debug.Log($"成功替換 slot{slotIndex + 1} 技能為 {newSkillPrefab.name}");
-        
+    }
 
+    /// <summary>
+    /// 定期更新所有技能的使用率数据
+    /// </summary>
+    private IEnumerator UpdateAllSkillsUsageRate()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f); // 每秒更新一次
+            
+            // 只更新当前装备的技能
+            foreach (var skillInstance in skillInstances)
+            {
+                if (skillInstance != null)
+                {
+                    Skill skill = skillInstance.GetComponent<Skill>();
+                    if (skill != null)
+                    {
+                        string skillName = skill.GetType().Name;
+                        // 确保技能在已装备列表中
+                        equippedSkills[skillName] = true;
+                        UpdateSkillUsageRate(skillName);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 更新技能使用率数据
+    /// </summary>
+    private void UpdateSkillUsageRate(string skillName)
+    {
+        FirebaseDataUploader dataUploader = FindObjectOfType<FirebaseDataUploader>();
+        if (dataUploader != null)
+        {
+            // 检查技能是否当前已装备
+            bool isEquipped = false;
+            if (equippedSkills.TryGetValue(skillName, out isEquipped) && isEquipped)
+            {
+                int usageCount = dataUploader.GetSkillUsageCount(skillName);
+                float totalTime = Time.time - dataUploader.GetGameStartTime();
+                
+                if (totalTime > 0)
+                {
+                    // 计算技能使用率：使用次数 * 冷却时间 / 总游戏时间
+                    Skill skill = GetSkillByName(skillName);
+                    if (skill != null)
+                    {
+                        float usageRate = (usageCount * skill.cooldownTime) / totalTime;
+                        // 确保使用率不超过1
+                        usageRate = Mathf.Clamp01(usageRate);
+                        dataUploader.TrackSkillIdleDuration(skillName, 1 - usageRate);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 根据技能名称获取技能实例
+    /// </summary>
+    private Skill GetSkillByName(string skillName)
+    {
+        foreach (var instance in skillInstances)
+        {
+            if (instance != null)
+            {
+                Skill skill = instance.GetComponent<Skill>();
+                if (skill != null && skill.GetType().Name == skillName)
+                {
+                    return skill;
+                }
+            }
+        }
+        return null;
     }
     
     /// <summary>
