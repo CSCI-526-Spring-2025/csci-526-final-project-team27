@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SmartMeleeMover : MonoBehaviour, IMover
+public class SmartMeleeTeammateMover : MonoBehaviour, IMover
 {
     // 分离半径
     public float separationRadius = 1.0f;
@@ -8,8 +8,22 @@ public class SmartMeleeMover : MonoBehaviour, IMover
     public float separationForce = 1.0f;
     // 距离目标（玩家）小于此值时停止移动，防止堵塞
     public float stopDistance = 2f;
+    // 碰撞体边缘距离小于此值视为接触
+    public float touchThreshold = 0.05f;
 
     public Animator animator;
+    
+    // 缓存自己的碰撞体
+    private Collider2D selfCollider;
+
+    void Awake()
+    {
+        selfCollider = GetComponent<Collider2D>();
+        if (selfCollider == null)
+        {
+            Debug.LogWarning("SmartMeleeTeammateMover没有找到Collider2D组件！");
+        }
+    }
 
     void Start()
     {
@@ -25,6 +39,27 @@ public class SmartMeleeMover : MonoBehaviour, IMover
         {
             float distanceToPlayer = Vector2.Distance(self.position, target.position);
             if (distanceToPlayer <= stopDistance)
+            {
+                rb.linearVelocity = Vector2.zero;
+                return;
+            }
+        }
+        
+        // 使用碰撞体距离检测，只针对当前目标
+        Collider2D targetCollider = target.GetComponent<Collider2D>();
+        if (selfCollider != null && targetCollider != null)
+        {
+            ColliderDistance2D colDistance = selfCollider.Distance(targetCollider);
+            
+            // 如果与目标碰撞体的距离很近，停止移动以避免推动目标
+            if (colDistance.distance <= touchThreshold)
+            {
+                rb.linearVelocity = Vector2.zero;
+                return;
+            }
+            
+            // 如果正在接触目标碰撞体，也停止移动
+            if (selfCollider.IsTouching(targetCollider))
             {
                 rb.linearVelocity = Vector2.zero;
                 return;
