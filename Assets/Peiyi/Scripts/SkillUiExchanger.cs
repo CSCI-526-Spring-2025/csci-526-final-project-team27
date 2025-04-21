@@ -13,6 +13,7 @@ public class SkillUiExchanger : MonoBehaviour
     public GameObject fingerHintObject;
     public GameObject skillExchangeCanva;
     public GameObject player;
+    private RectTransform fromBtn;
     public List<int> unlockedSkillIndeics = new List<int> { 0, 1 };
     public GameObject[] tempSlotPrefabs = new GameObject[2]; 
     public static SkillUiExchanger Instance;
@@ -21,6 +22,7 @@ public class SkillUiExchanger : MonoBehaviour
     public RectTransform key2Slot;
     public GameObject arrowPrefab;
     private RectTransform resetButton;
+    private  bool shouldCancelHint=false;
     private GameObject changestatusCanva;
     private Coroutine fingerHintCoroutine;
     // private TextMeshProUGUI key1Text;
@@ -59,7 +61,7 @@ public class SkillUiExchanger : MonoBehaviour
     private void Start()
     {
         skillExchangeCanva?.SetActive(false);
-        changestatusCanva.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 0f);
+        //changestatusCanva.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 0f);
         changestatusCanva?.SetActive(false);
         if (fingerHintObject != null)
             fingerHintObject.SetActive(false);
@@ -136,8 +138,11 @@ public class SkillUiExchanger : MonoBehaviour
         changestatusCanva?.SetActive(false);
         if (fingerHintCoroutine != null)
             StopCoroutine(fingerHintCoroutine);
-        fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation());
-        
+       
+        if (fromBtn !=null)
+        {
+            fingerHintCoroutine = StartCoroutine(PlayBothHintsSequentially(fromBtn));
+        }
         tempSlotPrefabs[0] = null;
         tempSlotPrefabs[1] = null;
         
@@ -168,47 +173,33 @@ public class SkillUiExchanger : MonoBehaviour
     }
 
 
-    
+   
 
     
 
-    private IEnumerator StartFingerHintAnimation()
+    private IEnumerator StartFingerHintAnimation(RectTransform fromBtn,Vector2 toPos,float duration)
 {
     yield return new WaitForEndOfFrame(); // 等一幀，確保技能都生出來
 
     if (SkillUiExchanger.Instance.skillGridParent.childCount == 0)
         yield break;
 
-    RectTransform fromBtn = SkillUiExchanger.Instance.skillGridParent.GetChild(0).GetComponent<RectTransform>();
+    
     RectTransform fingerImg = fingerHintObject.GetComponent<RectTransform>();
-
-    // 第一次：指向 Key1Slot
-    Vector2 fromPos = WorldToAnchored(fromBtn);
-    Vector2 toPos1 = WorldToAnchored(key1Slot);
-
+    Vector2 fromPos=WorldToAnchored(fromBtn);
     fingerImg.anchoredPosition = fromPos;
     fingerImg.gameObject.SetActive(true);
 
-    float duration = 1.3f;
+    
     float t = 0;
     while (t < duration)
     {
-        fingerImg.anchoredPosition = Vector2.Lerp(fromPos, toPos1, t / duration);
+        fingerImg.anchoredPosition = Vector2.Lerp(fromPos, toPos, t / duration);
         t += Time.deltaTime;
         yield return null;
     }
 
-    // 第二次：指向 Key2Slot
-    float duration2 = 1.5f;
-    Vector2 toPos2 = WorldToAnchored(key2Slot);
-    t = 0;
-    while (t < duration2)
-    {
-        fingerImg.anchoredPosition = Vector2.Lerp(fromPos, toPos2, t / duration2);
-        t += Time.deltaTime;
-        yield return null;
-    }
-
+   
     fingerImg.gameObject.SetActive(false);
     fingerHintCoroutine = null;
 }
@@ -222,6 +213,11 @@ private void ClearSkillSlot(RectTransform slot)
 }
 private Vector2 WorldToAnchored(RectTransform target)
 {
+    if (target == null || target.Equals(null))
+    {
+        Debug.LogWarning("WorldToAnchored: target is null or destroyed.");
+        return Vector2.zero;
+    }
     Vector2 localPoint;
     RectTransformUtility.ScreenPointToLocalPointInRectangle(
         fingerHintObject.transform.parent as RectTransform,
@@ -231,6 +227,7 @@ private Vector2 WorldToAnchored(RectTransform target)
 
     public void UpdateUnlockSkillUI(int? highlightIndex = null)
 {
+    
     foreach (Transform child in skillGridParent)
     {
         
@@ -282,6 +279,11 @@ private Vector2 WorldToAnchored(RectTransform target)
 
        
     }
+    if (skillGridParent.childCount > 0)
+    {
+        fromBtn = skillGridParent.GetComponent<RectTransform>();
+    }
+
 }
 public bool IsConfiguring()
 {
@@ -308,14 +310,22 @@ private IEnumerator HideChangeStatusAfterDelay(float delay)
 }
 public void NotifySkillDropped(int slotIndex, GameObject prefab)
 {
+    shouldCancelHint=true;
     tempSlotPrefabs[slotIndex] = prefab;
 
-    if (tempSlotPrefabs[0] != null && tempSlotPrefabs[1] != null)
+    bool slot0Filled = tempSlotPrefabs[0] != null;
+    bool slot1Filled = tempSlotPrefabs[1] != null;
+
+    if (slot0Filled && slot1Filled)
     {
+        if (hideStatusCoroutine != null)
+            StopCoroutine(hideStatusCoroutine);
+        if (fingerHintCoroutine != null)
+            StopCoroutine(fingerHintCoroutine);
+
         if (tempSlotPrefabs[0] != tempSlotPrefabs[1])
         {
             SkillController controller = player.GetComponent<SkillController>();
-
             for (int i = 0; i < 2; i++)
             {
                 GameObject skillPrefab = tempSlotPrefabs[i];
@@ -324,20 +334,63 @@ public void NotifySkillDropped(int slotIndex, GameObject prefab)
             }
 
             ShowChangeStatusText("Skills updated!", 1.3f);
-            isConfiguring=false;
-            //resetarrow.gameObject.SetActive(true);
+            isConfiguring = false;
         }
         else
         {
             ShowChangeStatusText("Update failed! Cannot use the same skill twice.", 2f);
-            ClearSkillSlot(key2Slot);
             ClearSkillSlot(key1Slot);
-            
+            ClearSkillSlot(key2Slot);
+            tempSlotPrefabs[0] = null;
+            tempSlotPrefabs[1] = null;
         }
+    }
+    else
+    {
+        ShowChangeStatusText("Drag two skills to update!", 3f);
 
-        
+        if (fingerHintCoroutine != null)
+            StopCoroutine(fingerHintCoroutine);
+
+        if (fromBtn != null)
+        {
+            if (slot0Filled && !slot1Filled)
+            {
+                fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation(fromBtn, WorldToAnchored(key2Slot), 1.5f));
+            }
+            else if (slot1Filled && !slot0Filled)
+            {
+                fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation(fromBtn, WorldToAnchored(key1Slot), 1.5f));
+            }
+            else if (!slot0Filled && !slot1Filled)
+            {
+                StartCoroutine(PlayBothHintsSequentially(fromBtn));
+            }
+        }
     }
 }
+
+private IEnumerator PlayBothHintsSequentially(RectTransform fromBtn)
+{
+    shouldCancelHint=false;
+    if (fingerHintCoroutine != null)
+    {
+        StopCoroutine(fingerHintCoroutine);
+        fingerHintCoroutine = null;
+    }
+
+    fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation(fromBtn, WorldToAnchored(key1Slot), 1f));
+    yield return fingerHintCoroutine;
+    if (shouldCancelHint) yield break;
+    yield return new WaitForSeconds(0.3f);
+
+    fingerHintCoroutine = StartCoroutine(StartFingerHintAnimation(fromBtn, WorldToAnchored(key2Slot), 1.2f));
+    yield return fingerHintCoroutine;
+
+    fingerHintCoroutine = null;
+}
+
+
 
    
 // public void OnSkillButtonClicked(GameObject skillPrefab)
