@@ -359,7 +359,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -166.6, y: -126.4}
-  m_SizeDelta: {x: 60, y: 70}
+  m_SizeDelta: {x: 40, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &44848420
 MonoBehaviour:
@@ -388,14 +388,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.13203098, g: 0.6509434, b: 0.4662231, a: 0.33333334}
+  m_Color: {r: 0.06087576, g: 0.0754717, b: 0.07027466, a: 0.33333334}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 807151dab6f214649bb3b1bec844bb29, type: 3}
+  m_Sprite: {fileID: 1452074441, guid: 05e0567213a58c840a3ea79a4409bdfd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1605,6 +1605,7 @@ MonoBehaviour:
   separationRadius: 1
   separationForce: 2
   stopDistance: 1
+  touchThreshold: 0.03
   animator: {fileID: 0}
 --- !u!1 &787160083
 GameObject:
@@ -2284,6 +2285,7 @@ MonoBehaviour:
   separationRadius: 1
   separationForce: 1
   stopDistance: 2
+  touchThreshold: 0.03
   animator: {fileID: 0}
 --- !u!1 &973093361
 GameObject:
@@ -2422,7 +2424,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 70}
+  m_SizeDelta: {x: 40, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1020888445
 MonoBehaviour:
@@ -2437,14 +2439,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.13203098, g: 0.6509434, b: 0.4662231, a: 0.33333334}
+  m_Color: {r: 0.08859915, g: 0.103773594, b: 0.098370574, a: 0.33333334}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 807151dab6f214649bb3b1bec844bb29, type: 3}
+  m_Sprite: {fileID: 1452074441, guid: 05e0567213a58c840a3ea79a4409bdfd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2590,6 +2592,7 @@ MonoBehaviour:
   separationRadius: 2
   separationForce: 2
   stopDistance: 1
+  touchThreshold: 0.03
   animator: {fileID: 0}
 --- !u!1001 &1073041097
 PrefabInstance:
@@ -2777,6 +2780,7 @@ MonoBehaviour:
   - {fileID: 3394115045921346216, guid: bb78aa4043c2e994580c86748503bcd0, type: 3}
   - {fileID: 1335576287191408607, guid: 4a9156cb0f86ffa4296b47721cac760f, type: 3}
   - {fileID: 8558044247187127818, guid: f327ae797cd26e941b21262bc0713340, type: 3}
+  - {fileID: 3394115045921346216, guid: 1b8a315afa2be4523a20915f9eb0d442, type: 3}
   elitecanva: {fileID: 1401707513}
 --- !u!1 &1209384159
 GameObject:

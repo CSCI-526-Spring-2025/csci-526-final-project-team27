@@ -52,7 +52,7 @@ public class SkillUiExchanger : MonoBehaviour
             // keyHint = skillExchangeCanva.transform.Find("keyhint")?.GetComponent<TextMeshProUGUI>();
             resetarrow = skillExchangeCanva.transform.Find("resetfinger")?.GetComponent<RectTransform>();
             resetButton = skillExchangeCanva.transform.Find("ResetButton")?.GetComponent<RectTransform>();
-            resetarrow.anchoredPosition = resetButton.anchoredPosition + new Vector2(0, -30f);
+            resetarrow.anchoredPosition = resetButton.anchoredPosition + new Vector2(0, -45f);
         }
 
         UpdateUnlockSkillUI();
