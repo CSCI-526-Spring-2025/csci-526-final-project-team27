@@ -98,6 +98,7 @@ public class GroundSlowSkill : Skill
 
     /// <summary>
     /// 当有碰撞体进入区域时检测是否为敌人，并应用减速效果
+    /// 同时禁用敌人的攻击能力
     /// </summary>
     /// <param name="collision">碰撞体</param>
     private void OnTriggerEnter2D(Collider2D collision)
@@ -129,10 +130,53 @@ public class GroundSlowSkill : Skill
                 //Debug.Log("Enemy slowed: " + collision.gameObject.name);
             }
         }
+        
+        // 禁用敌人的攻击能力 - 分别检查每种类型
+        DisableAttackForAllEnemyTypes(collision.gameObject);
+    }
+    
+    /// <summary>
+    /// 为所有可能的敌人类型禁用攻击能力
+    /// </summary>
+    private void DisableAttackForAllEnemyTypes(GameObject enemy)
+    {
+        // RangedEnemy目录下的敌人类型
+        DisableAttackForComponent<TrackRangedEnemy>(enemy);
+        DisableAttackForComponent<RangedEnemy>(enemy);
+        DisableAttackForComponent<SideRangedEnemy>(enemy);
+        DisableAttackForComponent<EightDirectionRangedEnemy>(enemy);
+        
+        // 特殊命名的敌人类型
+        DisableAttackForComponent<RangedRectangularEnemy>(enemy); // RectEnemy.cs中的类
+        DisableAttackForComponent<RangedFanSprayEnemy>(enemy);    // SprayEnemy.cs中的类
+        
+        // MeleeEnemy目录下的敌人类型
+        DisableAttackForComponent<MeleeEnemy>(enemy);
+        DisableAttackForComponent<WanderingEnemy>(enemy);
+        DisableAttackForComponent<FourDirectionWanderingEnemy>(enemy);
+        DisableAttackForComponent<SuicideEnemy>(enemy);
+        DisableAttackForComponent<ChargingEnemy>(enemy);
+    }
+    
+    /// <summary>
+    /// 为指定类型的组件禁用攻击能力
+    /// </summary>
+    private void DisableAttackForComponent<T>(GameObject enemy) where T : MonoBehaviour
+    {
+        T component = enemy.GetComponent<T>();
+        if (component != null)
+        {
+            var field = typeof(T).GetField("attackDisabledBySkill");
+            if (field != null)
+            {
+                field.SetValue(component, true);
+            }
+        }
     }
 
     /// <summary>
     /// 当碰撞体离开区域时恢复敌人原始移动速度
+    /// 并恢复攻击能力
     /// </summary>
     /// <param name="collision">碰撞体</param>
     private void OnTriggerExit2D(Collider2D collision)
@@ -149,6 +193,48 @@ public class GroundSlowSkill : Skill
             if (originalSpeeds.ContainsKey(collision.gameObject))
             {
                 originalSpeeds.Remove(collision.gameObject);
+            }
+        }
+        
+        // 恢复敌人的攻击能力
+        EnableAttackForAllEnemyTypes(collision.gameObject);
+    }
+    
+    /// <summary>
+    /// 为所有可能的敌人类型恢复攻击能力
+    /// </summary>
+    private void EnableAttackForAllEnemyTypes(GameObject enemy)
+    {
+        // RangedEnemy目录下的敌人类型
+        EnableAttackForComponent<TrackRangedEnemy>(enemy);
+        EnableAttackForComponent<RangedEnemy>(enemy);
+        EnableAttackForComponent<SideRangedEnemy>(enemy);
+        EnableAttackForComponent<EightDirectionRangedEnemy>(enemy);
+        
+        // 特殊命名的敌人类型
+        EnableAttackForComponent<RangedRectangularEnemy>(enemy); // RectEnemy.cs中的类
+        EnableAttackForComponent<RangedFanSprayEnemy>(enemy);    // SprayEnemy.cs中的类
+        
+        // MeleeEnemy目录下的敌人类型
+        EnableAttackForComponent<MeleeEnemy>(enemy);
+        EnableAttackForComponent<WanderingEnemy>(enemy);
+        EnableAttackForComponent<FourDirectionWanderingEnemy>(enemy);
+        EnableAttackForComponent<SuicideEnemy>(enemy);
+        EnableAttackForComponent<ChargingEnemy>(enemy);
+    }
+    
+    /// <summary>
+    /// 为指定类型的组件恢复攻击能力
+    /// </summary>
+    private void EnableAttackForComponent<T>(GameObject enemy) where T : MonoBehaviour
+    {
+        T component = enemy.GetComponent<T>();
+        if (component != null)
+        {
+            var field = typeof(T).GetField("attackDisabledBySkill");
+            if (field != null)
+            {
+                field.SetValue(component, false);
             }
         }
     }
@@ -172,10 +258,14 @@ public class GroundSlowSkill : Skill
                     enemyController.moveSpeed = originalSpeeds[enemy];
                     //Debug.Log("Enemy speed restored on skill end: " + enemy.name);
                 }
+                
+                // 恢复敌人的攻击能力
+                EnableAttackForAllEnemyTypes(enemy);
             }
         }
         affectedEnemies.Clear();
         originalSpeeds.Clear();
+
         // 销毁碰撞体
         Destroy(circleCollider);
         transform.SetParent(parentTransform);

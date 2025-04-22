@@ -116,7 +116,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &7364909040107935891
 CircleCollider2D:
@@ -185,6 +185,8 @@ MonoBehaviour:
   firePoint: {fileID: 563145812070834910}
   bulletSpeed: 5
   bulletLifetime: 2
+  canAttack: 1
+  attackDisabledBySkill: 0
 --- !u!114 &-1712874545482445724
 MonoBehaviour:
   m_ObjectHideFlags: 0

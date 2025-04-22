@@ -25,6 +25,8 @@ public class SuicideEnemy : BaseEnemy
     private bool hasExploded = false;
     private Transform currentTarget;
 
+    public bool attackDisabledBySkill = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,7 +39,7 @@ public class SuicideEnemy : BaseEnemy
     void Update()
     {
         // 如果尚未警戒，则检测 alertRange 内是否有玩家或队友进入
-        if (!isAlerted)
+        if (!isAlerted && !attackDisabledBySkill)
         {
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, alertRange);
             foreach (Collider2D hit in hits)

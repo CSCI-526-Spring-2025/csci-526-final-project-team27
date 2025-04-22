@@ -204,14 +204,23 @@ public class FirebaseDataUploader : MonoBehaviour
     /// </summary>
     public void TrackSkillIdleDuration(string skillName, float idleRatio)
     {
+        // 确保idleRatio在0到1之间
+        idleRatio = Mathf.Clamp01(idleRatio);
+        
         if (skillIdleDurationData.skillIdleRatios.ContainsKey(skillName))
         {
-            skillIdleDurationData.skillIdleRatios[skillName] = idleRatio;
+            // 使用平滑过渡来更新闲置时间比例
+            float currentRatio = skillIdleDurationData.skillIdleRatios[skillName];
+            // 使用较小的插值系数，使变化更平滑
+            skillIdleDurationData.skillIdleRatios[skillName] = Mathf.Lerp(currentRatio, idleRatio, 0.05f);
         }
         else
         {
             skillIdleDurationData.skillIdleRatios.Add(skillName, idleRatio);
         }
+        
+        // 记录调试信息
+        Debug.Log($"技能 {skillName} 的闲置率更新为: {skillIdleDurationData.skillIdleRatios[skillName]} (当前装备中)");
     }
 
     /// <summary>
@@ -488,5 +497,10 @@ public class FirebaseDataUploader : MonoBehaviour
     public void OnBrowserInfoReceived(string info)
     {
         browserInfo = info;
+    }
+
+    public float GetGameStartTime()
+    {
+        return startTime;
     }
 }

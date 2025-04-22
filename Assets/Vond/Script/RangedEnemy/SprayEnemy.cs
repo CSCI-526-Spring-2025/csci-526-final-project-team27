@@ -21,8 +21,10 @@ public class RangedFanSprayEnemy : BaseEnemy
     public bool isAttacking = false;
 
     public Transform currentTarget; // 当前锁定目标
+    public bool canAttack = true;
+    public bool attackDisabledBySkill = false;
+
     private Rigidbody2D rb;
-    private bool canAttack = true;
 
     // 接口实例（可以在 Inspector 中注入自定义实现，否则在 Start 中使用默认实现）
     public ITargetFinder targetFinder;
@@ -57,7 +59,7 @@ public class RangedFanSprayEnemy : BaseEnemy
 
     void Update()
     {
-        if (currentTarget != null && canAttack)
+        if (currentTarget != null && canAttack && !attackDisabledBySkill)
         {
             float distance = Vector2.Distance(transform.position, currentTarget.position);
             if (distance <= attackRange)
