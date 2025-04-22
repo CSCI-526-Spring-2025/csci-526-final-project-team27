@@ -24,6 +24,8 @@ public class ChargingEnemy : BaseEnemy
     // 冲撞开始时锁定的目标位置
     private Vector3 lockedChargeTarget;
 
+    public bool attackDisabledBySkill = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -92,26 +94,27 @@ public class ChargingEnemy : BaseEnemy
             }
 
             // 锁定当前目标位置，作为本次冲撞方向
-            if (currentTarget != null)
+            if (currentTarget != null && !attackDisabledBySkill)
             {
                 lockedChargeTarget = currentTarget.position;
+                
+                // 开始冲撞
+                isCharging = true;
+
+                // 固定冲撞时长为 3 秒
+                float chargeTime = 5f;
+                float timer = 0f;
+                while (isCharging && timer < chargeTime)
+                {
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                // 冲撞结束后，停止运动并进入休息状态
+                isCharging = false;
+                rb.linearVelocity = Vector2.zero;
             }
             
-            // 开始冲撞
-            isCharging = true;
-
-            // 固定冲撞时长为 3 秒
-            float chargeTime = 5f;
-            float timer = 0f;
-            while (isCharging && timer < chargeTime)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-            }
-
-            // 冲撞结束后，停止运动并进入休息状态
-            isCharging = false;
-            rb.linearVelocity = Vector2.zero;
             yield return new WaitForSeconds(restTime);
         }
     }
@@ -141,7 +144,7 @@ public class ChargingEnemy : BaseEnemy
         }
         
         // 若碰撞对象是玩家或队友，则造成伤害
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Ally"))
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Ally")) && !attackDisabledBySkill)
         {
             StartCoroutine(DealDamageRoutine(collision.gameObject.transform));
         }

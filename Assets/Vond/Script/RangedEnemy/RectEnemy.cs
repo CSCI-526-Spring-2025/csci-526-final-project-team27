@@ -161,7 +161,8 @@ public class RangedRectangularEnemy : BaseEnemy
 
     public Transform currentTarget; // 当前锁定目标
     private Rigidbody2D rb;
-    private bool canAttack = true;
+    public bool canAttack = true;
+    public bool attackDisabledBySkill = false;
 
     // 接口实例（可在 Inspector 中注入自定义实现，否则在 Start 中使用默认实现）
     public ITargetFinder targetFinder;
@@ -196,7 +197,7 @@ public class RangedRectangularEnemy : BaseEnemy
 
     void Update()
     {
-        if (currentTarget != null && canAttack)
+        if (currentTarget != null && canAttack && !attackDisabledBySkill)
         {
             float distance = Vector2.Distance(transform.position, currentTarget.position);
             if (distance <= attackRange)

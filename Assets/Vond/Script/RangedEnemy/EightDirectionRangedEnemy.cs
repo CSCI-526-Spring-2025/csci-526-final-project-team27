@@ -17,7 +17,8 @@ public class EightDirectionRangedEnemy : BaseEnemy
 
     private Transform target;             // 玩家目标
     private Rigidbody2D rb;
-    private bool canAttack = true;        // 攻击冷却标志
+    public bool canAttack = true;        // 攻击冷却标志
+    public bool attackDisabledBySkill = false;
 
     // 利用接口实现功能解耦
     public ITargetFinder targetFinder;
@@ -62,7 +63,7 @@ public class EightDirectionRangedEnemy : BaseEnemy
         {
             rb.linearVelocity = Vector2.zero;
             FaceTarget(target.position);
-            if (canAttack)
+            if (canAttack && !attackDisabledBySkill)
             {
                 StartCoroutine(PerformAttack());
             }

@@ -17,7 +17,8 @@ public class WanderingEnemy : BaseEnemy
     public IEnemyMelee meleeAttacker;
 
     private Rigidbody2D rb;
-    private bool canAttack = true;
+    public bool canAttack = true;
+    public bool attackDisabledBySkill = false;
 
     // ===== 新增变量：用于检测敌人是否卡住 =====
     private Vector3 lastPosition;
@@ -81,7 +82,7 @@ public class WanderingEnemy : BaseEnemy
     // 碰撞触发时，如果碰到玩家或队友则造成伤害
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Teammate")) && canAttack)
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Teammate")) && canAttack && !attackDisabledBySkill)
         {
             Health targetHealth = collision.gameObject.GetComponent<Health>();
             if (targetHealth != null)
