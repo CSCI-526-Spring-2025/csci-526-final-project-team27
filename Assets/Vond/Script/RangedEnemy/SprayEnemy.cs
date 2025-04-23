@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UIElements;
 
 public class RangedFanSprayEnemy : BaseEnemy
 {
@@ -30,6 +31,9 @@ public class RangedFanSprayEnemy : BaseEnemy
     public ITargetFinder targetFinder;
     public IMover mover;
     public ISprayAttacker fanSprayAttacker;
+
+    [Header("Sprite Settings")]
+    public SpriteRenderer spriteRenderer; // 用于翻转精灵的引用
 
     void Start()
     {
@@ -102,12 +106,13 @@ public class RangedFanSprayEnemy : BaseEnemy
         // 在攻击前实例化预制体显示扇形范围（注意：预制体需要设置好合适的视觉表现）
         if (fanAttackPrefab != null)
         {
-            GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
+            float angle = Mathf.Atan2(currentTarget.position.y - transform.position.y, currentTarget.position.x - transform.position.x) * Mathf.Rad2Deg;
+            GameObject effect = Instantiate(fanAttackPrefab, transform.position, Quaternion.Euler(0, 0, angle));
             Destroy(effect, fanEffectDuration);
         }
 
         // 执行扇形喷雾攻击
-        yield return StartCoroutine(fanSprayAttacker.Attack(this, transform, currentTarget, damage, attackInterval, sprayAngle, sprayRange));
+        yield return StartCoroutine(fanSprayAttacker.Attack(this, transform, currentTarget, damage, attackInterval, sprayAngle, sprayRange, false));
         isAttacking = false;
         canAttack = true;
     }
@@ -116,8 +121,22 @@ public class RangedFanSprayEnemy : BaseEnemy
     // 使敌人面向目标
     void FaceTarget(Vector3 targetPosition)
     {
+        /*
         Vector3 direction = (targetPosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.Euler(0, 0, angle);*/
+        // TODO: 添加翻转或旋转逻辑，目前仅为占位
+        if (spriteRenderer != null)
+        {
+            Vector2 direction = (targetPosition - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
+        }
     }
 }

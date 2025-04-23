@@ -24,9 +24,11 @@ public class EnemyFanSprayAttacker : ISprayAttacker
             if (hit.transform == self)
                 continue;
 
+            Vector2 baseDirect = target.position - self.position;
             // 计算从敌人到检测目标的方向，并判断是否在喷雾扇形内
             Vector2 toHit = (hit.transform.position - self.position).normalized;
-            float deltaAngle = Vector2.Angle(self.right, toHit);
+            //float deltaAngle = Vector2.Angle(self.right, toHit);
+            float deltaAngle = Vector2.Angle(baseDirect, toHit);
             if (deltaAngle <= sprayAngle / 2f)
             {
                 // 对具有 Health 组件的对象造成伤害

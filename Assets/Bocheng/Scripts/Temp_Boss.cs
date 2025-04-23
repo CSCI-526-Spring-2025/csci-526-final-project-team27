@@ -236,7 +236,9 @@ public class Temp_Boss : BaseEnemy
                 // 在攻击前实例化预制体显示扇形范围（注意：预制体需要设置好合适的视觉表现）
                 if (fanAttackPrefab != null)
                 {
-                    GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
+                    float sAngle = Mathf.Atan2(currentTarget.position.y - transform.position.y, currentTarget.position.x - transform.position.x) * Mathf.Rad2Deg;
+                    GameObject effect = Instantiate(fanAttackPrefab, transform.position, Quaternion.Euler(0, 0, sAngle));
+                    // GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
                     Destroy(effect, fanEffectDuration);
                 }
                 // 执行扇形喷雾攻击
