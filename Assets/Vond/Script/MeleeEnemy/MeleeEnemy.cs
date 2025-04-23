@@ -27,6 +27,9 @@ public class MeleeEnemy : BaseEnemy
     public IMover mover;
     public IEnemyMelee meleeAttacker;
 
+    [Header("Anim")]
+    public SpriteRenderer spriteRenderer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -53,12 +56,16 @@ public class MeleeEnemy : BaseEnemy
 
     void Update()
     {
+        if(currentTarget != null)
+        {
+            FaceTarget(currentTarget.position);
+        }
+
         if (currentTarget != null && canAttack && !attackDisabledBySkill)
         {
             float distance = Vector2.Distance(transform.position, currentTarget.position);
             if (distance <= attackRange)
             {
-                FaceTarget(currentTarget.position);
                 StartCoroutine(PerformAttack());
             }
         }
@@ -100,9 +107,22 @@ public class MeleeEnemy : BaseEnemy
     // 使敌人面向目标
     void FaceTarget(Vector3 targetPosition)
     {
+        /*
         Vector3 direction = (targetPosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.Euler(0, 0, angle);*/
+        if(spriteRenderer != null)
+        {
+            Vector2 direction = (targetPosition - transform.position).normalized;
+            if (direction.x > 0)
+            {
+                spriteRenderer.flipX = false; // 朝右
+            }
+            else if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true; // 朝左
+            }
+        }
     }
 
     // 外部调用：当目标消失或死亡时清空当前目标
