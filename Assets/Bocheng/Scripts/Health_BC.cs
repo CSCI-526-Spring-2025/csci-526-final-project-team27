@@ -3,9 +3,18 @@ using System;
 
 
 
+
 public class Health_BC : Health
 {
     public HealthBar healthBar;
+    public enum InterpolationMode { Linear, EaseIn, EaseOut, EaseInOut }
+
+    [Header("残血显示")]
+    public Color fullColor = Color.white;
+    public Color lowHpColor = Color.red;
+    public InterpolationMode mode = InterpolationMode.Linear;
+    public SpriteRenderer spriteRenderer;
+
 
     public float defenseBuff = 1.0f;
     public float damageBuff = 1.0f;
@@ -57,6 +66,12 @@ public class Health_BC : Health
             }
         }
 
+        float t = ApplyInterpolation(currentHealth / maxHealth); // 血量越低，越趋近 lowColor
+        Color resultColor = Color.Lerp(lowHpColor, fullColor, t);
+        if(spriteRenderer != null)
+        {
+            spriteRenderer.color = resultColor;
+        }
     }
 
     override public void TakeDamage(float damage) 
@@ -97,5 +112,19 @@ public class Health_BC : Health
     {
         this.healthBar = healthBar;
         healthBar.SetHealth(currentHealth, maxHealth);
+    }
+
+    float ApplyInterpolation(float t)
+    {
+        switch (mode)
+        {
+            case InterpolationMode.EaseIn: return t * t;
+            case InterpolationMode.EaseOut: return 1f - Mathf.Pow(1f - t, 2);
+            case InterpolationMode.EaseInOut:
+                return t < 0.5f
+                ? 2f * t * t
+                : 1f - Mathf.Pow(-2f * t + 2f, 2) / 2f;
+            default: return t;
+        }
     }
 }
