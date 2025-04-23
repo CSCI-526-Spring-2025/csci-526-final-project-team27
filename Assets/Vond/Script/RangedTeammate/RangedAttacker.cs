@@ -6,8 +6,17 @@ using System.Collections;
 /// </summary>
 public class RangedAttacker : IRangedAttacker 
 {
+    public float delayTime = 0;
     public IEnumerator Attack(MonoBehaviour owner, Transform self, Transform target, float attackInterval, GameObject bulletPrefab, Transform firePoint, float bulletSpeed, float bulletLifetime)
     {
+        // 等待延迟时间
+        if (delayTime > 0)
+        {
+            yield return new WaitForSeconds(delayTime);
+        }
+        // 如果目标为空，直接返回
+        if (target == null) yield break;
+
         // 计算从 firePoint 到目标的方向
         Vector2 attackDirection = (target.position - firePoint.position).normalized;
         float angle = Mathf.Atan2(attackDirection.y, attackDirection.x) * Mathf.Rad2Deg;
@@ -23,6 +32,6 @@ public class RangedAttacker : IRangedAttacker
         GameObject.Destroy(bullet, bulletLifetime);
 
         // 等待下一次攻击
-        yield return new WaitForSeconds(attackInterval);
+        yield return new WaitForSeconds(attackInterval - delayTime);
     }
 }

@@ -12,7 +12,8 @@ public class RangedTeammate : MonoBehaviour, IDieAble
     [Header("Attack Settings")]
     public float attackInterval = 1.5f;    // 两次攻击之间的间隔
     public GameObject bulletPrefab;        // 子弹预制体
-    public Transform firePoint;            // 子弹发射点
+    public Transform firePointLeft;            // 子弹发射点
+    public Transform firePointRight;            // 子弹发射点
     public float bulletSpeed = 10f;        // 子弹飞行速度
     public float bulletLifetime = 2f;      // 子弹最大存在时间
 
@@ -20,7 +21,13 @@ public class RangedTeammate : MonoBehaviour, IDieAble
     [Header("Follow Settings")]
     private float followDistance = 2.0f;   // 跟随玩家的距离
     public bool shouldFollowPlayer = true; // 是否应该跟随玩家
-    //---------------------
+                                           //---------------------
+
+    [Header("Anim Settings")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    public float delayAttackTime = 0.1f; // 延迟生成攻击
+
 
     private Transform currentTarget;       // 当前锁定的目标
     private Rigidbody2D rb;
@@ -47,12 +54,16 @@ public class RangedTeammate : MonoBehaviour, IDieAble
         if (mover == null)
         {
             mover = new SimpleMover();
+            SimpleMover simpleMover = (SimpleMover)mover;
+            simpleMover.animator = animator;
         }
         
         rangedAttacker = GetComponent<IRangedAttacker>();
         if (rangedAttacker == null)
         {
             rangedAttacker = new RangedAttacker();
+            RangedAttacker RA = (RangedAttacker)rangedAttacker;
+            RA.delayTime = delayAttackTime;
         }
     }
 
@@ -75,6 +86,19 @@ public class RangedTeammate : MonoBehaviour, IDieAble
                 if (distToPlayer > followDistance)
                 {
                     mover.Move(transform, rb, playerTransform, moveSpeed);
+
+                    if (spriteRenderer != null)
+                    {
+                        Vector2 direction = (playerTransform.position - transform.position).normalized;
+                        if (direction.x < 0)
+                        {
+                            spriteRenderer.flipX = true;
+                        }
+                        else
+                        {
+                            spriteRenderer.flipX = false;
+                        }
+                    }
                 }
                 else
                 {
@@ -86,6 +110,19 @@ public class RangedTeammate : MonoBehaviour, IDieAble
                 rb.linearVelocity = Vector2.zero;
             }
             return;
+        }
+
+        if (spriteRenderer != null)
+        {
+            Vector2 direction = (currentTarget.position - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
         }
 
         float distance = Vector2.Distance(transform.position, currentTarget.position);
@@ -106,6 +143,16 @@ public class RangedTeammate : MonoBehaviour, IDieAble
     IEnumerator PerformAttack()
     {
         canAttack = false;
+        Transform firePoint = firePointRight;
+        if(spriteRenderer != null && spriteRenderer.flipX)
+        {
+            firePoint = firePointLeft;
+        }
+
+        if(animator != null)
+        {
+            animator.Play("Attack");
+        }
         yield return StartCoroutine(rangedAttacker.Attack(this, transform, currentTarget, attackInterval, bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
         canAttack = true;
     }
