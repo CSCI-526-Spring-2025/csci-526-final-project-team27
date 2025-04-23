@@ -135,6 +135,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UIElements;
 
 public class RangedRectangularEnemy : BaseEnemy
 {
@@ -237,12 +238,17 @@ public class RangedRectangularEnemy : BaseEnemy
         canAttack = false;
         isAttacking = true;
 
+        Vector3 center = transform.position + (currentTarget.position - transform.position).normalized * (attackLength / 2f);
+        float angle = Mathf.Atan2(currentTarget.position.y - transform.position.y, currentTarget.position.x - transform.position.x) * Mathf.Rad2Deg;
+
         // 预警阶段：实例化闪烁预警效果
         if (chargeIndicatorPrefab != null)
         {
             // 计算偏移量，将预制体中心向攻击方向平移半个攻击长度
-            Vector3 spawnPos = transform.position + transform.right * (attackLength / 2f);
-            GameObject effect = Instantiate(chargeIndicatorPrefab, spawnPos, transform.rotation);
+            //Vector3 spawnPos = transform.position + transform.right * (attackLength / 2f);
+            Vector3 spawnPos = center;
+            //GameObject effect = Instantiate(chargeIndicatorPrefab, spawnPos, transform.rotation);
+            GameObject effect = Instantiate(chargeIndicatorPrefab, spawnPos, Quaternion.Euler(0, 0, angle));
             Destroy(effect, chargeIndicatorDuration);
         }
 
@@ -255,14 +261,15 @@ public class RangedRectangularEnemy : BaseEnemy
         {
             // 计算矩形区域中心位置：敌人位置向前偏移 attackLength/2
             Vector3 rectCenter = transform.position + transform.right * (attackLength / 2f);
-            GameObject rectEffect = Instantiate(rectAttackPrefab, rectCenter, transform.rotation);
+            //GameObject rectEffect = Instantiate(rectAttackPrefab, rectCenter, transform.rotation);
+            GameObject rectEffect = Instantiate(rectAttackPrefab, center, Quaternion.Euler(0, 0, angle));
             // 调整预制体的缩放以匹配攻击范围（假设预制体原始尺寸为 1 单位）
             rectEffect.transform.localScale = new Vector3(attackLength, attackWidth, 1f);
             Destroy(rectEffect, rectAttackEffectDuration);
         }
 
         // 执行矩形攻击：对区域内目标造成伤害
-        yield return StartCoroutine(rectAttackAttacker.Attack(this, transform, currentTarget, damage, attackInterval, attackWidth, attackLength));
+        yield return StartCoroutine(rectAttackAttacker.Attack(this, transform, currentTarget, damage, attackInterval, attackWidth, attackLength,center, angle));
 
         isAttacking = false;
         canAttack = true;

@@ -9,6 +9,8 @@ public class EnemyHealth : Health
     [Header("EXP Drop")]
     [SerializeField] private GameObject expOrbPrefab;
 
+    [Header("Health UI")]
+    public HealthBar healthBar;
 
     private SimpleSpawner enemySpawner;
     private FirebaseDataUploader dataUploader;
@@ -38,7 +40,10 @@ public class EnemyHealth : Health
     // Update is called once per frame
     void Update()
     {
-        
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth, maxHealth);
+        }
     }
 
     public void SetSpawnner(SimpleSpawner spawner)

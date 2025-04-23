@@ -5,6 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Temp_Boss : BaseEnemy
 {
+    [Header("Sprite")]
+    public SpriteRenderer spriteRenderer; // 用于翻转精灵的 SpriteRenderer 组件
+
+
     [Header("Movement Settings")]
     public float searchInterval = 1.0f;
     public float teleportPercent = 0.5f; // 50% 概率传送
@@ -57,6 +61,7 @@ public class Temp_Boss : BaseEnemy
     public IMover mover;
 
     public Transform currentTarget; // 当前锁定目标
+    private bool lockOnTarget = false; // 是否锁定目标
     private Rigidbody2D rb;
 
     private int attackIndex = 2; // 攻击方式索引
@@ -67,6 +72,7 @@ public class Temp_Boss : BaseEnemy
     private Vector2 roomPosition; // 房间位置
     private Vector2 roomSize;     // 房间大小
     private float bias = 4.0f;
+
 
     private void Awake()
     {
@@ -119,7 +125,11 @@ public class Temp_Boss : BaseEnemy
                 StartCoroutine(PerformRandomAttack());
             }
         }
-        StartCoroutine(SearchTargetRoutine());
+
+        if(!lockOnTarget)
+        {
+            StartCoroutine(SearchTargetRoutine());
+        }
     }
 
     void FixedUpdate()
@@ -157,19 +167,26 @@ public class Temp_Boss : BaseEnemy
 
     IEnumerator PerformRandomAttack()
     {
+
         switch (attackIndex)
         {
             case 0:
                 // 执行矩形攻击
                 canAttack = false;
                 isAttacking = true;
+                lockOnTarget = true; // 锁定目标，停止搜索
+
+                Vector3 TPosition = currentTarget.position;
+                Vector3 center = transform.position + (TPosition - transform.position).normalized * (attackLength / 2f);
+                float angle = Mathf.Atan2(TPosition.y - transform.position.y, TPosition.x - transform.position.x) * Mathf.Rad2Deg;
 
                 // 预警阶段：实例化闪烁预警效果
                 if (chargeIndicatorPrefab != null)
                 {
-                    // 计算偏移量，将预制体中心向攻击方向平移半个攻击长度
-                    Vector3 spawnPos = transform.position + transform.right * (attackLength / 2f);
-                    GameObject effect = Instantiate(chargeIndicatorPrefab, spawnPos, transform.rotation);
+                    Vector3 spawnPos = center;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    
+                    GameObject effect = Instantiate(chargeIndicatorPrefab, spawnPos, rotation);
                     Destroy(effect, chargeIndicatorDuration);
                 }
 
@@ -181,15 +198,19 @@ public class Temp_Boss : BaseEnemy
                 if (rectAttackPrefab != null)
                 {
                     // 计算矩形区域中心位置：敌人位置向前偏移 attackLength/2
-                    Vector3 rectCenter = transform.position + transform.right * (attackLength / 2f);
-                    GameObject rectEffect = Instantiate(rectAttackPrefab, rectCenter, transform.rotation);
+                    // Vector3 rectCenter = transform.position + transform.right * (attackLength / 2f);
+                    Vector3 spawnPos = center;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    // GameObject rectEffect = Instantiate(rectAttackPrefab, rectCenter, transform.rotation);
+
+                    GameObject rectEffect = Instantiate(rectAttackPrefab, spawnPos, rotation);
                     // 调整预制体的缩放以匹配攻击范围（假设预制体原始尺寸为 1 单位）
                     rectEffect.transform.localScale = new Vector3(attackLength, attackWidth, 1f);
                     Destroy(rectEffect, rectAttackEffectDuration);
                 }
 
                 // 执行矩形攻击：对区域内目标造成伤害
-                yield return StartCoroutine(enemyRectAttackAttacker.Attack(this, transform, currentTarget, damage, attackInterval, attackWidth, attackLength));
+                yield return StartCoroutine(enemyRectAttackAttacker.Attack(this, transform, currentTarget, damage, attackInterval, attackWidth, attackLength,center,angle));
 
                 isAttacking = false;
                 canAttack = true;
@@ -201,6 +222,7 @@ public class Temp_Boss : BaseEnemy
                 // 执行八方向远程攻击
                 canAttack = false;
                 isAttacking = true;
+                lockOnTarget = true; // 锁定目标，停止搜索
                 yield return StartCoroutine(eightDirectionRangedAttacker.Attack(this, transform, currentTarget, rangedAttackInterval, bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
                 isAttacking = false;
                 canAttack = true;
@@ -210,7 +232,7 @@ public class Temp_Boss : BaseEnemy
             case 2:
                 canAttack = false;
                 isAttacking = true;
-
+                lockOnTarget = true; // 锁定目标，停止搜索
                 // 在攻击前实例化预制体显示扇形范围（注意：预制体需要设置好合适的视觉表现）
                 if (fanAttackPrefab != null)
                 {
@@ -218,7 +240,7 @@ public class Temp_Boss : BaseEnemy
                     Destroy(effect, fanEffectDuration);
                 }
                 // 执行扇形喷雾攻击
-                yield return StartCoroutine(enemyFanSprayAttacker.Attack(this, transform, currentTarget, sprayDamage, sprayAttackInterval, sprayAngle, sprayRange));
+                yield return StartCoroutine(enemyFanSprayAttacker.Attack(this, transform, currentTarget, sprayDamage, sprayAttackInterval, sprayAngle, sprayRange, false));
 
                 isAttacking = false;
                 canAttack = true;
@@ -291,13 +313,29 @@ public class Temp_Boss : BaseEnemy
     // 使敌人面向目标
     void FaceTarget(Vector3 targetPosition)
     {
+        /*
         Vector3 direction = (targetPosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
+        */
+
+        if (spriteRenderer != null)
+        {
+            Vector2 direction = (targetPosition - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
+        }
     }
 
     void AttackEnd()
     {
+        lockOnTarget = false; // 解除锁定目标，继续搜索
         attackIndex = Random.Range(0, AttackerCount); // 随机选择下一个攻击方式
         // 50% 概率传送
         if (Random.value < teleportPercent)

@@ -29,14 +29,21 @@ using System.Collections;
 // }
 public class EnemyRectAttackAttacker : IRectAttacker 
 {
-    public IEnumerator Attack(MonoBehaviour owner, Transform self, Transform target, float damage, float attackInterval, float attackWidth, float attackLength)
+    public IEnumerator Attack(MonoBehaviour owner, Transform self, Transform target, float damage, float attackInterval, float attackWidth, float attackLength, Vector3 center, float angle)
     {
         // 假设敌人已面向目标（self.right 为攻击方向）
         // 矩形区域中心位置：敌人位置向前偏移 attackLength/2
+
+        /*
         Vector2 center = (Vector2)self.position + (Vector2)self.right * (attackLength / 2f);
         Vector2 size = new Vector2(attackLength, attackWidth);
         float angle = self.eulerAngles.z;
-        
+        */
+
+        //Vector3 center = self.position + (target.position - self.position).normalized * (attackLength / 2f);
+        //float angle = Mathf.Atan2(target.position.y - self.position.y, target.position.x - self.position.x) * Mathf.Rad2Deg;
+        Vector2 size = new Vector2(attackLength, attackWidth);
+
         // 检测矩形区域内所有碰撞体
         Collider2D[] hitColliders = Physics2D.OverlapBoxAll(center, size, angle);
         foreach (var hit in hitColliders)

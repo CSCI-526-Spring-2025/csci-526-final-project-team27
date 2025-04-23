@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
-  attackRange: 1
+  attackRange: 1.5
   searchInterval: 1
   hitboxPrefab: {fileID: 819594227005175230, guid: 5257ea765a7a3ec44b564a443e78f0a6, type: 3}
   hitboxOffset: 1
