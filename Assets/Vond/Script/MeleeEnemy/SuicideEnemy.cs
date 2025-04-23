@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SuicideEnemy : BaseEnemy
+public class SuicideEnemy : BaseEnemy, IDieAble
 {
     [Header("警戒设置")]
     [Tooltip("当玩家或队友进入该范围时触发警戒状态")]
@@ -16,6 +16,12 @@ public class SuicideEnemy : BaseEnemy
     public float explosionRadius = 3f;
     [Tooltip("爆炸造成的伤害")]
     public float explosionDamage = 20f;
+
+    [Header("Anim Setting")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    public float explodeAnimDelay = 0f;
+    public float destroyDelay = 0f;
 
     // 复用已有的移动实现
     public IMover mover;
@@ -61,10 +67,33 @@ public class SuicideEnemy : BaseEnemy
         if (isAlerted && currentTarget != null && !hasExploded)
         {
             mover.Move(transform, rb, currentTarget, rushSpeed * moveSpeed);
+
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", true);
+            }
+
+            if(spriteRenderer != null)
+            {
+                // 计算朝向目标的方向
+                Vector2 direction = (currentTarget.position - transform.position).normalized;
+                if (direction.x > 0)
+                {
+                    spriteRenderer.flipX = false; // 朝右
+                }
+                else if (direction.x < 0)
+                {
+                    spriteRenderer.flipX = true; // 朝左
+                }
+            }
         }
         else
         {
             rb.linearVelocity  = Vector2.zero;
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+            }
         }
     }
 
@@ -72,6 +101,11 @@ public class SuicideEnemy : BaseEnemy
     {
         // 警戒状态持续一段时间后触发爆炸
         yield return new WaitForSeconds(explosionDelay);
+        if(animator != null)
+        {
+            animator.SetTrigger("Explode");
+        }
+        yield return new WaitForSeconds(explodeAnimDelay);
         Explode();
     }
 
@@ -115,5 +149,17 @@ public class SuicideEnemy : BaseEnemy
         Gizmos.DrawWireSphere(transform.position, alertRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
+
+    public void Die()
+    {
+        StartCoroutine(HandleDie());
+    }
+
+    IEnumerator HandleDie()
+    {
+        yield return new WaitForSeconds(destroyDelay);
+        // 销毁游戏对象
+        Destroy(gameObject);
     }
 }
