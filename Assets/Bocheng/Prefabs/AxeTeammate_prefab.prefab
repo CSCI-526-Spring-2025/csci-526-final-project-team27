@@ -455,6 +455,7 @@ MonoBehaviour:
   shouldFollowPlayer: 1
   animator: {fileID: 8023452894174718895}
   spriteRenderer: {fileID: 3519553064318932915}
+  delayAttackTime: 0.1
 --- !u!114 &7414926327221384575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,6 +472,10 @@ MonoBehaviour:
   currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   healthBar: {fileID: 7639272024969832013}
+  fullColor: {r: 1, g: 1, b: 1, a: 1}
+  lowHpColor: {r: 0.9372549, g: 0.5882353, b: 0.5882353, a: 1}
+  mode: 0
+  spriteRenderer: {fileID: 3519553064318932915}
   defenseBuff: 1
   damageBuff: 1
 --- !u!114 &180932178889651524
@@ -488,6 +493,7 @@ MonoBehaviour:
   separationRadius: 2
   separationForce: 2
   stopDistance: 1
+  touchThreshold: 0.03
   animator: {fileID: 8023452894174718895}
 --- !u!1 &4758220855868368510
 GameObject:

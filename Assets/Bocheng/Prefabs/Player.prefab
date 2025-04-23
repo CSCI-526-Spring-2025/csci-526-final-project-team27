@@ -689,6 +689,10 @@ MonoBehaviour:
   currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   healthBar: {fileID: 1433038471541402383}
+  fullColor: {r: 1, g: 1, b: 1, a: 1}
+  lowHpColor: {r: 0.9372549, g: 0.5882353, b: 0.5882353, a: 1}
+  mode: 0
+  spriteRenderer: {fileID: 422105734422435433}
   defenseBuff: 1
   damageBuff: 1
 --- !u!114 &3701584900275016987
