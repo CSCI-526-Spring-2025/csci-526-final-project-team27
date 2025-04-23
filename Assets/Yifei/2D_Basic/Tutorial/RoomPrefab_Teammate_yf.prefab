@@ -256,7 +256,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+  m_Sprite: {fileID: 699413217, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2421,6 +2421,8 @@ MonoBehaviour:
   separationRadius: 1
   separationForce: 2
   stopDistance: 1
+  touchThreshold: 0.03
+  animator: {fileID: 0}
 --- !u!114 &7083429682327123369 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7639272024969832013, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
@@ -2672,6 +2674,8 @@ MonoBehaviour:
   separationRadius: 2
   separationForce: 2
   stopDistance: 1
+  touchThreshold: 0.03
+  animator: {fileID: 0}
 --- !u!4 &4579693449350733930 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2425171054499181086, guid: 326f2347f21cf23419e65fd7554b42c6, type: 3}
