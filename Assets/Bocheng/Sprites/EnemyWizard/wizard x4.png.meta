@@ -1,0 +1,985 @@
+fileFormatVersion: 2
+guid: 8a439f5f4252157448c14291204299fa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3803905368519895067
+    second: wizard x4_0
+  - first:
+      213: 986786946727040552
+    second: wizard x4_1
+  - first:
+      213: -2695849057452497018
+    second: wizard x4_2
+  - first:
+      213: 6896613927000753495
+    second: wizard x4_3
+  - first:
+      213: 6174848866674618304
+    second: wizard x4_4
+  - first:
+      213: -4995084194165738652
+    second: wizard x4_5
+  - first:
+      213: 4032313602351794964
+    second: wizard x4_6
+  - first:
+      213: -6923618226015900898
+    second: wizard x4_7
+  - first:
+      213: -6995704190758156778
+    second: wizard x4_8
+  - first:
+      213: -7470673787285552718
+    second: wizard x4_9
+  - first:
+      213: -2864263382582371047
+    second: wizard x4_10
+  - first:
+      213: 2611395556994231596
+    second: wizard x4_11
+  - first:
+      213: 2265311893996519054
+    second: wizard x4_12
+  - first:
+      213: 8087260871866285862
+    second: wizard x4_13
+  - first:
+      213: 6655566061045061639
+    second: wizard x4_14
+  - first:
+      213: -4518842627760262062
+    second: wizard x4_15
+  - first:
+      213: -7950030979821037635
+    second: wizard x4_16
+  - first:
+      213: 108944334541776571
+    second: wizard x4_17
+  - first:
+      213: 2352370975347469036
+    second: wizard x4_18
+  - first:
+      213: -4831004030578870270
+    second: wizard x4_19
+  - first:
+      213: -80965971128437990
+    second: wizard x4_20
+  - first:
+      213: -7242126717187271783
+    second: wizard x4_21
+  - first:
+      213: -7964455307698650985
+    second: wizard x4_22
+  - first:
+      213: -7863267623068263219
+    second: wizard x4_23
+  - first:
+      213: -8666455720261925912
+    second: wizard x4_24
+  - first:
+      213: 1415452119822346607
+    second: wizard x4_25
+  - first:
+      213: 5462783968582458367
+    second: wizard x4_26
+  - first:
+      213: -3426732098247254971
+    second: wizard x4_27
+  - first:
+      213: -4188892748889898171
+    second: wizard x4_28
+  - first:
+      213: 4321174508623979528
+    second: wizard x4_29
+  - first:
+      213: -3343352386476226565
+    second: wizard x4_30
+  - first:
+      213: -7649573435250083402
+    second: wizard x4_31
+  - first:
+      213: -748754662065710620
+    second: wizard x4_32
+  - first:
+      213: -3656337964966602172
+    second: wizard x4_33
+  - first:
+      213: 253683523477197418
+    second: wizard x4_34
+  - first:
+      213: -366070432960029004
+    second: wizard x4_35
+  - first:
+      213: -1856880337478264462
+    second: wizard x4_36
+  - first:
+      213: 3845328580411618862
+    second: wizard x4_37
+  - first:
+      213: 8449997780086362699
+    second: wizard x4_38
+  - first:
+      213: 6770921708222726433
+    second: wizard x4_39
+  - first:
+      213: 2198287844339957693
+    second: wizard x4_40
+  - first:
+      213: -3633596873370629793
+    second: wizard x4_41
+  - first:
+      213: 614476861824992056
+    second: wizard x4_42
+  - first:
+      213: -3427662149728216994
+    second: wizard x4_43
+  - first:
+      213: -4244439230155769329
+    second: wizard x4_44
+  - first:
+      213: -3766598335426393652
+    second: wizard x4_45
+  - first:
+      213: 3805457466248915015
+    second: wizard x4_46
+  - first:
+      213: 4744781093898667045
+    second: wizard x4_47
+  - first:
+      213: -3643057381626975690
+    second: wizard x4_48
+  - first:
+      213: 4344667892045358530
+    second: wizard x4_49
+  - first:
+      213: 1229774540392925673
+    second: wizard x4_50
+  - first:
+      213: 649407822648649749
+    second: wizard x4_51
+  - first:
+      213: -1162977231270229849
+    second: wizard x4_52
+  - first:
+      213: -1395672275572827771
+    second: wizard x4_53
+  - first:
+      213: -4098189359348586875
+    second: wizard x4_54
+  - first:
+      213: 5682056680242303475
+    second: wizard x4_55
+  - first:
+      213: 3302576090616231004
+    second: wizard x4_56
+  - first:
+      213: 740367831544278788
+    second: wizard x4_57
+  - first:
+      213: -6874417653096119483
+    second: wizard x4_58
+  - first:
+      213: -2883870246512860588
+    second: wizard x4_59
+  - first:
+      213: -2660247273616165123
+    second: wizard x4_60
+  - first:
+      213: 3701266630395927986
+    second: wizard x4_61
+  - first:
+      213: -2617910775060027807
+    second: wizard x4_62
+  - first:
+      213: -2259027948867477924
+    second: wizard x4_63
+  - first:
+      213: -8004288110871649295
+    second: wizard x4_64
+  - first:
+      213: 7038737323115274444
+    second: wizard x4_65
+  - first:
+      213: 2792765369741960957
+    second: wizard x4_66
+  - first:
+      213: 1864424812642236601
+    second: wizard x4_67
+  - first:
+      213: 5430700269585507660
+    second: wizard x4_68
+  - first:
+      213: -5354201039449849506
+    second: wizard x4_69
+  - first:
+      213: -7099150038959848546
+    second: wizard x4_70
+  - first:
+      213: -5842580202527683789
+    second: wizard x4_71
+  - first:
+      213: -8669108544849267840
+    second: wizard x4_72
+  - first:
+      213: -951614978097067091
+    second: wizard x4_73
+  - first:
+      213: -4278375332794446971
+    second: wizard x4_74
+  - first:
+      213: -6222789622574156380
+    second: wizard x4_75
+  - first:
+      213: 3750764150687967836
+    second: wizard x4_76
+  - first:
+      213: 523953951408412621
+    second: wizard x4_77
+  - first:
+      213: 5015204600987577530
+    second: wizard x4_78
+  - first:
+      213: 4147354583134001254
+    second: wizard x4_79
+  - first:
+      213: -6053060150134108308
+    second: wizard x4_80
+  - first:
+      213: 2580383633134959366
+    second: wizard x4_81
+  - first:
+      213: -6525497511574411055
+    second: wizard x4_82
+  - first:
+      213: 2125044458865440449
+    second: wizard x4_83
+  - first:
+      213: 5421149068007816490
+    second: wizard x4_84
+  - first:
+      213: 1046608530185072966
+    second: wizard x4_85
+  - first:
+      213: -2901993780455370957
+    second: wizard x4_86
+  - first:
+      213: 2898079476538194635
+    second: wizard x4_87
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: wizard x4_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1280
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1864d957cf2ac430800000000000000
+      internalID: 3803905368519895067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1152
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1be6e508ed5aef90800000000000000
+      internalID: -6923618226015900898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1152
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61606247a144aee90800000000000000
+      internalID: -6995704190758156778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_3
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1152
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b1c50495c5d25890800000000000000
+      internalID: -7470673787285552718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1152
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91dd40a01a71048d0800000000000000
+      internalID: -2864263382582371047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_46
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 431
+        width: 34
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 748ef934763bfc430800000000000000
+      internalID: 3805457466248915015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_47
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 435
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 524c1d61449d8d140800000000000000
+      internalID: 4744781093898667045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_48
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 439
+        width: 34
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63a62c7fc92417dc0800000000000000
+      internalID: -3643057381626975690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_49
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 435
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c5a864cd6c5b4c30800000000000000
+      internalID: 4344667892045358530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_61
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 307
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bd91c3e36a8d5330800000000000000
+      internalID: 3701266630395927986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_62
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 307
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16621e635005babd0800000000000000
+      internalID: -2617910775060027807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_63
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 307
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5e1312ac0256a0e0800000000000000
+      internalID: -2259027948867477924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_64
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 307
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f3ec972f5e0be090800000000000000
+      internalID: -8004288110871649295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_68
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 127
+        width: 129
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4523424f19bd5b40800000000000000
+      internalID: 5430700269585507660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_82
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 0
+        width: 50
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d869e73696c075a0800000000000000
+      internalID: -6525497511574411055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_83
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 15
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c636962dacad7d10800000000000000
+      internalID: 2125044458865440449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_84
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 0
+        width: 42
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2dbb09da5acb3b40800000000000000
+      internalID: 5421149068007816490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_85
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 15
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 641339cb9ec468e00800000000000000
+      internalID: 1046608530185072966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_86
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 0
+        width: 34
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33f8097380c0ab7d0800000000000000
+      internalID: -2901993780455370957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 768
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0fc2752298cb30408d2719ec4e96527
+      internalID: -888485540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_8
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 768
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bbfe120fc28f494382d64af227d74d2
+      internalID: 1362416978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_6
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43d0f00be0841d04ba6f3ed965c4cc0e
+      internalID: 4032313602351794964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wizard x4_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 768
+        width: 128
+        height: 128
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0771af154f7b3c141bad91b304969695
+      internalID: -4995084194165738652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 10efd2da337a1b74499ac6750ee69d02
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      wizard x4_0: 3803905368519895067
+      wizard x4_1: -6923618226015900898
+      wizard x4_11: 2611395556994231596
+      wizard x4_12: 2265311893996519054
+      wizard x4_13: 8087260871866285862
+      wizard x4_14: 6655566061045061639
+      wizard x4_15: -4518842627760262062
+      wizard x4_16: -7950030979821037635
+      wizard x4_17: 108944334541776571
+      wizard x4_18: 2352370975347469036
+      wizard x4_19: -4831004030578870270
+      wizard x4_2: -6995704190758156778
+      wizard x4_20: -80965971128437990
+      wizard x4_21: -7242126717187271783
+      wizard x4_22: -7964455307698650985
+      wizard x4_23: -7863267623068263219
+      wizard x4_24: -8666455720261925912
+      wizard x4_25: 1415452119822346607
+      wizard x4_26: 5462783968582458367
+      wizard x4_27: -3426732098247254971
+      wizard x4_28: -4188892748889898171
+      wizard x4_29: 4321174508623979528
+      wizard x4_3: -7470673787285552718
+      wizard x4_30: -3343352386476226565
+      wizard x4_31: -7649573435250083402
+      wizard x4_32: -748754662065710620
+      wizard x4_33: -3656337964966602172
+      wizard x4_34: 253683523477197418
+      wizard x4_35: -366070432960029004
+      wizard x4_36: -1856880337478264462
+      wizard x4_37: 3845328580411618862
+      wizard x4_38: 8449997780086362699
+      wizard x4_39: 6770921708222726433
+      wizard x4_4: -2864263382582371047
+      wizard x4_40: 2198287844339957693
+      wizard x4_41: -3633596873370629793
+      wizard x4_42: 614476861824992056
+      wizard x4_43: -3427662149728216994
+      wizard x4_44: -4244439230155769329
+      wizard x4_45: -3766598335426393652
+      wizard x4_46: 3805457466248915015
+      wizard x4_47: 4744781093898667045
+      wizard x4_48: -3643057381626975690
+      wizard x4_49: 4344667892045358530
+      wizard x4_5: -4995084194165738652
+      wizard x4_50: 1229774540392925673
+      wizard x4_51: 649407822648649749
+      wizard x4_52: -1162977231270229849
+      wizard x4_53: -1395672275572827771
+      wizard x4_54: -4098189359348586875
+      wizard x4_55: 5682056680242303475
+      wizard x4_56: 3302576090616231004
+      wizard x4_57: 740367831544278788
+      wizard x4_58: -6874417653096119483
+      wizard x4_59: -2883870246512860588
+      wizard x4_6: 4032313602351794964
+      wizard x4_60: -2660247273616165123
+      wizard x4_61: 3701266630395927986
+      wizard x4_62: -2617910775060027807
+      wizard x4_63: -2259027948867477924
+      wizard x4_64: -8004288110871649295
+      wizard x4_65: 7038737323115274444
+      wizard x4_66: 2792765369741960957
+      wizard x4_67: 1864424812642236601
+      wizard x4_68: 5430700269585507660
+      wizard x4_69: -5354201039449849506
+      wizard x4_7: -888485540
+      wizard x4_70: -7099150038959848546
+      wizard x4_71: -5842580202527683789
+      wizard x4_72: -8669108544849267840
+      wizard x4_73: -951614978097067091
+      wizard x4_74: -4278375332794446971
+      wizard x4_75: -6222789622574156380
+      wizard x4_76: 3750764150687967836
+      wizard x4_78: 5015204600987577530
+      wizard x4_79: 4147354583134001254
+      wizard x4_8: 1362416978
+      wizard x4_80: -6053060150134108308
+      wizard x4_81: 2580383633134959366
+      wizard x4_82: -6525497511574411055
+      wizard x4_83: 2125044458865440449
+      wizard x4_84: 5421149068007816490
+      wizard x4_85: 1046608530185072966
+      wizard x4_86: -2901993780455370957
+      wizard x4_87: 2898079476538194635
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

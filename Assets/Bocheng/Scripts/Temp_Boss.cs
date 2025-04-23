@@ -5,9 +5,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Temp_Boss : BaseEnemy
 {
-    [Header("Sprite")]
-    public SpriteRenderer spriteRenderer; // 用于翻转精灵的 SpriteRenderer 组件
-
 
     [Header("Movement Settings")]
     public float searchInterval = 1.0f;
@@ -73,6 +70,13 @@ public class Temp_Boss : BaseEnemy
     private Vector2 roomSize;     // 房间大小
     private float bias = 4.0f;
 
+    [Header("Anim")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer LeftBookSprite;
+    public SpriteRenderer RightBookSprite;
+    public List<Color> colorList = new List<Color>();
+    bool lockFlipX = false; // 是否锁定翻转状态
 
     private void Awake()
     {
@@ -89,6 +93,11 @@ public class Temp_Boss : BaseEnemy
         if (mover == null)
         {
             mover = new SimpleMover();
+            if (animator != null)
+            {
+                SimpleMover simpleMover = (SimpleMover)mover;
+                simpleMover.animator = animator; // 传递动画控制器
+            }
         }
 
         if (enemyRectAttackAttacker == null)
@@ -111,7 +120,15 @@ public class Temp_Boss : BaseEnemy
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
+        if (spriteRenderer.flipX)
+        {
+            LeftBookSprite.enabled = false;
+        }
+        else
+        {
+            RightBookSprite.enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -167,6 +184,13 @@ public class Temp_Boss : BaseEnemy
 
     IEnumerator PerformRandomAttack()
     {
+        if(animator != null)
+        {
+            animator.SetBool("isAttacking", true);
+        }
+
+        lockFlipX = true; // 锁定翻转状态
+        ShowMagicBook(attackIndex);
 
         switch (attackIndex)
         {
@@ -175,6 +199,7 @@ public class Temp_Boss : BaseEnemy
                 canAttack = false;
                 isAttacking = true;
                 lockOnTarget = true; // 锁定目标，停止搜索
+
 
                 Vector3 TPosition = currentTarget.position;
                 Vector3 center = transform.position + (TPosition - transform.position).normalized * (attackLength / 2f);
@@ -241,6 +266,7 @@ public class Temp_Boss : BaseEnemy
                     // GameObject effect = Instantiate(fanAttackPrefab, transform.position, transform.rotation);
                     Destroy(effect, fanEffectDuration);
                 }
+
                 // 执行扇形喷雾攻击
                 yield return StartCoroutine(enemyFanSprayAttacker.Attack(this, transform, currentTarget, sprayDamage, sprayAttackInterval, sprayAngle, sprayRange, false));
 
@@ -250,6 +276,7 @@ public class Temp_Boss : BaseEnemy
                 break;
 
             default:
+                lockFlipX = false; // 解除锁定翻转状态
                 break;
         }
     }
@@ -320,6 +347,10 @@ public class Temp_Boss : BaseEnemy
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
         */
+        if(lockFlipX)
+        {
+            return; // 锁定翻转状态时不进行翻转
+        }
 
         if (spriteRenderer != null)
         {
@@ -337,12 +368,27 @@ public class Temp_Boss : BaseEnemy
 
     void AttackEnd()
     {
+        lockFlipX = false; 
         lockOnTarget = false; // 解除锁定目标，继续搜索
         attackIndex = Random.Range(0, AttackerCount); // 随机选择下一个攻击方式
         // 50% 概率传送
         if (Random.value < teleportPercent)
         {
             Teleport();
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("isAttacking", false);
+        }
+
+        if (spriteRenderer.flipX)
+        {
+            LeftBookSprite.enabled = false;
+        }
+        else
+        {
+            RightBookSprite.enabled = false;
         }
     }
 
@@ -354,5 +400,31 @@ public class Temp_Boss : BaseEnemy
                                   Random.Range(roomPosition.y - roomSize.y / 2, roomPosition.y + roomSize.y / 2)
                                          );
         transform.position = randomPosition;
+    }
+
+    void ShowMagicBook(int index)
+    {
+        if(LeftBookSprite == null || RightBookSprite == null)
+        {
+            return;
+        }
+
+        Color chosenColor = Color.white;
+
+        if(colorList.Count - 1 >= index)
+        {
+            chosenColor = colorList[index];
+        }
+
+        if (spriteRenderer.flipX)
+        {
+            LeftBookSprite.color = chosenColor;
+            LeftBookSprite.enabled = true;
+        }
+        else
+        {
+            RightBookSprite.color = chosenColor;
+            RightBookSprite.enabled = true;
+        }
     }
 }
