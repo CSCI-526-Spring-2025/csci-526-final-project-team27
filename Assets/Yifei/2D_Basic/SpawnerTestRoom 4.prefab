@@ -1236,7 +1236,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 625642135969737916, guid: 31139b0004389c94ca5ca211a1f8f782, type: 3}
+    - enemyPrefab: {fileID: 625642135969737916, guid: ae43871b03dbd4343a3e66cb4de357f5, type: 3}
       count: 2
       interval: 0
       positionType: 2

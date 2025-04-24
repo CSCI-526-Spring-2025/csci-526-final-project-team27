@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7b423040b60f35a4d89fe3c2540870d7
+guid: 35fc352c7eceea04296ecce4d993b753
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -209,11 +209,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Skeleton Archer-Hurt_0: 4915499258703585561
-      Skeleton Archer-Hurt_1: -8093550418751175530
-      Skeleton Archer-Hurt_2: 7452212708572026131
-      Skeleton Archer-Hurt_3: 3182055909973457954
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

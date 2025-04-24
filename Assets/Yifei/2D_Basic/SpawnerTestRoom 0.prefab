@@ -1370,7 +1370,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 625642135969737916, guid: 31139b0004389c94ca5ca211a1f8f782, type: 3}
+    - enemyPrefab: {fileID: 625642135969737916, guid: ae43871b03dbd4343a3e66cb4de357f5, type: 3}
       count: 2
       interval: 0
       positionType: 1
@@ -1382,7 +1382,7 @@ MonoBehaviour:
   - waveName: 1
     preDelay: 1
     units:
-    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: cbb4b05cb66fdbf44a21216182d9300d, type: 3}
       count: 2
       interval: 1
       positionType: 1

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dc6978d70c968bf46833f656f7c6d9e5
+guid: ecf59731fcb2e7e44b189e867afd8757
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Skeleton Archer-Attack_Effect_0: 8265219467952208008
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
