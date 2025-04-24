@@ -15,6 +15,11 @@ public class EightDirectionRangedEnemy : BaseEnemy
     public float bulletSpeed = 10f;       // 子弹移动速度
     public float bulletLifetime = 2f;     // 子弹存在时间
 
+    [Header("Anim Settings")]
+    public Animator animator;                // 动画控制器
+    public SpriteRenderer spriteRenderer;    // 精灵渲染器
+    public float delayAttackTime = 0.1f;    // 攻击动画延迟时间
+
     private Transform target;             // 玩家目标
     private Rigidbody2D rb;
     public bool canAttack = true;        // 攻击冷却标志
@@ -55,13 +60,30 @@ public class EightDirectionRangedEnemy : BaseEnemy
         if (target == null)
         {
             rb.linearVelocity = Vector2.zero;
+            // 停止移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+            }
             return;
+        }
+
+        // 更新精灵朝向
+        if (spriteRenderer != null)
+        {
+            Vector2 direction = (target.position - transform.position).normalized;
+            spriteRenderer.flipX = direction.x < 0;
         }
 
         float distance = Vector2.Distance(transform.position, target.position);
         if (distance <= attackRange)
         {
             rb.linearVelocity = Vector2.zero;
+            // 停止移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+            }
             FaceTarget(target.position);
             if (canAttack && !attackDisabledBySkill)
             {
@@ -70,6 +92,11 @@ public class EightDirectionRangedEnemy : BaseEnemy
         }
         else
         {
+            // 移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", true);
+            }
             mover.Move(transform, rb, target, moveSpeed);
         }
     }
@@ -88,15 +115,36 @@ public class EightDirectionRangedEnemy : BaseEnemy
     IEnumerator PerformAttack()
     {
         canAttack = false;
-        yield return StartCoroutine(rangedAttacker.Attack(this, transform, target, attackInterval, bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
+        
+        // 播放攻击动画
+        if(animator != null)
+        {
+            animator.Play("Attack");
+        }
+        
+        // 等待动画延迟
+        yield return new WaitForSeconds(delayAttackTime);
+        
+        yield return StartCoroutine(rangedAttacker.Attack(this, transform, target, attackInterval, 
+            bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
+        
         canAttack = true;
     }
 
     // 保证敌人始终面向目标
     void FaceTarget(Vector3 targetPos)
     {
-        Vector2 direction = (targetPos - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        if(spriteRenderer != null)
+        {
+            Vector2 direction = (targetPos - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;  // 向左时翻转精灵
+            }
+            else
+            {
+                spriteRenderer.flipX = false; // 向右时不翻转
+            }
+        }
     }
 }

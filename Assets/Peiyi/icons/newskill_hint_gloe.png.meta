@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      newskill_hint_gloe_0: 5884927284612213817
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

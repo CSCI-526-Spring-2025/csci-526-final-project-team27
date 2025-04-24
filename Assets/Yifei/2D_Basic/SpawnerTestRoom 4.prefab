@@ -1227,7 +1227,7 @@ MonoBehaviour:
   - waveName: 0
     preDelay: 1
     units:
-    - enemyPrefab: {fileID: 4769684472117481767, guid: 13b6e5d1840626d45895ffe5b7e27862, type: 3}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: cbb4b05cb66fdbf44a21216182d9300d, type: 3}
       count: 2
       interval: 0.5
       positionType: 1
@@ -1236,7 +1236,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 719380913716239421, guid: a425b81c88748d14cbd36db71894fb6e, type: 3}
+    - enemyPrefab: {fileID: 625642135969737916, guid: 31139b0004389c94ca5ca211a1f8f782, type: 3}
       count: 2
       interval: 0
       positionType: 2
@@ -1245,7 +1245,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 2031947946319213741, guid: 3c9d2ad80028e3547986f0976ab11ef0, type: 3}
+    - enemyPrefab: {fileID: 4801950249613166350, guid: 18f2649a5a1185d47afbc87cfd7b2ae4, type: 3}
       count: 1
       interval: 1
       positionType: 2
@@ -1257,7 +1257,7 @@ MonoBehaviour:
   - waveName: 1
     preDelay: 3
     units:
-    - enemyPrefab: {fileID: 4801950249613166350, guid: bca9a03f7613b1c4d908d8f9a278d39c, type: 3}
+    - enemyPrefab: {fileID: 4801950249613166350, guid: 18f2649a5a1185d47afbc87cfd7b2ae4, type: 3}
       count: 2
       interval: 1
       positionType: 1
@@ -1266,7 +1266,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 3474226149447707943, guid: c34cf515c2b350342a3db2f19d5b530c, type: 3}
+    - enemyPrefab: {fileID: 625642135969737916, guid: 262abdec05d63de4d9d71a668c624a3f, type: 3}
       count: 2
       interval: 1
       positionType: 1
@@ -1275,7 +1275,7 @@ MonoBehaviour:
       - {x: -10, y: -5}
       - {x: 10, y: -5}
       - {x: -10, y: 5}
-    - enemyPrefab: {fileID: 2031947946319213741, guid: 3c9d2ad80028e3547986f0976ab11ef0, type: 3}
+    - enemyPrefab: {fileID: 2031947946319213741, guid: c2dec4a848fcc034f9912dbb4f463313, type: 3}
       count: 2
       interval: 2
       positionType: 2
@@ -1287,8 +1287,26 @@ MonoBehaviour:
   - waveName: 2
     preDelay: 6
     units:
-    - enemyPrefab: {fileID: 8621166182278658443, guid: 847e56c8fbf8e2440af9fecd42313ba8, type: 3}
-      count: 3
+    - enemyPrefab: {fileID: 8621166182278658443, guid: 4590ecee974014e43b4704b97eeed0ac, type: 3}
+      count: 2
+      interval: 2
+      positionType: 2
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}
+      - {x: -10, y: 5}
+    - enemyPrefab: {fileID: 625642135969737916, guid: 2069acdc79d73f747982a9d620f860a1, type: 3}
+      count: 2
+      interval: 2
+      positionType: 2
+      spawnPositions:
+      - {x: 10, y: 5}
+      - {x: -10, y: -5}
+      - {x: 10, y: -5}
+      - {x: -10, y: 5}
+    - enemyPrefab: {fileID: 4769684472117481767, guid: cbb4b05cb66fdbf44a21216182d9300d, type: 3}
+      count: 2
       interval: 2
       positionType: 2
       spawnPositions:

@@ -11,9 +11,15 @@ public class RangedEnemy : BaseEnemy
     public float attackRange = 5f;        // 远程攻击射程
     public float attackInterval = 1.5f;   // 两次攻击之间的间隔
     public GameObject bulletPrefab;       // 子弹预制体
-    public Transform firePoint;           // 子弹发射位置
+    public Transform firePointLeft;   // 左侧发射点
+    public Transform firePointRight;  // 右侧发射点
     public float bulletSpeed = 10f;       // 子弹移动速度
     public float bulletLifetime = 2f;     // 子弹存在时间
+
+    [Header("Anim Settings")]
+    public Animator animator;                // 动画控制器
+    public SpriteRenderer spriteRenderer;    // 精灵渲染器
+    public float delayAttackTime = 0.1f;    // 攻击动画延迟时间
 
     private Transform target;             // 玩家目标
     private Rigidbody2D rb;
@@ -54,13 +60,36 @@ public class RangedEnemy : BaseEnemy
         if (target == null)
         {
             rb.linearVelocity = Vector2.zero;
+            // 停止移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+            }
             return;
+        }
+
+        if (spriteRenderer != null)
+        {
+            Vector2 direction = (target.position - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
         }
 
         float distance = Vector2.Distance(transform.position, target.position);
         if (distance <= attackRange)
         {
             rb.linearVelocity = Vector2.zero;
+            // 停止移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+            }
             FaceTarget(target.position);
             if (canAttack && !attackDisabledBySkill)
             {
@@ -69,7 +98,11 @@ public class RangedEnemy : BaseEnemy
         }
         else
         {
-            // 利用 IMover 接口实现移动（RotatingMover 会同时处理旋转）
+            // 移动时设置动画状态
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", true);
+            }
             mover.Move(transform, rb, target, moveSpeed);
         }
     }
@@ -88,15 +121,38 @@ public class RangedEnemy : BaseEnemy
     IEnumerator PerformAttack()
     {
         canAttack = false;
-        yield return StartCoroutine(rangedAttacker.Attack(this, transform, target, attackInterval, bulletPrefab, firePoint, bulletSpeed, bulletLifetime));
+        
+        // 根据朝向选择发射点
+        Transform currentFirePoint = spriteRenderer.flipX ? firePointLeft : firePointRight;
+        
+        if(animator != null)
+        {
+            animator.Play("Attack");
+        }
+        
+        yield return new WaitForSeconds(delayAttackTime);
+        
+        // 使用选定的发射点
+        yield return StartCoroutine(rangedAttacker.Attack(this, transform, target, attackInterval, 
+            bulletPrefab, currentFirePoint, bulletSpeed, bulletLifetime));
+        
         canAttack = true;
     }
 
     // 保证敌人始终面向目标
     void FaceTarget(Vector3 targetPos)
     {
-        Vector2 direction = (targetPos - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        if(spriteRenderer != null)
+        {
+            Vector2 direction = (targetPos - transform.position).normalized;
+            if (direction.x < 0)
+            {
+                spriteRenderer.flipX = true;  // 向左时翻转精灵
+            }
+            else
+            {
+                spriteRenderer.flipX = false; // 向右时不翻转
+            }
+        }
     }
 }
