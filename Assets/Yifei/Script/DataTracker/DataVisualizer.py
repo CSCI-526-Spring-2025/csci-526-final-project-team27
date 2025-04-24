@@ -1,106 +1,124 @@
 import requests
 import json
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 from collections import defaultdict
 
+# Set Seaborn style
+sns.set(style="whitegrid")
+
+# Data source
 url = 'https://cureallcrew-default-rtdb.firebaseio.com/CureAllCrew.json'
 response = requests.get(url)
 data = response.json()
 
-print("Valid Session IDs:")
-print("-" * 50)
+# Filter thresholds
+cutoff_date = 20250408  # Only include sessions after April 8, 2025
+min_play_time = 20      # Only include sessions with PlayTime >= 20 seconds
 
-# Create subplots
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
-fig.suptitle('Game Data Analysis', fontsize=16)
+# Teammate name mapping
+teammate_name_map = {
+    "AxeTeammate_prefab": "MeleeTeammate_3",
+    "SwordTeammate_prefab": "MeleeTeammate_2"
+}
 
-# 1. Difficulty Level Analysis
+# Initialize statistics containers
 levels = [1, 2, 3, 4, 5]
 level_counts = {level: 0 for level in levels}
-
-# 2. Buff Selection Analysis
 buff_selections = defaultdict(int)
-
-# 3. Skill Idle Duration Analysis
 skill_idle_times = defaultdict(list)
-
-# 4. Teammate Damage Analysis
 teammate_damage = defaultdict(list)
 
+def extract_date(session_id):
+    try:
+        return int(session_id.split('-')[0])
+    except:
+        return 0
+
+valid_sessions = 0
+
+# Process and filter data
 for session_id, session_data in data.items():
     if "a" not in session_data:
         continue
-        
-    # Print valid session ID
-    print(f"Session ID: {session_id}")
-    
-    # Difficulty Level Count
-    if "DifficultyLevelReached" in session_data["a"]:
-        level_str = session_data["a"].get("DifficultyLevelReached", "0")
-        try:
-            level = int(level_str)
-            if level in level_counts:
-                level_counts[level] += 1
-        except ValueError:
+
+    session_date = extract_date(session_id)
+    play_time = float(session_data["a"].get("PlayTime", 0))
+
+    if session_date <= cutoff_date or play_time < min_play_time:
+        continue
+
+    valid_sessions += 1
+
+    # Difficulty level
+    try:
+        level = int(session_data["a"].get("DifficultyLevelReached", "0"))
+        if level in level_counts:
+            level_counts[level] += 1
+    except ValueError:
+        continue
+
+    # Buff selections
+    for buff, count in session_data["a"].get("BuffSelections", {}).items():
+        buff_selections[buff] += count
+
+    # Skill idle durations (exclude amplifyheal)
+    for skill, ratio in session_data["a"].get("SkillIdleDuration", {}).items():
+        if "amplifyheal" in skill.lower():
             continue
+        skill_idle_times[skill].append(ratio)
 
-    # Buff Selection Count
-    if "BuffSelections" in session_data["a"]:
-        for buff, count in session_data["a"]["BuffSelections"].items():
-            buff_selections[buff] += count
+    # Teammate damage with name mapping
+    for teammate, damage in session_data["a"].get("TeammateDamage", {}).items():
+        mapped_teammate = teammate_name_map.get(teammate, teammate)
+        teammate_damage[mapped_teammate].append(damage)
 
-    # Skill Idle Duration Count
-    if "SkillIdleDuration" in session_data["a"]:
-        for skill, ratio in session_data["a"]["SkillIdleDuration"].items():
-            skill_idle_times[skill].append(ratio)
+print(f"Total valid sessions (after April 8, PlayTime > 20s): {valid_sessions}")
 
-    # Teammate Damage Count
-    if "TeammateDamage" in session_data["a"]:
-        for teammate, damage in session_data["a"]["TeammateDamage"].items():
-            teammate_damage[teammate].append(damage)
+# Plotting
+fig, axs = plt.subplots(2, 2, figsize=(16, 12))
+fig.suptitle('Game Session Analysis (Post-April 8)', fontsize=18)
 
-print("-" * 50)
-print(f"Total valid sessions: {len([k for k, v in data.items() if 'a' in v])}")
+# 1. Difficulty Level Distribution
+sns.barplot(x=list(map(str, levels)), y=[level_counts[lvl] for lvl in levels], palette="Greens_d", ax=axs[0, 0])
+axs[0, 0].set_title("Difficulty Level Distribution")
+axs[0, 0].set_xlabel("Difficulty Level")
+axs[0, 0].set_ylabel("Player Count")
 
-# 1. Plot Difficulty Level Chart
-levels_labels = [str(lv) for lv in levels]
-counts_data = [level_counts[lv] for lv in levels]
-ax1.bar(levels_labels, counts_data, color='green')
-ax1.set_title('Difficulty Level Distribution')
-ax1.set_xlabel('Difficulty Level')
-ax1.set_ylabel('Player Count')
+# 2. Buff Selection Frequency
+buffs = list(buff_selections.keys())
+counts = list(buff_selections.values())
+sns.barplot(x=buffs, y=counts, palette="Blues_d", ax=axs[0, 1])
+axs[0, 1].set_title("Buff Selection Frequency")
+axs[0, 1].set_xlabel("Buff Type")
+axs[0, 1].set_ylabel("Selection Count")
+axs[0, 1].tick_params(axis='x', rotation=30)
 
-# 2. Plot Buff Selection Chart
-buff_names = list(buff_selections.keys())
-buff_counts = list(buff_selections.values())
-ax2.bar(buff_names, buff_counts, color='blue')
-ax2.set_title('Buff Selection Statistics')
-ax2.set_xlabel('Buff Type')
-ax2.set_ylabel('Selection Count')
-plt.setp(ax2.get_xticklabels(), rotation=45, ha='right')
+# 3. Skill Idle Time Distribution (Box Plot)
+skill_data = []
+for skill, values in skill_idle_times.items():
+    for v in values:
+        skill_data.append((skill, v))
+skill_df = {"Skill": [x[0] for x in skill_data], "IdleRatio": [x[1] for x in skill_data]}
+sns.boxplot(x=skill_df["Skill"], y=skill_df["IdleRatio"], palette="Oranges", ax=axs[1, 0])
+axs[1, 0].set_title("Skill Idle Time Ratio Distribution")
+axs[1, 0].set_xlabel("Skill Type")
+axs[1, 0].set_ylabel("Idle Time Ratio")
+axs[1, 0].tick_params(axis='x', rotation=30)
 
-# 3. Plot Skill Idle Duration Chart
-skill_names = list(skill_idle_times.keys())
-skill_means = [np.mean(times) for times in skill_idle_times.values()]
-ax3.bar(skill_names, skill_means, color='orange')
-ax3.set_title('Average Skill Idle Duration Ratio')
-ax3.set_xlabel('Skill Type')
-ax3.set_ylabel('Average Idle Duration Ratio')
-plt.setp(ax3.get_xticklabels(), rotation=45, ha='right')
+# 4. Teammate Damage Distribution (Violin Plot)
+teammate_data = []
+for t, values in teammate_damage.items():
+    for v in values:
+        teammate_data.append((t, v))
+team_df = {"Teammate": [x[0] for x in teammate_data], "Damage": [x[1] for x in teammate_data]}
+sns.violinplot(x=team_df["Teammate"], y=team_df["Damage"], palette="Reds", ax=axs[1, 1])
+axs[1, 1].set_title("Teammate Damage Distribution")
+axs[1, 1].set_xlabel("Teammate Type")
+axs[1, 1].set_ylabel("Damage Value")
+axs[1, 1].tick_params(axis='x', rotation=30)
 
-# 4. Plot Teammate Damage Chart
-teammate_names = list(teammate_damage.keys())
-damage_means = [np.mean(damages) for damages in teammate_damage.values()]
-ax4.bar(teammate_names, damage_means, color='red')
-ax4.set_title('Average Teammate Damage')
-ax4.set_xlabel('Teammate Type')
-ax4.set_ylabel('Average Damage')
-plt.setp(ax4.get_xticklabels(), rotation=45, ha='right')
-
-# Adjust layout
-plt.tight_layout()
-plt.subplots_adjust(top=0.9)
-
-# Show the charts
+# Layout adjustment
+plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()
