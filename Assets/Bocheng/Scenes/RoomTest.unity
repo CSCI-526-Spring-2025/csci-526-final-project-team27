@@ -3667,6 +3667,42 @@ PrefabInstance:
       propertyPath: 'buffSlots.Array.data[2]'
       value: 
       objectReference: {fileID: 164565320}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[0].buffName
+      value: Player's Max HP +10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[1].buffName
+      value: Heals all allies for 25 HP
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[2].buffName
+      value: Teammates' Speed +1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[3].buffName
+      value: Teammates' Damage +5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[4].buffName
+      value: Teammates' Max HP +15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[5].buffName
+      value: Player's healing power +5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[4].buffPrefab
+      value: 
+      objectReference: {fileID: 8791776605809785185, guid: 9f4b44ba35fdd4c40b45c0e6db2882de, type: 3}
+    - target: {fileID: 6026046402913223729, guid: 0ec04e597bed5fd42bb21f9a88c80b65, type: 3}
+      propertyPath: availableBuffs.Array.data[5].buffPrefab
+      value: 
+      objectReference: {fileID: 6553054341293318856, guid: 33eb2850a75d01b4fa7be82c99b75561, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

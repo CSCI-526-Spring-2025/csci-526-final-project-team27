@@ -99,39 +99,63 @@ public class LevelUpRewardSystem : MonoBehaviour
             player = GameObject.FindWithTag("Player");
         }
         Health playerHealth = player.GetComponent<Health>();
-        PlayerMovement playerspeed = player.GetComponent<PlayerMovement>();
 
         if (playerHealth != null)
         {
             switch (buff.buffName)
-            {
-                case "Heal HP":
-                    playerHealth.Heal(20f);
-                    break;
-
-                case "MaxHP++":
-                    float increaseAmount = 20f;
+            {   
+                case "Player's Max HP +10":
+                    float increaseAmount = 10f;
                     playerHealth.maxHealth += increaseAmount;
+                    playerHealth.currentHealth += increaseAmount;
 
                     Debug.Log($"增加最大生命 {increaseAmount}，当前生命设为满血：{playerHealth.currentHealth}");
 
                     // 生成黄色提示
                     playerHealth.ShowFloatingText("Max HP ↑", Color.yellow, new Vector3(0.5f, 1f, 0));
                     break;
-                case "Speed++":
-                    float increaseSpeed = 1f;
-                    playerspeed.moveSpeed += increaseSpeed;
-
-                    Debug.Log($"增加最大速度 {increaseSpeed}，当前速度：{playerspeed.moveSpeed}");
+                case "Heals all allies for 25 HP":
+                    playerHealth.Heal(25f);
+                    GameObject[] teammatesHeal = GameObject.FindGameObjectsWithTag("Teammate");
+                    foreach (GameObject teammate in teammatesHeal)
+                    {
+                        Health teammateHealth = teammate.GetComponent<Health>();
+                        if (teammateHealth != null)
+                        {
+                            teammateHealth.Heal(25f);
+                        }
+                    }
                     break;
-                case "Damage++":
+                case "Teammates' Speed +1":
+                    float increaseSpeed = 1f;
+                    // 给所有队友增加速度
+                    GameObject[] teammatesSpeed = GameObject.FindGameObjectsWithTag("Teammate");
+                    foreach (GameObject teammate in teammatesSpeed)
+                    {
+                        MeleeTeammate meleeMovement = teammate.GetComponent<MeleeTeammate>();
+
+                        if (meleeMovement != null)
+                        {
+                            meleeMovement.moveSpeed += increaseSpeed;
+                            continue;
+                        }
+                        RangedTeammate rangedMovement = teammate.GetComponent<RangedTeammate>();
+                        if (rangedMovement != null)
+                        {
+                            rangedMovement.moveSpeed += increaseSpeed;
+                            continue;
+                        }
+                    }
+                    break;
+                case "Teammates' Damage +5":
+                    float increaseDamage = 5f;
                     GameObject[] teammates = GameObject.FindGameObjectsWithTag("Teammate");
                     foreach (GameObject teammate in teammates)
                     {
                         MeleeTeammate melee = teammate.GetComponent<MeleeTeammate>();
                         if (melee != null)
                         {
-                            melee.damage += 1f;
+                            melee.damage += increaseDamage;
                             continue;
                         }
                         // 如果是远程队友
@@ -143,11 +167,37 @@ public class LevelUpRewardSystem : MonoBehaviour
                                 DamageBallTeam teamBullet = ranged.bulletPrefab.GetComponent<DamageBallTeam>();
                                 if (teamBullet != null)
                                 {
-                                    teamBullet.damageAmount += 5;
+                                    teamBullet.damageAmount += increaseDamage;
                                     Debug.Log("Range teammate damage increased, new damage: " + teamBullet.damageAmount);
                                 }
                             }
                             continue;
+                        }
+                    }
+                    break;
+                case "Teammates' Max HP +15":
+                    GameObject[] teammatesHP = GameObject.FindGameObjectsWithTag("Teammate");
+                    foreach (GameObject teammate in teammatesHP)
+                    {
+                        Health teammateHealth = teammate.GetComponent<Health>();
+                        if (teammateHealth != null)
+                        {
+                            teammateHealth.maxHealth += 15;
+                            teammateHealth.currentHealth += 15;
+                            Debug.Log($"队友最大生命增加 {15}，当前最大生命：{teammateHealth.maxHealth}");
+                        }
+                    }
+                    break;
+                case "Player's healing power +5":
+                    float increaseHeal = 5f;
+                    ShootingController shootingController = player.GetComponent<ShootingController>();
+                    if (shootingController != null && shootingController.bulletPrefab != null)
+                    {
+                        HealBallVond playerBullet = shootingController.bulletPrefab.GetComponent<HealBallVond>();
+                        if (playerBullet != null)
+                        {
+                            playerBullet.healAmount += increaseHeal;
+                            Debug.Log("Player's healing power increased, new healing amount: " + playerBullet.healAmount);
                         }
                     }
                     break;
