@@ -6,6 +6,7 @@ using UnityEngine;
 /// 在二维平面（X/Y）上跳跃，通过在Y轴方向添加一个抛物线偏移来模拟真实跳跃效果。 
 /// 如果目标在跳跃距离内，则直接跳到目标位置；否则跳跃固定距离。
 /// </summary>
+[RequireComponent(typeof(ParabolicSlimeJumpMovementBehavior2D))]
 public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
 {
 
@@ -16,8 +17,10 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     [SerializeField] private float maxJumpHeight = 1f;
 
     [Tooltip("两次跳跃之间的间隔（秒）")]
-    [SerializeField] private float jumpInterval = 1.5f;
+    // [SerializeField] private float jumpInterval = 3.0f;
+    private const float jumpInterval = 3.0f;
 
+    private Rigidbody2D rb;
     private float lastJumpTime = 0f;
     private bool isJumping = false;
     private float jumpDistance = 5f;
@@ -38,23 +41,30 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     void Awake()
     {
         slimeHealth = GetComponent<SlimeHealth>();
+        rb = GetComponent<Rigidbody2D>();
         splitJumpInterval = jumpInterval;
         splitJumpHeight = maxJumpHeight;
         if (slimeHealth != null)
         {
             splitJumpInterval /= slimeHealth.jumpCounter;
             splitJumpHeight /= slimeHealth.jumpCounter;
+            Debug.Log("Counter is: " + slimeHealth.jumpCounter);
         }
+        Debug.Log("Now interval is: " + splitJumpInterval);
+        Debug.Log("Interval is: " + jumpInterval);
     }
 
     public void Move(Transform self, Rigidbody2D rb, Transform target, float moveSpeed)
     {
         if (target == null) return;
 
+        if (isJumping) return;
+
         if (!isJumping && Time.time - lastJumpTime >= splitJumpInterval)
         {
+            Debug.Log("Last time is: " + lastJumpTime);
             jumpDistance = moveSpeed; // 使用 moveSpeed 作为跳跃距离
-            StartCoroutine(JumpTowardsTarget(self, target));
+            StartCoroutine(JumpTowardsTarget(target));
         }
     }
 
@@ -63,7 +73,6 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
         transform.rotation = Quaternion.Euler(0, 0, 180);
     }
 
-
     /// <summary>
     /// 协程：执行一次抛物线跳跃，并在二维平面上更新角色位置。
     /// 如果目标在跳跃距离内，则跳到目标位置；否则按照固定跳跃距离计算落点。
@@ -71,13 +80,14 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
     /// <param name="self">当前角色的 Transform</param>
     /// <param name="target">目标 Transform</param>
     /// <returns></returns>
-    private IEnumerator JumpTowardsTarget(Transform self, Transform target)
+    private IEnumerator JumpTowardsTarget(Transform target)
     {
         isJumping = true;
         lastJumpTime = Time.time;
 
         // 记录跳跃起点（使用传入的 self 位置）
-        Vector2 startPos = self.position;
+        // Vector2 startPos = self.position;
+        Vector2 startPos = rb.position;
         // 计算目标与起点的距离
         float targetDistance = Vector2.Distance(startPos, (Vector2)target.position);
         // 如果目标距离小于跳跃距离，则实际跳跃距离为目标距离，否则为设定的跳跃距离
@@ -99,12 +109,15 @@ public class ParabolicSlimeJumpMovementBehavior2D : MonoBehaviour, IMover
             float verticalOffset = 4 * splitJumpHeight * t * (1 - t);
             pos.y += verticalOffset;
 
-            self.position = pos;
-            yield return null;
+            // self.position = pos;
+            // yield return null;
+            rb.MovePosition(pos);
+            yield return new WaitForFixedUpdate();
         }
 
         // 确保跳跃结束时位置精确落在预定的落点
-        self.position = endPos;
+        // self.position = endPos;
+        rb.MovePosition(endPos);
         isJumping = false;
     }
 }

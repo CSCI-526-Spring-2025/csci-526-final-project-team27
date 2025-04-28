@@ -231,10 +231,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!60 &445820219740098354
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -330,6 +330,7 @@ MonoBehaviour:
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 0}
   expOrbPrefab: {fileID: 0}
+  healthBar: {fileID: 0}
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -368,6 +369,9 @@ MonoBehaviour:
   damage: 20
   isAttacking: 0
   currentTarget: {fileID: 0}
+  canAttack: 1
+  attackDisabledBySkill: 0
+  spriteRenderer: {fileID: 0}
 --- !u!114 &-183548247518927584
 MonoBehaviour:
   m_ObjectHideFlags: 0
