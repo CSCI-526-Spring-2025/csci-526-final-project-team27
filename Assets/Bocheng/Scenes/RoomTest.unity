@@ -554,6 +554,8 @@ MonoBehaviour:
   shopRoomUIPrefab: {fileID: 7120024035353279927, guid: 7cd910283daf22b449908d91098ffc58, type: 3}
   startRoomUIPrefab: {fileID: 7120024035353279927, guid: db166b9138e28ae4fa792cc86bf59590, type: 3}
   endRoomUIPrefab: {fileID: 7120024035353279927, guid: b07f63b8c2d809447aea63a588539822, type: 3}
+  bossArrowPrefab: {fileID: 7696184989025304373, guid: d4fa1e96bc7baf04580c32e48f5b7e61, type: 3}
+  arrowEdgeOffset: 0
   panel: {fileID: 2064287712}
   playerUIPrefab: {fileID: 5199802273415970533, guid: 6df6e4c9886123843825f7b7b7ebf776, type: 3}
   playerMovement: {fileID: 69524384}
