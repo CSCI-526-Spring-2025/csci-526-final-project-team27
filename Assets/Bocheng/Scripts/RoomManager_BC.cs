@@ -48,6 +48,9 @@ public class RoomManager_BC : MonoBehaviour
     public GameObject shopRoomUIPrefab;
     public GameObject startRoomUIPrefab;
     public GameObject endRoomUIPrefab;
+    public GameObject bossArrowPrefab; // 指向Boss房间的箭头预制体
+    private RectTransform bossArrowUI; // 箭头的RectTransform组件
+    public float arrowEdgeOffset = 10f; // 箭头与画布边缘的距离
     public RectTransform panel;  // 小地图的UI Panel
     public GameObject playerUIPrefab;
     private RectTransform playerUI;
@@ -119,6 +122,12 @@ public class RoomManager_BC : MonoBehaviour
     void Update()
     {
         HandleMinimapInput();
+        
+        // 如果小地图打开，更新箭头方向
+        if (MinimapOpen && bossArrowUI != null)
+        {
+            UpdateBossArrow();
+        }
     }
 
     void GenerateTutorialMap()
@@ -821,6 +830,9 @@ public class RoomManager_BC : MonoBehaviour
         }
         // **创建玩家 UI**
         CreatePlayerUI();
+        
+        // 创建指向Boss房间的箭头
+        CreateBossArrow();
     }
 
     private void HandleMinimapInput()
@@ -841,6 +853,9 @@ public class RoomManager_BC : MonoBehaviour
             if (Input.GetKey(KeyCode.D)) moveDir.x -= 1; // 向右 = Panel 向左移动
 
             panel.anchoredPosition += moveDir * UImoveSpeed * Time.deltaTime;
+            
+            // 更新箭头位置
+            UpdateBossArrow();
         }
     }
 
@@ -905,6 +920,9 @@ public class RoomManager_BC : MonoBehaviour
 
         // **对齐到新房间 UI**
         playerUI.anchoredPosition = Vector2.zero;
+        
+        // 更新箭头位置
+        UpdateBossArrow();
     }
 
 
@@ -1069,7 +1087,7 @@ public class RoomManager_BC : MonoBehaviour
 
             case RewardSelectionUI.RewardType.Attack:
                 {
-                    // 玩家获得“增加治疗量”的效果
+                    // 玩家获得"增加治疗量"的效果
                     ShootingController playerShooting = player.GetComponent<ShootingController>();
                     if (playerShooting != null)
                     {
@@ -1090,7 +1108,7 @@ public class RoomManager_BC : MonoBehaviour
                         Debug.LogError("Player身上没有找到 ShootingController 组件！");
                     }
 
-                    // 队友获得“增加伤害”的效果（针对近战队友）
+                    // 队友获得"增加伤害"的效果（针对近战队友）
                     if (tm != null)
                     {
                         foreach (GameObject teammate in tm.teammates)
@@ -1272,7 +1290,127 @@ public class RoomManager_BC : MonoBehaviour
     //        playerMovement.LockMove(true);
     //}
 
+    private void CreateBossArrow()
+    {
+        if (bossArrowPrefab == null)
+        {
+            Debug.LogError("Boss箭头预制体未设置！");
+            return;
+        }
+        
+        // 实例化箭头预制体，将其作为panel的父对象(Canvas)的子对象
+        GameObject arrowInstance = Instantiate(bossArrowPrefab, panel.parent);
+        bossArrowUI = arrowInstance.GetComponent<RectTransform>();
+        
+        // 初始化位置
+        UpdateBossArrow();
+    }
 
+    private void UpdateBossArrow()
+    {
+        if (!roomUIElements.ContainsKey(endRoom) || bossArrowUI == null)
+            return;
 
+        // 获取Canvas的RectTransform
+        RectTransform canvasRect = panel.parent as RectTransform;
+        if (canvasRect == null)
+            return;
 
+        // 获取Canvas的尺寸
+        Vector2 canvasSize = canvasRect.rect.size;
+        
+        // 计算当前视图中心点
+        Vector2 viewCenter = -panel.anchoredPosition;
+        
+        // 获取终点房间的位置
+        Vector2 endRoomPos = roomUIElements[endRoom].anchoredPosition;
+        
+        // 计算从视图中心到终点房间的方向向量
+        Vector2 direction = endRoomPos - viewCenter;
+        
+        // 获取箭头的大小
+        Vector2 arrowSize = bossArrowUI.sizeDelta;
+        
+        // 考虑箭头大小的偏移值（取较大的值确保完全显示）
+        float offsetX = arrowEdgeOffset + arrowSize.x / 2;
+        float offsetY = arrowEdgeOffset + arrowSize.y / 2;
+        
+        // 调整后的视图区域（考虑箭头大小和偏移）
+        Rect adjustedViewRect = new Rect(
+            viewCenter.x - canvasSize.x/2 + offsetX, 
+            viewCenter.y - canvasSize.y/2 + offsetY, 
+            canvasSize.x - offsetX * 2, 
+            canvasSize.y - offsetY * 2
+        );
+        
+        // 如果终点房间在调整后的视图内，隐藏箭头
+        if (adjustedViewRect.Contains(endRoomPos))
+        {
+            bossArrowUI.gameObject.SetActive(false);
+            return;
+        }
+        
+        // 显示箭头
+        bossArrowUI.gameObject.SetActive(true);
+        
+        // 计算箭头在画布边缘的位置
+        Vector2 normalizedDir = direction.normalized;
+        
+        // 计算有效边界（考虑箭头尺寸和边缘偏移）
+        float effectiveWidth = canvasSize.x - offsetX * 2;
+        float effectiveHeight = canvasSize.y - offsetY * 2;
+        
+        // 计算箭头与画布边缘的交点
+        float horizontal = 0, vertical = 0;
+        
+        // 计算与水平边界的交点（考虑偏移）
+        if (normalizedDir.y > 0)
+            vertical = (effectiveHeight/2) / normalizedDir.y;
+        else if (normalizedDir.y < 0)
+            vertical = (-effectiveHeight/2) / normalizedDir.y;
+        
+        // 计算与垂直边界的交点（考虑偏移）
+        if (normalizedDir.x > 0)
+            horizontal = (effectiveWidth/2) / normalizedDir.x;
+        else if (normalizedDir.x < 0)
+            horizontal = (-effectiveWidth/2) / normalizedDir.x;
+        
+        // 选择较小的交点距离
+        float distance = (Mathf.Abs(horizontal) < Mathf.Abs(vertical) && horizontal != 0) ? horizontal : vertical;
+        
+        // 如果有效距离不存在，使用默认位置
+        if (distance == 0)
+        {
+            // 默认放置在右上角
+            bossArrowUI.anchoredPosition = new Vector2(effectiveWidth/2, effectiveHeight/2);
+            bossArrowUI.rotation = Quaternion.Euler(0, 0, 135); // 指向左下方
+            return;
+        }
+        
+        // 计算箭头位置，应用偏移确保不贴边
+        Vector2 arrowPos = normalizedDir * distance;
+        
+        // 设置箭头位置（相对于Canvas中心）
+        bossArrowUI.anchoredPosition = arrowPos;
+        
+        // 计算旋转角度
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        
+        // 设置箭头旋转
+        bossArrowUI.rotation = Quaternion.Euler(0, 0, angle);
+        
+        // 确保箭头在Canvas的可见区域内
+        bossArrowUI.anchoredPosition = new Vector2(
+            Mathf.Clamp(bossArrowUI.anchoredPosition.x, -canvasSize.x/2 + offsetX, canvasSize.x/2 - offsetX),
+            Mathf.Clamp(bossArrowUI.anchoredPosition.y, -canvasSize.y/2 + offsetY, canvasSize.y/2 - offsetY)
+        );
+    }
+
+    public void ToggleBossArrow(bool show)
+    {
+        if (bossArrowUI != null)
+        {
+            bossArrowUI.gameObject.SetActive(show);
+        }
+    }
 }
