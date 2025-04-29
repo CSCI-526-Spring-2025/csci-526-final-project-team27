@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3075bc55eafdbc74db504e92147ce339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 120
+  maxHealth: 200
   currentHealth: 0
   FloatingHPCanvas: {fileID: 326221456605243696, guid: 60f95272b6609eb47a69653e15dace96, type: 3}
   coinPrefab: {fileID: 0}
@@ -386,4 +386,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpDuration: 0.7
   maxJumpHeight: 1
-  jumpInterval: 1.5
