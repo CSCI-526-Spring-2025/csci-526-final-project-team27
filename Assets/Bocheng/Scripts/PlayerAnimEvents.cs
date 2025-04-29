@@ -23,13 +23,15 @@ public class PlayerAnimEvents : MonoBehaviour
 
     public void OnShootAnimEnd()
     {
+        /*
         if(shootingController!=null)
         {
             shootingController.isOnCooldown = false;
             Debug.Log("OnShootAnimEnd");
-        }
+        }*/
     }
 
+    
     public void LockShoot()
     {
         CtrlCtrl.Instance.LockShoot(true);

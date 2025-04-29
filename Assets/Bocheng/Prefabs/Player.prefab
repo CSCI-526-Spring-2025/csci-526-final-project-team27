@@ -630,11 +630,11 @@ MonoBehaviour:
   bulletLifetime: 2
   manaCost: 5
   inventoryPanel: {fileID: 0}
-  cooldownTime: 0.1
+  cooldownTime: 0.4
   animator: {fileID: 0}
   spriteRenderer: {fileID: 0}
   shootDelay: 0.1
-  autoCooldown: 0
+  autoCooldown: 1
   isOnCooldown: 0
 --- !u!70 &5927747135369112822
 CapsuleCollider2D:

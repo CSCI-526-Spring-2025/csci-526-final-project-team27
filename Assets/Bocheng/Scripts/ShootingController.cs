@@ -23,11 +23,11 @@ public class ShootingController : MonoBehaviour
     private Camera cam;
 
     [Header("动画配置")]
-    public float cooldownTime = 0.2f; // 冷却时间
+    public float cooldownTime = 0.3f; // 冷却时间
     public Animator animator; // 动画组件引用
     public SpriteRenderer spriteRenderer; // 精灵渲染器引用
     public float shootDelay = 0.1f; // 射击延迟时间
-    public bool autoCooldown = false;
+    public bool autoCooldown = true;
 
     public bool isOnCooldown = false; // 是否在冷却中
     private float cooldownTimer = 0f; // 冷却计时器
@@ -59,6 +59,7 @@ public class ShootingController : MonoBehaviour
             }
         }
 
+        
         if(isOnCooldown && autoCooldown)
         {
             cooldownTimer += Time.deltaTime;
@@ -139,9 +140,11 @@ public class ShootingController : MonoBehaviour
         return false;
     }
 
+
     public void LockShoot(bool bLock)
     {
         isLocked = bLock;
+
     }
 
     void UpdateFilpX()

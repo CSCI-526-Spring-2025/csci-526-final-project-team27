@@ -6843,8 +6843,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3088407847875791146, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
+      propertyPath: autoCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088407847875791146, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: cooldownTime
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3088407847875791146, guid: c62657ecb98b8f04284edbf344de37b9, type: 3}
       propertyPath: inventoryPanel
