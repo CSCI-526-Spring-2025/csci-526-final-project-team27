@@ -2247,7 +2247,7 @@ PrefabInstance:
     - target: {fileID: 7714216547639284420, guid: 855b0284946cd634198803004c83ffb9, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
+      objectReference: {fileID: 11400000, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
     - target: {fileID: 7714216547639284420, guid: 855b0284946cd634198803004c83ffb9, type: 3}
       propertyPath: m_fontSizeBase
       value: 48
@@ -2255,7 +2255,7 @@ PrefabInstance:
     - target: {fileID: 7714216547639284420, guid: 855b0284946cd634198803004c83ffb9, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -8061770658413904301, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
+      objectReference: {fileID: 8120820643711012971, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
     - target: {fileID: 7714216547639284420, guid: 855b0284946cd634198803004c83ffb9, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -3711,6 +3711,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1972766458373038423, guid: 51bb6bdba8a3fd540a6d5040e226498c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
     - target: {fileID: 3452993446651344690, guid: 51bb6bdba8a3fd540a6d5040e226498c, type: 3}
       propertyPath: m_Camera
       value: 
@@ -3794,8 +3798,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
-  m_sharedMaterial: {fileID: -8061770658413904301, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
+  m_sharedMaterial: {fileID: 8120820643711012971, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3819,8 +3823,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4303,6 +4307,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6175070674898453974, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
+    - target: {fileID: 6175070674898453974, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8586790917306438146, guid: 0157d92928964fc40acd6935efdbbbc8, type: 3}
       propertyPath: m_Name
       value: PauseMenu
@@ -4374,6 +4386,8 @@ MonoBehaviour:
   shopRoomUIPrefab: {fileID: 7120024035353279927, guid: 7cd910283daf22b449908d91098ffc58, type: 3}
   startRoomUIPrefab: {fileID: 7120024035353279927, guid: db166b9138e28ae4fa792cc86bf59590, type: 3}
   endRoomUIPrefab: {fileID: 7120024035353279927, guid: b07f63b8c2d809447aea63a588539822, type: 3}
+  bossArrowPrefab: {fileID: 0}
+  arrowEdgeOffset: 10
   panel: {fileID: 1863550179}
   playerUIPrefab: {fileID: 5199802273415970533, guid: 6df6e4c9886123843825f7b7b7ebf776, type: 3}
   playerMovement: {fileID: 1896199990}
@@ -6246,8 +6260,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
-  m_sharedMaterial: {fileID: -8061770658413904301, guid: 328a67b7225070d46afa4d1d45b8098c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
+  m_sharedMaterial: {fileID: 8120820643711012971, guid: 4333f5a0f6fe41d4984e92d4badca042, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6271,8 +6285,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
