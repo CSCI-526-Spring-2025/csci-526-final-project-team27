@@ -60,9 +60,9 @@ public class RoomTutorial : MonoBehaviour
         enemy.tag = "Untagged";
         //避免索敌
         teammates = new GameObject[3];
-        teammates[0] = transform.Find("MeleeTeammate_1").gameObject;
-        teammates[1] = transform.Find("MeleeTeammate_3").gameObject;
-        teammates[2] = transform.Find("RangeTeammate_2").gameObject;
+        teammates[0] = transform.Find("SwordTeammate_prefab").gameObject;
+        teammates[1] = transform.Find("AxeTeammate_prefab").gameObject;
+        teammates[2] = transform.Find("SoldierTeammate_prefab").gameObject;
         foreach (GameObject teammate in teammates)
         {
             teammate.tag = "Untagged";
